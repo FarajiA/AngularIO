@@ -1,0 +1,22 @@
+﻿<ion-view hide-nav-bar="true" >
+<ion-content has-header="true" padding="true">
+    <div class="LoginWrapper">
+        <div class="logo"><img id="logo" ng-src="img/logo.png" /></div>
+        <form name="form.loginform" ng-submit="submitLogin(user)" novalidate>
+            <div class="list list-inset">
+                <label class="item item-input">
+                    <input type="text" placeholder="Username / Email" ng-model="user.username" name="username" ng-minlength="2" required>
+                </label>
+                <label class="item item-input">
+                    <input type="password" placeholder="Password" ng-model="user.password" name="password" ng-minlength="2" required>
+                </label>
+
+            </div>
+            <button type="submit" class="button button-block button-assertive">
+                Login
+            </button>
+        </form>
+        <p class="register">Wanna Signup? <a href="#/register">Register Here</a></p>
+    </div>
+</ion-content>
+</ion-view>

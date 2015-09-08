@@ -1,0 +1,379 @@
+var baseURL = "http://localhost:3536/";
+var countSet = 10;
+; (function () {
+var app = angular.module('App', [
+                'oc.lazyLoad',
+                'ionic',
+                'LocalStorageModule'
+]);
+
+app.run(function ($ionicPlatform, $ionicSideMenuDelegate, $rootScope, UserObject, $state, $q) {
+    //var deffered = $q.defer();
+
+    $ionicPlatform.ready(function () {
+            if(window.cordova && window.cordova.plugins.Keyboard) {
+                cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
+            }
+            if(window.StatusBar) {
+                StatusBar.styleDefault();
+            }
+        });
+
+        UserObject.fillAuthData();
+
+        $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
+            var authdata = UserObject.authentication();
+            var auth = authdata.isAuth;
+            var guid = authdata.guid;
+            var userGuid = UserObject.data().GUID;
+
+            if ($rootScope.stateChangeBypass || toState.name === 'login' || toState.name == 'register') {
+                $rootScope.stateChangeBypass = false;
+                return;
+            }
+            
+            event.preventDefault();
+
+            if (auth && userGuid) {
+                $rootScope.stateChangeBypass = true;
+                $state.go(toState, toParams);
+            }
+            else if (auth && !userGuid) {
+                UserObject.setUser(guid).then(function () {
+                    $rootScope.stateChangeBypass = true;
+                    $state.go(toState.name);                    
+                });
+            }
+            else {
+                $state.go('login')
+            }
+
+        });
+});
+
+app.config(RouteMethods, ocLazyLoadProvider);
+RouteMethods.$inject = ["$stateProvider","$urlRouterProvider","$ionicConfigProvider"];
+ocLazyLoadProvider.$inject = ["$ocLazyLoadProvider"];
+
+function RouteMethods($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
+    
+    $ionicConfigProvider.backButton.text('');
+
+    // setup an abstract state for the tabs directive
+    $stateProvider.state('main', {
+        url: '/main',
+        templateUrl: 'components/layout/main.html',
+        abstract: true
+    })
+    // Each tab has its own nav history stack:
+    .state('main.dash', {
+        url: '/dash',
+        views: {
+            'main-dash': {
+                templateUrl: 'components/dash/dash.html',
+                controller: 'DashController'
+            }
+        },
+        resolve: {
+            loadExternals: ['$ocLazyLoad', function ($ocLazyLoad) {
+                return $ocLazyLoad.load({
+                    name: 'dash',
+                    files: [
+                        'components/dash/dash.js'
+                    ]
+                });
+            }],
+            data: ['$ionicSideMenuDelegate', function ($ionicSideMenuDelegate) {
+                $ionicSideMenuDelegate.canDragContent(true);
+            }]
+        }
+    })
+        .state('main.traffic', {
+            url: '/traffic',
+            views: {
+                'main-traffic': {
+                    templateUrl: 'components/traffic/traffic.html',
+                    controller: 'TrafficController'
+                }
+            },
+            resolve: {
+                loadExternals: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'traffic',
+                        files: [
+                            'components/traffic/trafficServices.js',
+                            'components/traffic/traffic.js'
+                        ]
+                    });
+                }],
+                data: ['$ionicSideMenuDelegate', function ($ionicSideMenuDelegate) {
+                    $ionicSideMenuDelegate.canDragContent(true);
+                }]
+            }
+        })
+        .state('main.traffic-detail', {
+            url: '/traffic/:userId',
+            views: {
+                'main-trafficDetails': {
+                    templateUrl: 'components/user/user.html',
+                    controller: 'UserController'
+                }
+            },
+            resolve: {
+                loadExternals: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'trafficDetails',
+                        files: [
+                            'components/user/user.js'
+                        ]
+                    });
+                }],
+                data: ['$ionicSideMenuDelegate', function ($ionicSideMenuDelegate) {
+                    $ionicSideMenuDelegate.canDragContent(false);
+                }]
+            }
+        })
+        .state('main.activity', {
+            url: '/activity',
+            views: {
+                'main-activity': {
+                    templateUrl: 'components/activity/activity.html',
+                    controller: 'ActivityController'
+                }
+            },
+            resolve: {
+                loadExternals: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'activity',
+                        files: [
+                            'components/activity/activityServices.js',
+                            'components/activity/activity.js'
+                        ]
+                    });
+                }],
+                data: ['$ionicSideMenuDelegate', function ($ionicSideMenuDelegate) {
+                    $ionicSideMenuDelegate.canDragContent(true);
+                }]
+            }
+        })
+        .state('main.search', {
+            url: '/search',
+            views: {
+                'main-search': {
+                    templateUrl: 'components/search/search.html',
+                    controller: 'SearchController'
+                }
+            },
+            resolve: {
+                loadExternals: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'search',
+                        files: [
+                            'components/search/search.js'
+                        ]
+                    });
+                }],
+                data: ['$ionicSideMenuDelegate', function ($ionicSideMenuDelegate) {
+                    $ionicSideMenuDelegate.canDragContent(true);
+                }]
+            }
+        })
+  .state('settings', {
+      url: '/settings',
+      templateUrl: 'components/settings/settings.html',
+      controller: 'SettingsController',
+      resolve: {
+          loadExternals: ['$ocLazyLoad', function ($ocLazyLoad) {
+              return $ocLazyLoad.load({
+                  name: 'settings',
+                  files: [
+                      'lib/angular-messages.js',
+                      'components/settings/settings.js'
+                  ]
+              });
+          }],
+          data: ['$ionicSideMenuDelegate', function ($ionicSideMenuDelegate) {
+              $ionicSideMenuDelegate.canDragContent(false);
+          }]
+      }
+  })
+  .state('contacts', {
+      url: '/contacts',
+      templateUrl: 'components/contacts/contacts.html',
+      controller: 'ContactsController',
+      resolve: {
+          loadExternals: ['$ocLazyLoad', function ($ocLazyLoad) {
+              return $ocLazyLoad.load({
+                  name: 'contacts',
+                  files: [
+                      'components/contacts/contacts.js'
+                  ]
+              });
+          }],
+          data: ['$ionicSideMenuDelegate', function ($ionicSideMenuDelegate) {
+              $ionicSideMenuDelegate.canDragContent(false);
+          }]
+      }
+  })
+  .state('login', {
+      url: '/login',
+      templateUrl: 'components/login/login.html',
+      controller: 'LoginController',
+      resolve: {
+          loadExternals: ['$ocLazyLoad', function ($ocLazyLoad) {
+              return $ocLazyLoad.load({
+                  name: 'login',
+                  files: [
+                      'components/login/login.js'
+                  ]
+              });
+          }],
+          data: ['$ionicSideMenuDelegate', function($ionicSideMenuDelegate) {
+              $ionicSideMenuDelegate.canDragContent(false);
+          }]
+      }
+  })
+  .state('register', {
+      url: '/register',
+      templateUrl: 'components/register/register.html',
+      controller: 'RegisterController',
+      resolve: {
+          loadExternals: ['$ocLazyLoad', function ($ocLazyLoad) {
+              return $ocLazyLoad.load({
+                  name: 'register',
+                  files: [
+                      'lib/angular-messages.js',
+                      'components/register/registrationServices.js',
+                      'components/register/register.js',
+                      'components/register/registrationDirectives.js'
+                  ]
+              });
+          }],
+          data: ['$ionicSideMenuDelegate', function ($ionicSideMenuDelegate) {
+              $ionicSideMenuDelegate.canDragContent(false);
+          }]
+      }
+  });
+
+  // if none of the above states are matched, use this as the fallback
+    $urlRouterProvider.otherwise(function ($injector, $location) {
+        var $state = $injector.get("$state");
+        $state.go("main.dash");
+    });
+};
+
+function ocLazyLoadProvider($ocLazyLoadProvider) {
+    $ocLazyLoadProvider.config({
+        debug: true
+    });
+}
+    /************ Factory Services ***********/
+    // Store and Process User data
+app.factory('UserObject',['$http', '$q', 'localStorageService', function ($http, $q, localStorageService) {
+    var data = [];
+    var detailedUser = [];
+    var UserObject = {};
+
+    var _authentication = function() {
+        var authData = localStorageService.get('authorizationData');
+        var authObject = {}
+        if (authData) {
+            authObject.isAuth = true;
+            authObject.guid = authData.chaserID;
+            authObject.userName = authData.chaseruser;
+            authObject.password = authData.chasrpsswd;
+        }
+        else {
+            authObject.isAuth = false;
+            authObject.userName = "";
+            authObject.password = "";
+        }        
+        return authObject;
+    };
+
+    var _fillAuthData = function () {
+       // var stuff = this.data().GUID;
+       // var stuff2 = UserObject.data().GUID;
+        var authData = localStorageService.get('authorizationData');
+        if (authData) {
+            _authentication.isAuth = true;
+            _authentication.guid = authData.chaserID;
+            _authentication.userName = authData.userName;           
+        }
+
+    };
+
+    UserObject.login = function (user) {
+        var deffered = $q.defer();
+        var msg = { "username": user.username, "password": user.password };
+        $http.post(baseURL + "api/login", msg)
+        .success(function (d) {
+            data = d;
+            if (data.passwd !== "0" && data.username !== "0") {
+                localStorageService.set('authorizationData', { chaserID: data.GUID, chaseruser: data.username, chasrpsswd: user.password });
+                _authentication.isAuth = true;
+                _authentication.userName = data.username;
+                _authentication.userName = user.password;
+            }
+            deffered.resolve();
+        })
+        .error(function (data, status) {
+            console.log("Request failed " + status);
+        });
+        return deffered.promise;
+    };
+
+    UserObject.setUser = function (guid) {
+        var deffered = $q.defer();
+        $http.get(baseURL + "api/user/" + guid)
+        .success(function (d) {
+            data = d;
+            deffered.resolve();
+        })
+        .error(function (data, status) {
+            console.log("Request failed " + status);
+        });
+        return deffered.promise;
+    };
+
+    UserObject.register = function (user) {
+        var deffered = $q.defer();
+        var msg = { "firstName": user.firstname, "lastName": user.lastname, "emailAddress": user.email, "username": user.username, "passwd": user.passwordConfirm };
+        $http.post(baseURL + "api/register", msg)
+        .success(function (d) {
+            data = d;
+            if (data.passwd !== "0" && data.username !== "0") {
+                localStorageService.set('authorizationData', { chaserID: data.GUID, chaseruser: user.passwordConfirm, chasrpsswd: user.password });
+                _authentication.isAuth = true;
+                _authentication.userName = data.username;
+                _authentication.userName = user.password;
+            }
+            deffered.resolve();
+        })
+        .error(function (data, status) {
+            console.log("Request failed " + status);
+        });
+        return deffered.promise;
+    };
+
+    UserObject.getUser = function (guid) {
+        var deffered = $q.defer();
+        $http.get(baseURL + "api/user/" + guid + "/" + this.data().GUID)
+        .success(function (d) {
+            detailedUser = d;
+            deffered.resolve();
+        })
+        .error(function (data, status) {
+            console.log("Request failed " + status);
+        });
+        return deffered.promise;
+    };
+
+    UserObject.details = function () { return detailedUser; }
+    UserObject.data = function () { return data; };
+    UserObject.authentication = _authentication;
+    UserObject.fillAuthData = _fillAuthData;
+    return UserObject;
+}]);
+
+})();

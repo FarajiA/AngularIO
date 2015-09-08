@@ -1,0 +1,31 @@
+﻿<div class="row">
+    <alert type="{{alert.type}}" close="closeAlert()" ng-show="alertNeeded">{{alert.msg}}</alert>
+    <div class="zeroResults" ng-show="followers.length === 0">
+        <h2>No followers</h2>
+    </div>
+
+    <div id="followers" ng-show="followers.length > 0" lr-infinite-scroll="loadMore" scroll-threshold="600">        
+        <ul class="list list-group">
+            <li class="item list-group-item" ng-repeat=" follower in followers">
+                <a href="#" ng-click="UserDetails(follower.GUID)">
+                    <span class="user">{{follower.username}} - {{follower.firstname}} {{follower.lastname}}</span>
+                    <button class="btn btn-default" id="btnRequest_remove" ng-click="Unfollow(follower.GUID,follower.username, $index); $event.stopPropagation();" type="button"><span style="color:#d21445;" aria-hidden="true" class="glyphicon glyphicon-remove"></span></button>
+                </a>
+            </li>
+        </ul>         
+    </div>
+</div>
+
+<script type="text/ng-template" id="UnfollowModal.html">
+  <!--  <div style="text-align:center;" class="modal-header">
+        <h3 class="modal-title">Remove User</h3>
+    </div>
+  -->
+    <div class="modal-body">
+        <h1>Yeaa</h1>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+        <button class="btn btn-primary" ng-click="deleteUser()">Remove User</button>
+    </div>
+</script>
