@@ -47,7 +47,6 @@ app.run(function ($ionicPlatform, $ionicSideMenuDelegate, $rootScope, UserObject
             else {
                 $state.go('login')
             }
-
         });
 });
 
@@ -169,6 +168,7 @@ function RouteMethods($stateProvider, $urlRouterProvider, $ionicConfigProvider) 
                     return $ocLazyLoad.load({
                         name: 'search',
                         files: [
+                            'lib/lrInfiniteScroll.js',
                             'components/search/search.js'
                         ]
                     });
@@ -292,8 +292,6 @@ app.factory('UserObject',['$http', '$q', 'localStorageService', function ($http,
     };
 
     var _fillAuthData = function () {
-       // var stuff = this.data().GUID;
-       // var stuff2 = UserObject.data().GUID;
         var authData = localStorageService.get('authorizationData');
         if (authData) {
             _authentication.isAuth = true;

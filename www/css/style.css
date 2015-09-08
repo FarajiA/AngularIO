@@ -8,6 +8,7 @@
 /**** All results styling ***/
 .zeroResults {text-align: center;margin-top: 50px;}
 .zeroResults h2 {color:grey;}
+#result .ion-ios-arrow-thin-left { font-size: 40px; }
 
 /* global button styling */
 button.button-outline.button-full {border-right-width: thin; border-left-width: thin;}

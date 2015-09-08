@@ -9,26 +9,26 @@
 
     <ion-content has-header="true" padding="false">
         <div class="button-bar">
-            <a class="button" ng-class="{'active' : showBroadcasters }" ng-click="toggle()">Broadcasting</a>
-            <a class="button" ng-class="{'active' : !showBroadcasters }" ng-click="toggle()">Requests</a>
-        </div>
-        
+            <a class="button" ng-class="{'active' : showBroadcasters }" ng-click="showBroadcasters = true">Broadcasting <i class="icon ion-ios7-telephone-outline"><span class="badge badge-stable icon-badge">{{broadcastingNo}}</span></i></a>
+            <a class="button" ng-class="{'active' : !showBroadcasters }" ng-click="showBroadcasters = false">Requests <i class="icon ion-ios7-telephone-outline"><span class="badge badge-stable icon-badge">{{requestsNo}}</span></i></a>
+        </div>        
         <div id="result">
             <div id="activity" ng-show="showBroadcasters" class="broadcast">
                 <div class="zeroResults" ng-show="broadcasting.length === 0">
-                    <h2>Noone broadcasting</h2>
+                    <h2>no one broadcasting</h2>
                 </div>
                 <ion-list ng-show="broadcasting.length > 0">
                     <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="broadcast in broadcasting" type="item-text-wrap" href="#/main/activity/{{broadcast.GUID}}">
                         <img ng-src="img/default_avatar.png">
                         <h2>{{broadcast.username}}</h2>
                         <p>{{broadcast.firstname}}&nbsp;{{broadcast.lastname}}</p>
-                      </ion-item>
+                    </ion-item>
                 </ion-list>
+                <ion-infinite-scroll ng-if="!noMoBroadcasters" on-infinite="loadMoreBroadcasters()" distance="30%"></ion-infinite-scroll>
             </div>
             <div id="requests" ng-show="!showBroadcasters" class="requests">
                 <div class="zeroResults" ng-show="requests.length === 0">
-                    <h2>No requests</h2>
+                    <h2>no requests</h2>
                 </div>
                 <ion-list ng-show="requests.length > 0">
                     <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="request in requests" type="item-text-wrap" href="#/main/activity/{{request.GUID}}">
@@ -36,22 +36,16 @@
                         <h2>{{request.username}}</h2>
                         <p>{{request.firstname}}&nbsp;{{request.lastname}}</p>                       
                         <i class="icon ion-ios-arrow-thin-left icon-accessory"></i>
-                        <i class="icon ion-ios-arrow-thin-right icon-accessory"></i>
-                        <ion-option-button class="button-royal" ng-click="remove(request.GUID)">
+                        <ion-option-button class="button-royal" ng-click="decline(request.GUID)">
                              <i class="icon ion-close-circled"></i>                            
                         </ion-option-button>
-                        <ion-option-button class="button-balanced">
+                        <ion-option-button class="button-balanced" ng-click="accept(request.GUID)">
                             <i class="icon ion-checkmark-circled"></i>
-                            </ion-option-button>
+                        </ion-option-button>
                     </ion-item>
                 </ion-list>
+                <ion-infinite-scroll ng-if="!noMoRequests" on-infinite="loadMoreRequests()" distance="30%"></ion-infinite-scroll>
             </div>
-
-
-
-
         </div>
-
     </ion-content>
-
 </ion-view>

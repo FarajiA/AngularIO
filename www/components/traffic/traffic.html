@@ -9,13 +9,13 @@
 
     <ion-content has-header="true" padding="false">
         <div class="button-bar">
-            <a class="button" ng-class="{'active' : showChasers }" ng-click="toggle()">Chasers <i class="icon ion-ios7-telephone-outline"><span class="badge badge-stable icon-badge">{{chasersNo}}</span></i></a>
-            <a class="button" ng-class="{'active' : !showChasers }" ng-click="toggle()">Chasing <i class="icon ion-ios7-telephone-outline"><span class="badge badge-stable icon-badge">{{chasingNo}}</span></i></a>
+            <a class="button" ng-class="{'active' : showChasers }" ng-click="showChasers = true">Chasers <i class="icon ion-ios7-telephone-outline"><span class="badge badge-stable icon-badge">{{chasersNo}}</span></i></a>
+            <a class="button" ng-class="{'active' : !showChasers }" ng-click="showChasers = false">Chasing <i class="icon ion-ios7-telephone-outline"><span class="badge badge-stable icon-badge">{{chasingNo}}</span></i></a>
         </div>
         <div id="result">
             <div id="chasers" ng-show="showChasers" class="chasers">
                 <div class="zeroResults" ng-show="chasers.length === 0">
-                    <h2>no chasers</h2>
+                    <h2>no chasers homie</h2>
                 </div>
                 <ion-list ng-show="chasers.length > 0">
                     <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="chaser in chasers" type="item-text-wrap" href="#/main/traffic/{{chaser.GUID}}">
@@ -23,28 +23,27 @@
                         <h2>{{chaser.username}}</h2>
                         <p>{{chaser.firstname}}&nbsp;{{chaser.lastname}}</p>
                         <i class="icon ion-ios-arrow-thin-left icon-accessory"></i>
-                        <i class="icon ion-ios-arrow-thin-right icon-accessory"></i>
 
-                        <ion-option-button class="button-assertive" ng-click="remove(chaser.GUID)">
-                           <i class="icon ion-close-circled"></i>
+                        <ion-option-button class="button-royal" ng-click="remove(chaser.GUID)">
+                            <i class="icon ion-close-circled"></i>
                         </ion-option-button>
                     </ion-item>
                 </ion-list>
+                <ion-infinite-scroll ng-if="!noMoChasers" on-infinite="loadMoreChasers()" distance="30%"></ion-infinite-scroll>
             </div>
             <div id="chasing" ng-show="!showChasers" class="chasing">
                 <div class="zeroResults" ng-show="chasing.length === 0">
                     <h2>not chasing anyone</h2>
                 </div>
-                <ion-list ng-show="chasers.length > 0">
+                <ion-list ng-show="chasing.length > 0" lr-infinite-scroll="loadMoreChasing" scroll-threshold="600">
                     <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="chaser in chasing" type="item-text-wrap" href="#/main/traffic/{{chaser.GUID}}">
                         <img ng-src="img/default_avatar.png">
                         <h2>{{chaser.username}}</h2>
                         <p>{{chaser.firstname}}&nbsp;{{chaser.lastname}}</p>
-                        <!-- <i class="icon ion-chevron-right icon-accessory"></i> -->
                     </ion-item>
                 </ion-list>
+                <ion-infinite-scroll ng-if="!noMoChasing" on-infinite="loadMoreChasing()" distance="30%"></ion-infinite-scroll>
             </div>
-
         </div>
 </ion-content>  
 

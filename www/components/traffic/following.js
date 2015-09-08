@@ -6,7 +6,7 @@
        
         $scope.index = 0;
         Following.following($scope.index).then(function () {
-            $scope.following = Following.data();
+            $scope.following = Following.data().Results;
             $scope.index++;
         });
 

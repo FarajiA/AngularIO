@@ -12,7 +12,7 @@
 
         $scope.index = 0;        
         Followers.followers($scope.index).then(function () {
-            $scope.followers = Followers.data();
+            $scope.followers = Followers.data().Results;
             $scope.index++;
         });
 
