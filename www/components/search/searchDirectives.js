@@ -3,19 +3,22 @@
         return {
             restrict: 'A',
             link: function (scope, elem, attrs) {
-                    elem.bind('propertychange keyup paste', function () {
+                elem.bind('propertychange keyup paste', function () {
                         var value = elem.val();
                         var min = attrs.min;
                         if (value.length >= min) {
                             scope.$apply(function () {
-                                SearchService.results(value).then(function () {
-                                    var initialData = scope.searchresults;
-                                    scope.searchresults = SearchService.data();
+                                SearchService.results(value, scope.searchIndex.index).then(function () {
+                                    scope.searchCount.figure = SearchService.data().Total;
+                                    scope.searchresults.array = SearchService.data().Results;
+                                    scope.noMoSearch = (scope.searchCount.figure <= countSet);
+                                    scope.searchIndex.index++;
                                 });
                             });
                         }
                         else
                             scope.searchresults = {};
+
                     });
             }
         };

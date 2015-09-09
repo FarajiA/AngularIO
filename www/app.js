@@ -168,8 +168,9 @@ function RouteMethods($stateProvider, $urlRouterProvider, $ionicConfigProvider) 
                     return $ocLazyLoad.load({
                         name: 'search',
                         files: [
-                            'lib/lrInfiniteScroll.js',
-                            'components/search/search.js'
+                            'components/search/searchServices.js',
+                            'components/search/search.js',
+                            'components/search/searchDirectives.js',
                         ]
                     });
                 }],
@@ -269,7 +270,7 @@ function ocLazyLoadProvider($ocLazyLoadProvider) {
 }
     /************ Factory Services ***********/
     // Store and Process User data
-app.factory('UserObject',['$http', '$q', 'localStorageService', function ($http, $q, localStorageService) {
+app.factory('UserObject', ['$http', '$q', 'localStorageService', '$rootScope', function ($http, $q, localStorageService,$rootScope) {
     var data = [];
     var detailedUser = [];
     var UserObject = {};
@@ -280,7 +281,7 @@ app.factory('UserObject',['$http', '$q', 'localStorageService', function ($http,
         if (authData) {
             authObject.isAuth = true;
             authObject.guid = authData.chaserID;
-            authObject.userName = authData.chaseruser;
+            $rootScope.username = authObject.userName = authData.chaseruser;
             authObject.password = authData.chasrpsswd;
         }
         else {

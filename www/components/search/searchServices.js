@@ -3,11 +3,11 @@
         var data = [];
         var Search = {};
 
-        Search.results = function (query) {
+        Search.results = function (query, index) {
             var deffered = $q.defer();
             var guid = UserObject.data().GUID;
 
-            $http.get(baseURL + "api/search/" + query + "/0/" + guid)
+            $http.get(baseURL + "api/search/" + query + "/" + index + "/" + countSet + "/" + guid)
             .success(function (d) {
                 data = d;
                 deffered.resolve();
