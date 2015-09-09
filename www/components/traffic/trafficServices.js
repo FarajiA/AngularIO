@@ -37,7 +37,6 @@
             var deffered = $q.defer();
             $http.delete(baseURL + "api/chasing/" + guid + "/" + UserObject.data().GUID)
             .success(function (d) {
-                //data = d;
                 deffered.resolve(d);
             })
             .error(function (data, status) {

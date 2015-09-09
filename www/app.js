@@ -1,5 +1,32 @@
 var baseURL = "http://localhost:3536/";
 var countSet = 10;
+var activityConst = {
+    following: 'Following',
+    follow: 'Follow',
+    requested: 'Requested'
+}
+var updatedUserConst = {
+    successfulPassword: 'Password Updated!',
+    unsuccessfulPassword: 'Oops Password not updated!',
+    successfulUpdate: 'Account Updated!',
+    emailInUse: 'Email is already registered.',
+    unsuccessfulUpdate: 'Something went wrong. Try again!'
+}
+
+var deleteUserConst = {
+    removeUserTitle: 'Remove Chaser?',
+    successfullyDeleted: '0 is no longer following you.',
+    notsuccessfullyDeleted: 'Oops something fubbed!'
+}
+var requestConst = {
+    acceptRequest: 'Accept',
+    declineRequest: 'Decline',
+    acceptRequestMsg: 'Allow 0 to follow you?',
+    declineRequestMsg: "Reject 0's request?",
+    acceptRequestSuccess: '0 accepted',
+    declineRequestSuccess: '0 declined'
+}
+
 ; (function () {
 var app = angular.module('App', [
                 'oc.lazyLoad',
@@ -299,7 +326,6 @@ app.factory('UserObject', ['$http', '$q', 'localStorageService', '$rootScope', f
             _authentication.guid = authData.chaserID;
             _authentication.userName = authData.userName;           
         }
-
     };
 
     UserObject.login = function (user) {

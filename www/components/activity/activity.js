@@ -1,19 +1,19 @@
 ﻿; (function () {
     var app = angular.module('App');
-    app.controller('ActivityController', ['$scope', 'Activity', function ($scope, Activity) {
+    app.controller('ActivityController', ['$scope', 'Activity', '$ionicPopup', '$rootScope', function ($scope, Activity, $ionicPopup, $rootScope) {
 
         $scope.showBroadcasters = true;
 
         $scope.broadcastingIndex = 0;
         Activity.broadcasting($scope.broadcastingIndex).then(function () {
             $scope.broadcasting = Activity.broadcastData().Results;
-            $scope.broadcastingNo = Activity.broadcastData().Total;
-            $scope.noMoBroadcasters = ($scope.broadcastingNo <= countSet);
+            $rootScope.broadcastingNo = Activity.broadcastData().Total;
+            $scope.noMoBroadcasters = ($rootScope.broadcastingNo <= countSet);
             $scope.broadcastingIndex++;
         });
 
         $scope.loadMoreBroadcasters = function () {
-            var pagingMax = Math.ceil($scope.broadcastingNo / countSet, 1);
+            var pagingMax = Math.ceil($rootScope.broadcastingNo / countSet, 1);
             if ($scope.broadcastingIndex < pagingMax && $scope.broadcastingIndex > 0) {
                 Activity.broadcasting($scope.broadcastingIndex).then(function (data) {
                     var merged = data.Results.concat($scope.broadcasting);
@@ -31,13 +31,13 @@
         $scope.requestIndex = 0;
         Activity.request($scope.requestIndex).then(function () {
             $scope.requests = Activity.requestData().Results;
-            $scope.requestsNo = Activity.requestData().Total;
-            $scope.noMoRequests = ($scope.requestsNo <= countSet);
+            $rootScope.requestsNo = Activity.requestData().Total;
+            $scope.noMoRequests = ($rootScope.requestsNo <= countSet);
             $scope.requestIndex++;
         });
 
         $scope.loadMoreRequests = function () {
-            var pagingMax = Math.ceil($scope.requestsNo / countSet, 1);
+            var pagingMax = Math.ceil($rootScope.requestsNo / countSet, 1);
             if ($scope.requestIndex < pagingMax && $scope.requestIndex > 0) {
                 Activity.request($scope.requestIndex).then(function (data) {
                     var merged = data.Results.concat($scope.requests);
@@ -51,23 +51,41 @@
             $scope.$broadcast('scroll.infiniteScrollComplete');
         };
 
-
-        $scope.accept = function (guid) {
-            console.log("Accept: " + guid);
-            /*
-            Activity.requestAccept(guid).then(function () {
-                $scope.accepted = Activity.data();
-            });
-            */
-        };
-
-        $scope.decline = function (guid) {
-            console.log("Decline: " + guid);
-            /*
-            Activity.requestDecline(guid).then(function () {
-                $scope.declined = Activity.data();
-            });
-            */
+        $scope.decision = function (guid, username, accept, index) {
+            $scope.requestUsername = username;
+            if (accept) {
+                $scope.userRequest = requestConst.acceptRequestMsg.replace(/0/gi, $scope.requestUsername);
+                var confirmPopup = $ionicPopup.confirm({
+                    title: $scope.userRequest,
+                    template: ''
+                });
+                confirmPopup.then(function (res) {
+                    if (res) {
+                        Actitity.requestAccept(guid).then(function (response) {
+                            var successful = Activity.data();
+                            $scope.requests.splice(index, 1);
+                            $rootScope.chasersNo = ($rootScope.chasersNo + 1);
+                            $rootScope.requestsNo = ($rootScope.requestsNo - 1);
+                        });
+                    }
+                });
+            }
+            else {
+                $scope.userRequest = requestConst.declineRequestMsg.replace(/0/gi, $scope.requestUsername);
+                var confirmPopup = $ionicPopup.confirm({
+                    title: $scope.userRequest,
+                    template: ''
+                });
+                confirmPopup.then(function (res) {
+                    if (res) {
+                        Actitity.requestDecline(guid).then(function (response) {
+                            var successful = Activity.data();
+                            $scope.requests.splice(index, 1);
+                            $rootScope.requestsNo = ($rootScope.requestsNo - 1);
+                        });
+                    }
+                });
+            }
         };
 
 

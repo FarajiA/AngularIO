@@ -1,12 +1,12 @@
 ﻿; (function () {
     var app = angular.module('App');
-    app.controller('TrafficController', ['$scope', 'UserObject', 'Traffic', function ($scope, UserObject, Traffic) {
+    app.controller('TrafficController', ['$scope', 'Traffic', '$ionicPopup', '$rootScope', function ($scope, Traffic, $ionicPopup, $rootScope) {
         $scope.showChasers = true;
 
         $scope.chasersindex = 0;
         Traffic.chasers($scope.chasersindex).then(function (data) {
             $scope.chasers = data.Results;
-            $scope.chasersNo = data.Total;
+            $rootScope.chasersNo = data.Total;
             $scope.noMoChasers = ($scope.chasersNo <= countSet);
             $scope.chasersindex++;
         });
@@ -29,7 +29,7 @@
         $scope.chasingindex = 0;
         Traffic.chasing($scope.chasingindex).then(function (data) {
             $scope.chasing = data.Results;
-            $scope.chasingNo = data.Total;
+            $rootScope.chasingNo = data.Total;
             $scope.noMoChasing = ($scope.chasingNo <= countSet);
             $scope.chasingindex++;
         });
@@ -49,8 +49,20 @@
             $scope.$broadcast('scroll.infiniteScrollComplete');
         };
 
-        $scope.remove = function (guid) {
-            console.log("Remove: " + guid);
+        $scope.remove = function (guid,username,index) {
+            var confirmPopup = $ionicPopup.confirm({
+                title: deleteUserConst.removeUserTitle,
+                template: ''
+            });
+            confirmPopup.then(function (res) {
+                if (res) {
+                    Traffic.unfollow(guid).then(function (response) {
+                        var successful = response;
+                        $scope.chasers.splice(index, 1);
+                        $scope.chasersNo = ($scope.chasersNo - 1);
+                    });
+                } 
+            });
         };
 
     }]);

@@ -24,7 +24,7 @@
                         <p>{{chaser.firstname}}&nbsp;{{chaser.lastname}}</p>
                         <i class="icon ion-ios-arrow-thin-left icon-accessory"></i>
 
-                        <ion-option-button class="button-royal" ng-click="remove(chaser.GUID)">
+                        <ion-option-button class="button-royal" ng-click="remove(chaser.GUID, chaser.username, $index)">
                             <i class="icon ion-close-circled"></i>
                         </ion-option-button>
                     </ion-item>

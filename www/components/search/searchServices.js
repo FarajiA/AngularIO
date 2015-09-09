@@ -10,7 +10,7 @@
             $http.get(baseURL + "api/search/" + query + "/" + index + "/" + countSet + "/" + guid)
             .success(function (d) {
                 data = d;
-                deffered.resolve();
+                deffered.resolve(d);
             })
             .error(function (data, status) {
                 console.log("Request failed " + status);

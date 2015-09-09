@@ -36,10 +36,10 @@
                         <h2>{{request.username}}</h2>
                         <p>{{request.firstname}}&nbsp;{{request.lastname}}</p>                       
                         <i class="icon ion-ios-arrow-thin-left icon-accessory"></i>
-                        <ion-option-button class="button-royal" ng-click="decline(request.GUID)">
-                             <i class="icon ion-close-circled"></i>                            
+                        <ion-option-button class="button-royal" ng-click="decision(request.GUID, request.username, false, $index)">
+                            <i class="icon ion-close-circled"></i>
                         </ion-option-button>
-                        <ion-option-button class="button-balanced" ng-click="accept(request.GUID)">
+                        <ion-option-button class="button-balanced" ng-click="decision(request.GUID, request.username, true, $index)">
                             <i class="icon ion-checkmark-circled"></i>
                         </ion-option-button>
                     </ion-item>

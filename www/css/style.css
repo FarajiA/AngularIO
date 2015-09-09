@@ -1,16 +1,10 @@
-/*  Login Page  */
-.LoginWrapper{margin-top:33%}
-.LoginWrapper .logo {text-align: center;}
-.LoginWrapper p.register {text-align: center;font-size: 15px;}
-/*  Register Page */
-.registerForm label.has-error {border-left: 5px solid rgb(204, 37, 17);}
-
 /**** All results styling ***/
 .zeroResults {text-align: center;margin-top: 50px;}
 .zeroResults h2 {color:grey;}
 #result .ion-ios-arrow-thin-left { font-size: 40px; }
-
-/* global button styling */
+/*******  prompt styling  ******/
+.button.button-positive { background-color:#886aea; border-color: #6b46e5; }
+/***** global button styling *******/
 button.button-outline.button-full {border-right-width: thin; border-left-width: thin;}
 .button-bar .button {background-color: #FFF2EE;}
 .button-bar .button.active {background-color: #E1D6D2;}
@@ -42,3 +36,9 @@ label.item-input { height: 60px;}
     color:#fff;
     margin-bottom: 0;
 }
+/*  Login Page  */
+.LoginWrapper{margin-top:33%}
+.LoginWrapper .logo {text-align: center;}
+.LoginWrapper p.register {text-align: center;font-size: 15px;}
+/*  Register Page */
+.registerForm label.has-error {border-left: 5px solid rgb(204, 37, 17);}
