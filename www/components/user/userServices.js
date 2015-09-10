@@ -1,5 +1,5 @@
 ﻿; (function () {
-    angular.module('main').factory('Decision', function ($http, $q, UserObject) {
+    angular.module('App').factory('Decision', function ($http, $q, UserObject) {
     var data = [];
     var Decision = {};
 

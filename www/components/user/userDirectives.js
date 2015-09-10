@@ -1,7 +1,8 @@
 ﻿; (function () {
-    angular.module('main').directive('userChoice', ['UserObject', 'Decision', '$rootScope', function (UserObject, Decision, $rootScope) {
+    angular.module('App').directive('userChoice', ['UserObject', 'Decision', '$rootScope', function (UserObject, Decision, $rootScope) {
         return {
             restrict: 'A',
+            require:'?ngModel',
             link: function (scope, elem, attrs, ctrl) {
 
                 var UserRequest = function () {
@@ -25,7 +26,7 @@
                                     scope.isFollowing = activityConst.following;
                                     UserObject.details().isChasing = true;
                                     scope.noChasers++;
-                                    $rootScope.followingNo++;
+                                    //$rootScope.followingNo++;
                                     scope.notChasing = false;
                                     scope.yesChasing = true;
                                 }
@@ -41,7 +42,7 @@
                                 scope.isFollowing = activityConst.follow;
                                 UserObject.details().isChasing = false;
                                 scope.noChasers--;
-                                $rootScope.followingNo--;
+                                //$rootScope.followingNo--;
                                 scope.notChasing = true;
                                 scope.yesChasing = false;
                             }
@@ -49,17 +50,24 @@
                     });
                 };
 
-                switch (UserObject.details().isChasing) {
-                    case 0:
-                        elem.attr('data-chasing', false);
-                        break;
-                    case 1:
-                        elem.attr('data-chasing', true);
-                        break;
-                    case 2:
-                        elem.attr('data-chasing', "requested").attr("disabled", "disabled");
-                        break;
-                }
+                scope.$watch(attrs.ngModel, function (newValue, oldValue) {
+                    if (newValue) {
+                        switch (newValue) {
+                            case 0:
+                                elem.attr('data-chasing', false);
+                                scope.isFollowing = activityConst.follow;
+                                break;
+                            case 1:
+                                elem.attr('data-chasing', true);
+                                scope.isFollowing = activityConst.following;
+                                break;
+                            case 2:
+                                elem.attr('data-chasing', "requested").attr("disabled", "disabled");
+                                scope.isFollowing = activityConst.requested;
+                                break;
+                        }
+                    }
+                });
 
                 elem.on('click', function (e) {
                     if (UserObject.details().isprivate && UserObject.details().isChasing == 0) 

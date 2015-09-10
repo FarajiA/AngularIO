@@ -1,25 +1,25 @@
 ﻿; (function () {
     var app = angular.module('App');
-    app.controller('TrafficController', ['$scope', 'Traffic', '$ionicPopup', '$rootScope', function ($scope, Traffic, $ionicPopup, $rootScope) {
+    app.controller('TrafficController', ['$scope', 'Traffic', '$ionicPopup', function ($scope, Traffic, $ionicPopup) {
         $scope.showChasers = true;
 
         $scope.$on('update_Chasers', function (event, args) {
             //$scope.message = 'ONE: ' + args.action;
             if (args.action === "add")
-                chaserInit();
+                  chasersInit();
         });
 
-        var chaserInit = function () {
+        var chasersInit = function () {
             $scope.chasersindex = 0;
             Traffic.chasers($scope.chasersindex).then(function (data) {
                 $scope.chasers = data.Results;
-                $rootScope.chasersNo = data.Total;
+                $scope.chasersNo = data.Total;
                 $scope.noMoChasers = ($scope.chasersNo <= countSet);
                 $scope.chasersindex++;
             });
         };
 
-        chaserInit();
+        chasersInit();
 
         $scope.loadMoreChasers = function () {
             var pagingMax = Math.ceil($scope.chasersNo / countSet, 1);
@@ -35,14 +35,18 @@
 
             $scope.$broadcast('scroll.infiniteScrollComplete');
         };
+        
+        var chasingInit = function () {
+            $scope.chasingindex = 0;
+            Traffic.chasing($scope.chasingindex).then(function (data) {
+                $scope.chasing = data.Results;
+                $scope.chasingNo = data.Total;
+                $scope.noMoChasing = ($scope.chasingNo <= countSet);
+                $scope.chasingindex++;
+            });
+        }
 
-        $scope.chasingindex = 0;
-        Traffic.chasing($scope.chasingindex).then(function (data) {
-            $scope.chasing = data.Results;
-            $rootScope.chasingNo = data.Total;
-            $scope.noMoChasing = ($scope.chasingNo <= countSet);
-            $scope.chasingindex++;
-        });
+        chasingInit();
 
         $scope.loadMoreChasing = function () {
             var pagingMax = Math.ceil($scope.chasingNo / countSet, 1);

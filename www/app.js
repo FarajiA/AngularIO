@@ -35,8 +35,7 @@ var app = angular.module('App', [
 ]);
 
 app.run(function ($ionicPlatform, $ionicSideMenuDelegate, $rootScope, UserObject, $state, $q) {
-    //var deffered = $q.defer();
-
+   
     $ionicPlatform.ready(function () {
             if(window.cordova && window.cordova.plugins.Keyboard) {
                 cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
@@ -45,15 +44,14 @@ app.run(function ($ionicPlatform, $ionicSideMenuDelegate, $rootScope, UserObject
                 StatusBar.styleDefault();
             }
     });
-
-
+    
     $rootScope.$on('emit_Chasers', function (event, args) {
         $rootScope.$broadcast('update_Chasers', args);
     });
 
-        UserObject.fillAuthData();
+    UserObject.fillAuthData();
 
-        $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
+    $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
             var authdata = UserObject.authentication();
             var auth = authdata.isAuth;
             var guid = authdata.guid;
@@ -79,7 +77,7 @@ app.run(function ($ionicPlatform, $ionicSideMenuDelegate, $rootScope, UserObject
             else {
                 $state.go('login')
             }
-        });
+      });
 });
 
 app.config(RouteMethods, ocLazyLoadProvider);
@@ -145,7 +143,7 @@ function RouteMethods($stateProvider, $urlRouterProvider, $ionicConfigProvider) 
         .state('main.traffic-detail', {
             url: '/traffic/:userId',
             views: {
-                'main-trafficDetails': {
+                'main-traffic': {
                     templateUrl: 'components/user/user.html',
                     controller: 'UserController'
                 }
@@ -155,7 +153,9 @@ function RouteMethods($stateProvider, $urlRouterProvider, $ionicConfigProvider) 
                     return $ocLazyLoad.load({
                         name: 'trafficDetails',
                         files: [
-                            'components/user/user.js'
+                            'components/user/userServices.js',
+                            'components/user/user.js',
+                            'components/user/userDirectives.js',
                         ]
                     });
                 }],
@@ -398,29 +398,17 @@ app.factory('UserObject', ['$http', '$q', 'localStorageService', '$rootScope', f
         });
         return deffered.promise;
     };
-
-    UserObject.broadcastItem = function () {
-        $rootScope.$broadcast('handleBroadcast');
-    };
-
-    UserObject.prepForBroadcast = function (msg) {
-        this.message = msg;
-        this.broadcastItem();
-    };
-
+    
     UserObject.details = function () { return detailedUser; }
     UserObject.data = function () { return data; };
     UserObject.authentication = _authentication;
     UserObject.fillAuthData = _fillAuthData;
     return UserObject;
 }]);
-
-
+    
 
 /************ init ****************/
-app.controller('initController', ['$scope', 'Traffic', '$rootScope', function ($scope, Traffic, $rootScope) {
-
-   
+app.controller('initController', ['$scope', 'UserObject', '$rootScope', function ($scope, UserObject, $rootScope) {
 
 
 }]);

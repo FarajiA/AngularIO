@@ -1,10 +1,25 @@
-﻿ <ion-view>
+﻿<ion-view>
 
-    <ion-content has-header="true" padding="true">
-        <h1>User Details</h1>
+<ion-content has-header="true" padding="true">
+    <div class="row userInfo">
+        <div class="col col-33">
+            <img ng-src="img/default_avatar.png" /><br />
+            <h2>{{username}}</h2>
+        </div>
+        <div class="col">
+            <div class="button-bar">
+                <a class="button"><span>{{noChasers}}</span>Chasers</a>
+                <a class="button"><span>{{noChasing}}</span>Chasing</a>
+            </div>
+            <button user-choice ng-model="symbol" class="button button-block icon" ng-class="{'ion-star':symbol == 0 || symbol == 1 ,'ion-paper-airplane':symbol == 2 }">
+                {{isFollowing}}
+            </button>
+        </div>
+    </div>
+    <div class="row">
 
-
-    </ion-content>
+    </div>
+</ion-content>
 
 </ion-view>
 
