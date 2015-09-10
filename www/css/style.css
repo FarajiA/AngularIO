@@ -3,7 +3,9 @@
 .zeroResults h2 {color:grey;}
 #result .ion-ios-arrow-thin-left { font-size: 40px; }
 /*******  prompt styling  ******/
-.button.button-positive { background-color:#886aea; border-color: #6b46e5; }
+.button.button-positive { background-color:#FFF2EE; color:#444; border-color: #b2b2b2; }
+.button.button-positive:hover {color: #000;}
+.button.button-positive.active, .button.button-positive.activated { border-color: #b2b2b2; background-color: #E1D6D2; }
 /***** global button styling *******/
 button.button-outline.button-full {border-right-width: thin; border-left-width: thin;}
 .button-bar .button {background-color: #FFF2EE;}

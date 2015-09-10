@@ -3,13 +3,23 @@
     app.controller('TrafficController', ['$scope', 'Traffic', '$ionicPopup', '$rootScope', function ($scope, Traffic, $ionicPopup, $rootScope) {
         $scope.showChasers = true;
 
-        $scope.chasersindex = 0;
-        Traffic.chasers($scope.chasersindex).then(function (data) {
-            $scope.chasers = data.Results;
-            $rootScope.chasersNo = data.Total;
-            $scope.noMoChasers = ($scope.chasersNo <= countSet);
-            $scope.chasersindex++;
+        $scope.$on('update_Chasers', function (event, args) {
+            //$scope.message = 'ONE: ' + args.action;
+            if (args.action === "add")
+                chaserInit();
         });
+
+        var chaserInit = function () {
+            $scope.chasersindex = 0;
+            Traffic.chasers($scope.chasersindex).then(function (data) {
+                $scope.chasers = data.Results;
+                $rootScope.chasersNo = data.Total;
+                $scope.noMoChasers = ($scope.chasersNo <= countSet);
+                $scope.chasersindex++;
+            });
+        };
+
+        chaserInit();
 
         $scope.loadMoreChasers = function () {
             var pagingMax = Math.ceil($scope.chasersNo / countSet, 1);

@@ -1,6 +1,9 @@
 ﻿; (function () {
     angular.module('App').controller('UserController', ['$scope', 'UserObject', '$rootScope', 'Decision', function ($scope, UserObject, $rootScope, Decision) {
         
+        $stateParams.userId
+
+        /*
         $scope.username = UserObject.details().username;
         $scope.firstname = UserObject.details().firstname;
         $scope.lastname = UserObject.details().lastname;
@@ -22,6 +25,7 @@
                 $scope.isFollowing = activityConst.requested;
                 break;
         }
+        */
 
         $scope.userfollowers = function () {
             $location.path("/user/" + $scope.username + "/followers");

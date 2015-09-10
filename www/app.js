@@ -15,13 +15,13 @@ var updatedUserConst = {
 
 var deleteUserConst = {
     removeUserTitle: 'Remove Chaser?',
-    successfullyDeleted: '0 is no longer following you.',
+    successfullyDeleted: '0 is no longer chasing you.',
     notsuccessfullyDeleted: 'Oops something fubbed!'
 }
 var requestConst = {
     acceptRequest: 'Accept',
     declineRequest: 'Decline',
-    acceptRequestMsg: 'Allow 0 to follow you?',
+    acceptRequestMsg: 'Allow 0 to chase you?',
     declineRequestMsg: "Reject 0's request?",
     acceptRequestSuccess: '0 accepted',
     declineRequestSuccess: '0 declined'
@@ -44,7 +44,12 @@ app.run(function ($ionicPlatform, $ionicSideMenuDelegate, $rootScope, UserObject
             if(window.StatusBar) {
                 StatusBar.styleDefault();
             }
-        });
+    });
+
+
+    $rootScope.$on('emit_Chasers', function (event, args) {
+        $rootScope.$broadcast('update_Chasers', args);
+    });
 
         UserObject.fillAuthData();
 
@@ -394,11 +399,31 @@ app.factory('UserObject', ['$http', '$q', 'localStorageService', '$rootScope', f
         return deffered.promise;
     };
 
+    UserObject.broadcastItem = function () {
+        $rootScope.$broadcast('handleBroadcast');
+    };
+
+    UserObject.prepForBroadcast = function (msg) {
+        this.message = msg;
+        this.broadcastItem();
+    };
+
     UserObject.details = function () { return detailedUser; }
     UserObject.data = function () { return data; };
     UserObject.authentication = _authentication;
     UserObject.fillAuthData = _fillAuthData;
     return UserObject;
 }]);
+
+
+
+/************ init ****************/
+app.controller('initController', ['$scope', 'Traffic', '$rootScope', function ($scope, Traffic, $rootScope) {
+
+   
+
+
+}]);
+
 
 })();

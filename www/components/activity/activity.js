@@ -61,11 +61,12 @@
                 });
                 confirmPopup.then(function (res) {
                     if (res) {
-                        Actitity.requestAccept(guid).then(function (response) {
+                        Activity.requestAccept(guid).then(function (response) {
                             var successful = Activity.data();
                             $scope.requests.splice(index, 1);
                             $rootScope.chasersNo = ($rootScope.chasersNo + 1);
                             $rootScope.requestsNo = ($rootScope.requestsNo - 1);
+                            $scope.$emit('emit_Chasers', { action: "add" });
                         });
                     }
                 });
@@ -78,7 +79,7 @@
                 });
                 confirmPopup.then(function (res) {
                     if (res) {
-                        Actitity.requestDecline(guid).then(function (response) {
+                        Activity.requestDecline(guid).then(function (response) {
                             var successful = Activity.data();
                             $scope.requests.splice(index, 1);
                             $rootScope.requestsNo = ($rootScope.requestsNo - 1);
