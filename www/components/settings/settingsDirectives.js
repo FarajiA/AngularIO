@@ -1,5 +1,5 @@
 ﻿; (function () {
-    angular.module('main').directive('pwudpateCheck', [function () {
+    angular.module('App').directive('pwudpateCheck', [function () {
         return {
             restrict: 'A',
             require: 'ngModel',
@@ -14,7 +14,7 @@
         }
     }]);
 
-    angular.module('main').directive('usernameupdateValidate', ['Settings', function (Settings) {
+    angular.module('App').directive('usernameupdateValidate', ['Settings', function (Settings) {
         return {
             restrict: 'A',
             require: 'ngModel',
@@ -32,8 +32,41 @@
             }
         }
     }]);
+    /*
+    angular.module('App').directive('usernameValidate', ['Registration', function (Registration) {
+        return {
+            restrict: 'A',
+            require: 'ngModel',
+            link: function (scope, elem, attrs, ctrl) {
+                var me = attrs.ngModel;
+                //var min = attrs.ngMinlength;                
+                scope.$watch(me, function (value) {
+                    var theexpression = attrs.usernameValidate;
+                    var flags = attrs.regexValidateFlags || '';
 
-    angular.module('main').directive('emailupdateValidate', ['Settings', '$timeout', function (Settings, $timeout) {
+                    if (value) {
+                        var regex = new RegExp(theexpression, flags);
+                        var valid = regex.test(value);
+                        ctrl.$setValidity('charactersvalid', valid);
+                        if (valid) {
+                            Registration.usernameCheck(value).then(function () {
+                                var isValid = !Registration.data();
+                                ctrl.$setValidity('usernamevalid', isValid);
+                            });
+                        }
+                        else
+                            ctrl.$setValidity('usernamevalid', true)
+                    }
+                    else {
+                        ctrl.$setValidity('usernamevalid', true);
+                        ctrl.$setValidity('charactersvalid', true);
+                    }
+                });
+            }
+        }
+    }])
+    */
+    angular.module('App').directive('emailupdateValidate', ['Settings', '$timeout', function (Settings, $timeout) {
         return {
             restrict: 'A',
             require: 'ngModel',
@@ -65,5 +98,6 @@
             }
         }
     }]);
+
 
 })();

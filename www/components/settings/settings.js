@@ -1,14 +1,60 @@
 ﻿; (function () {
         var app = angular.module('App');
-        app.controller('SettingsController', ['$scope', '$location', '$ionicHistory', function ($scope, $location, $ionicHistory) {
-            // reusable authorization
+        app.controller('SettingsController', ['$scope', '$ionicPopup', 'UserObject', 'Settings', function ($scope, $ionicPopup, UserObject, Settings) {
+            
+            $scope.user = UserObject.data();
+            
+            $scope.updatePassword = function () {
+                $scope.data = {}
 
-            console.log("Enter settings controller");
+                // An elaborate, custom popup
+                var myPopup = $ionicPopup.show({
+                    templateUrl: 'components/settings/password-modal.html',
+                    title: 'Update Password',
+                    scope: $scope,
+                    buttons: [
+                      { text: 'Cancel' },
+                      {
+                          text: '<b>Save</b>',
+                          type: 'button-positive',
+                          onTap: function(e) {
+                              if (!$scope.data.oldpassword) {
+                                  //don't allow the user to close unless he enters wifi password
+                                  e.preventDefault();
+                              } else {
+                                  return $scope.data.wifi;
+                              }
+                          }
+                      }
+                    ]
+                });
+                myPopup.then(function(res) {
+                    console.log('Tapped!', res);
+                });
+                /*
+                $timeout(function () {
+                    myPopup.close(); //close the popup after 3 seconds for some reason
+                }, 3000);
+                */
+            };
 
-            $scope.back = function() {
-                $ionicHistory.goBack();
-            }
-
+            $scope.settingsSubmit = function (user) {
+                // check to make sure the form is completely valid
+              /*  if ($scope.settingsForm.$valid) {
+                    Settings.register(user).then(function () {
+                        $scope.user = UserObject.data();
+                        if ($scope.user.GUID) {
+                            $rootScope.username = $scope.user.username;
+                            $location.path("/dash");
+                        }
+                        else {
+                            $scope.user = "";
+                            $scope.alertNeeded = true;
+                        }
+                    });
+                }
+                */
+            };
         }]);
 
     /*

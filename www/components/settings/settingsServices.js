@@ -1,5 +1,5 @@
 ﻿; (function () {
-    angular.module('main').factory("Settings", function ($http, $q, UserObject) {
+    angular.module('App').factory("Settings", function ($http, $q, UserObject) {
         // defines a service used to populate initial data. Also persists value changes between pages.
         var data;
         var passwordUpdated = false;
