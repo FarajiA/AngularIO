@@ -1,18 +1,4 @@
 ﻿; (function () {
-    angular.module('App').directive('pwudpateCheck', [function () {
-        return {
-            restrict: 'A',
-            require: 'ngModel',
-            link: function (scope, elem, attrs, ctrl) {
-                var me = attrs.ngModel;
-                var matchTo = attrs.pwudpateCheck;
-
-                scope.$watchGroup([me, matchTo], function (value) {
-                    ctrl.$setValidity('pwmatch', value[0] === value[1]);
-                });
-            }
-        }
-    }]);
 
     angular.module('App').directive('usernameupdateValidate', ['Settings', function (Settings) {
         return {
@@ -32,6 +18,71 @@
             }
         }
     }]);
+
+    angular.module('App').directive('ogpasswordCheck', [function () {
+        return {
+            restrict: 'A',
+            link: function (scope, elem, attrs, ctrl) {
+                var me = attrs.ngModel;
+                var watchModel = attrs.ogpasswordCheck;
+
+                elem.bind('keyup', function () {
+                    scope.$apply(function () {
+                        scope.oldpasswordInvalid = false;
+                    });
+                });
+                /* scope.$watch(scope.oldpasswordInvalid, function (newValue, oldValue) {
+                    if (newValue) {
+
+                    }
+                });
+               */
+            }
+        }
+    }]);
+
+    angular.module('App').directive('pwupdateCheck', [function () {
+        return {
+            restrict: 'A',
+            require: 'ngModel',
+            link: function (scope, elem, attrs, ctrl) {
+                var me = attrs.ngModel;
+                var matchTo = attrs.pwupdateCheck;
+
+                scope.$watchGroup([me, matchTo], function (value) {
+                    ctrl.$setValidity('pwmatch', value[0] === value[1]);
+                });
+            }
+        }
+    }]);
+
+    angular.module('App').directive('pwValidate', [function () {
+        return {
+            restrict: 'A',
+            require: 'ngModel',
+            link: function (scope, elem, attrs, ctrl) {
+                var me = attrs.ngModel;
+                elem.bind('focusin', function () {
+                    ctrl.$setValidity('passwordvalid', true);
+                });
+
+                elem.bind('blur', function () {
+                    var value = elem.val();
+                    var theexpression = attrs.pwValidate;
+                    var flags = attrs.regexValidateFlags || '';
+                    if (value) {
+                        var regex = new RegExp(theexpression, flags);
+                        var valid = regex.test(value);
+                        ctrl.$setValidity('passwordvalid', valid);
+                    }
+                    else
+                        ctrl.$setValidity('passwordvalid', true);
+                });
+            }
+        }
+    }])
+
+
     /*
     angular.module('App').directive('usernameValidate', ['Registration', function (Registration) {
         return {

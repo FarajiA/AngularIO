@@ -1,5 +1,5 @@
 ﻿; (function () {
-    angular.module('App').factory("Settings", function ($http, $q, UserObject) {
+    angular.module('App').factory("Settings", ['$http','$q','localStorageService','UserObject', function ($http, $q, localStorageService, UserObject) {
         // defines a service used to populate initial data. Also persists value changes between pages.
         var data;
         var passwordUpdated = false;
@@ -9,7 +9,7 @@
 
         User.updateUser = function (user) {
             var deffered = $q.defer();
-            var msg = { "guid": user.GUID, "firstName": user.firstname, "lastName": user.lastname, "username": user.username, "emailAddress": user.email, "private": user.private };
+            var msg = { "guid": user.GUID, "firstName": user.firstname, "lastName": user.lastname, "username": user.username, "emailAddress": user.email, "private": user.isprivate };
             $http.put(baseURL + "api/user", msg)
             .success(function (d) {
                 data = d;
@@ -21,14 +21,21 @@
             return deffered.promise;
         }
 
+        User.passwordValid = function (password) {
+            var authData = localStorageService.get('authorizationData');
+            return password != authData.chasrpsswd;
+        }
+
         User.updatePassword = function (password) {
             var deffered = $q.defer();
             var guid = UserObject.data().GUID;
+            var authData = localStorageService.get('authorizationData');
             passwordUpdated = false;
             var msg = { "guid": guid, "password": password };
             $http.post(baseURL + "api/update_password", msg)
             .success(function (d) {
                 passwordUpdated = d;
+                localStorageService.set('authorizationData', { chasrpsswd: user.password });
                 deffered.resolve();
             })
             .error(function (data, status) {
@@ -75,6 +82,6 @@
         User.successfulUsername = function () { return usernameValid; }
 
         return User;
-    });
+    }]);
 
 })();

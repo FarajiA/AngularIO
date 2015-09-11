@@ -59,3 +59,5 @@ label.item-input { height: 60px;}
 
 /* Settings Page  */
 form .password {margin: 30px 0 15px;text-align: center;}
+form .private .item {border-left:0;border-right:0;border-bottom:0;font-weight:bold}
+.passwordPopup .popup {min-width: 33%;width: 350px;}

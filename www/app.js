@@ -221,6 +221,8 @@ function RouteMethods($stateProvider, $urlRouterProvider, $ionicConfigProvider) 
                   name: 'settings',
                   files: [
                       'lib/angular-messages.js',
+                      'components/settings/settingsServices.js',
+                      'components/settings/settingsDirectives.js',
                       'components/settings/settings.js'
                   ]
               });

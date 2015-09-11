@@ -1,37 +1,58 @@
 ﻿; (function () {
         var app = angular.module('App');
-        app.controller('SettingsController', ['$scope', '$ionicPopup', 'UserObject', 'Settings', function ($scope, $ionicPopup, UserObject, Settings) {
+        app.controller('SettingsController', ['$scope', '$ionicPopup', '$timeout', 'UserObject', 'Settings', function ($scope, $ionicPopup, $timeout, UserObject, Settings) {
             
-            $scope.user = UserObject.data();
-            
-            $scope.updatePassword = function () {
-                $scope.data = {}
+            $scope.user = UserObject.data();  
+            $scope.oldpasswordInvalid = false;
 
+            $scope.updatePassword = function () {
+                //$scope.oldpasswordInvalid = true;
+                $scope.data = {}
+                $scope.form = {
+                    passwordForm: {}
+                };          
                 // An elaborate, custom popup
                 var myPopup = $ionicPopup.show({
                     templateUrl: 'components/settings/password-modal.html',
+                    cssClass: 'passwordPopup',
                     title: 'Update Password',
                     scope: $scope,
                     buttons: [
                       { text: 'Cancel' },
                       {
-                          text: '<b>Save</b>',
+                          text: '<b>Update</b>',
                           type: 'button-positive',
-                          onTap: function(e) {
-                              if (!$scope.data.oldpassword) {
-                                  //don't allow the user to close unless he enters wifi password
-                                  e.preventDefault();
-                              } else {
-                                  return $scope.data.wifi;
+                          onTap: function (e) {
+                              var passwordWrong = $timeout(function () {                               
+                                  $scope.oldpasswordInvalid = notValid;
+                              });
+                              
+                              var notValid = Settings.passwordValid($scope.data.oldpassword);
+                             if ($scope.form.passwordForm.$valid) {
+                                  if (!notValid) {
+                                      Settings.updatePassword($scope.data.confirmpassword).then(function () {
+                                          var successful = Settings.successfulPassword();
+                                          if (successful > 0)
+                                                myPopup.close();
+                                      });
+                                  }
+                                  else {
+                                      e.preventDefault();
+                                     $scope.oldpasswordInvalid = true;
                               }
+                                 
+                              } else {
+                                  e.preventDefault();
+                             }                                
+                              
                           }
                       }
                     ]
-                });
+                });/*  
                 myPopup.then(function(res) {
                     console.log('Tapped!', res);
                 });
-                /*
+              
                 $timeout(function () {
                     myPopup.close(); //close the popup after 3 seconds for some reason
                 }, 3000);
