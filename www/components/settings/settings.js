@@ -6,7 +6,6 @@
             $scope.oldpasswordInvalid = false;
 
             $scope.updatePassword = function () {
-                //$scope.oldpasswordInvalid = true;
                 $scope.data = {}
                 $scope.form = {
                     passwordForm: {}
@@ -23,25 +22,19 @@
                           text: '<b>Update</b>',
                           type: 'button-positive',
                           onTap: function (e) {
-                              var passwordWrong = $timeout(function () {                               
-                                  $scope.oldpasswordInvalid = notValid;
-                              });
-                              
-                              var notValid = Settings.passwordValid($scope.data.oldpassword);
+                             var valid = Settings.passwordValid($scope.data.oldpassword);
                              if ($scope.form.passwordForm.$valid) {
-                                  if (!notValid) {
+                                 if (valid) {
                                       Settings.updatePassword($scope.data.confirmpassword).then(function () {
                                           var successful = Settings.successfulPassword();
-                                          if (successful > 0)
+                                          if (successful)
                                                 myPopup.close();
                                       });
                                   }
                                   else {
                                       e.preventDefault();
-                                     $scope.oldpasswordInvalid = true;
-                              }
-                                 
-                              } else {
+                                  }
+                             } else {
                                   e.preventDefault();
                              }                                
                               
@@ -52,10 +45,6 @@
                 myPopup.then(function(res) {
                     console.log('Tapped!', res);
                 });
-              
-                $timeout(function () {
-                    myPopup.close(); //close the popup after 3 seconds for some reason
-                }, 3000);
                 */
             };
 

@@ -9,10 +9,12 @@
 
         User.updateUser = function (user) {
             var deffered = $q.defer();
+            var authData = localStorageService.get('authorizationData');
             var msg = { "guid": user.GUID, "firstName": user.firstname, "lastName": user.lastname, "username": user.username, "emailAddress": user.email, "private": user.isprivate };
             $http.put(baseURL + "api/user", msg)
             .success(function (d) {
                 data = d;
+                localStorageService.set('authorizationData', { chaserID: UserObject.data().GUID, chaseruser: user.username, chasrpsswd: authData.chasrpsswd });
                 deffered.resolve();
             })
             .error(function (data, status) {
@@ -23,19 +25,18 @@
 
         User.passwordValid = function (password) {
             var authData = localStorageService.get('authorizationData');
-            return password != authData.chasrpsswd;
+            return password === authData.chasrpsswd;
         }
 
         User.updatePassword = function (password) {
             var deffered = $q.defer();
             var guid = UserObject.data().GUID;
-            var authData = localStorageService.get('authorizationData');
             passwordUpdated = false;
             var msg = { "guid": guid, "password": password };
             $http.post(baseURL + "api/update_password", msg)
             .success(function (d) {
                 passwordUpdated = d;
-                localStorageService.set('authorizationData', { chasrpsswd: user.password });
+                localStorageService.set('authorizationData', { chaserID: UserObject.data().GUID, chaseruser: UserObject.data().username, chasrpsswd: password });
                 deffered.resolve();
             })
             .error(function (data, status) {

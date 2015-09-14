@@ -302,8 +302,9 @@ function ocLazyLoadProvider($ocLazyLoadProvider) {
         debug: true
     });
 }
-    /************ Factory Services ***********/
-    // Store and Process User data
+
+/************ Factory Services ***********/
+// Store and Process User data
 app.factory('UserObject', ['$http', '$q', 'localStorageService', '$rootScope', function ($http, $q, localStorageService,$rootScope) {
     var data = [];
     var detailedUser = [];
@@ -375,7 +376,7 @@ app.factory('UserObject', ['$http', '$q', 'localStorageService', '$rootScope', f
         .success(function (d) {
             data = d;
             if (data.passwd !== "0" && data.username !== "0") {
-                localStorageService.set('authorizationData', { chaserID: data.GUID, chaseruser: user.passwordConfirm, chasrpsswd: user.password });
+                localStorageService.set('authorizationData', { chaserID: data.GUID, chaseruser: user.username, chasrpsswd: user.password });
                 _authentication.isAuth = true;
                 _authentication.userName = data.username;
                 _authentication.userName = user.password;

@@ -19,24 +19,28 @@
         }
     }]);
 
-    angular.module('App').directive('ogpasswordCheck', [function () {
+    angular.module('App').directive('ogpasswordCheck', ['Settings', function (Settings) {
         return {
             restrict: 'A',
             link: function (scope, elem, attrs, ctrl) {
                 var me = attrs.ngModel;
                 var watchModel = attrs.ogpasswordCheck;
 
-                elem.bind('keyup', function () {
+                elem.on('focus', function () {
                     scope.$apply(function () {
                         scope.oldpasswordInvalid = false;
-                    });
+                    });                   
                 });
-                /* scope.$watch(scope.oldpasswordInvalid, function (newValue, oldValue) {
-                    if (newValue) {
 
+                elem.on('blur', function () {
+                    var value = elem.val();
+                    var valid = Settings.passwordValid(value);
+                    if (!valid) {
+                        scope.$apply(function () {
+                            scope.oldpasswordInvalid = true;
+                        });
                     }
                 });
-               */
             }
         }
     }]);
