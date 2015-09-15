@@ -2,7 +2,6 @@
     angular.module('App').controller('UserController', ['$scope', 'UserObject', '$stateParams', 'Decision', '$rootScope', function ($scope, UserObject, $stateParams, Decision, $rootScope) {
         
         var userID = $stateParams.userId;
-        //$scope.symbol = 1;
 
    UserObject.getUser(userID).then(function () {
        $rootScope.title = UserObject.details().username;
@@ -12,6 +11,15 @@
         $scope.noChasers = UserObject.details().noChasers;
         $scope.noChasing = UserObject.details().noChasing;
         $scope.isChasing = $scope.symbol = UserObject.details().isChasing;
+        $scope.private = UserObject.details().isprivate;
+        $scope.broadcasting = UserObject.details().broadcast;
+        
+        $scope.longitude = UserObject.details().longitude;
+        $scope.latitude = UserObject.details().latitude;
+        
+       
+       
+
 
        /*
         switch (UserObject.details().isChasing) {

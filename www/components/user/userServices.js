@@ -1,5 +1,5 @@
 ﻿; (function () {
-    angular.module('App').factory('Decision', function ($http, $q, UserObject) {
+    angular.module('App').factory('Decision', ['$http', '$q', 'UserObject', function ($http, $q, UserObject) {
     var data = [];
     var Decision = {};
 
@@ -46,6 +46,28 @@
 
     Decision.data = function () { return data; };
     return Decision;
-    });
+    }]);
+
+    angular.module('App').factory('chaserBroadcast', ['$http', '$q', 'UserObject', function ($http, $q, UserObject) {
+        var data = [];
+        var Broadcast = {};
+
+        Broadcast.coords = function (guid) {
+            var deffered = $q.defer();
+            var msg = { "guid": UserObject.data().GUID, "chaser": guid };
+            $http.post(baseURL + "api/chasing", msg)
+            .success(function (d) {
+                data = d;
+                deffered.resolve();
+            })
+            .error(function (data, status) {
+                console.log("Request failed " + status);
+            });
+            return deffered.promise;
+        };
+
+        Broadcast.data = function () { return data; }
+        return Broadcast;
+    }]);
 
 })();

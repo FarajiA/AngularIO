@@ -26,6 +26,10 @@ var requestConst = {
     acceptRequestSuccess: '0 accepted',
     declineRequestSuccess: '0 declined'
 }
+var userDetails = {
+    broadcasting: 'View location',
+    notBroadcasting: 'Not broadcasting'
+}
 
 ; (function () {
 var app = angular.module('App', [

@@ -77,10 +77,58 @@
                     else 
                         UserFollow();
                 });
-
-
             }
         }
     }]);
+
+    angular.module('App').directive('userBroadcast', ['UserObject', 'chaserBroadcast', '$timeout', function (UserObject, chaserBroadcast, $timeout) {
+        return {
+            restrict: 'A',
+            require: '?ngModel',
+            link: function (scope, elem, attrs, ctrl) {
+
+                //var theexpression = attrs.usernameValidate;
+                //var flags = attrs.regexValidateFlags || '';
+                
+                scope.$watch(attrs.ngModel, function (newValue, oldValue) {
+                    if (newValue) {
+                        if (!UserObject.details().isprivate) {
+                            elem.removeAttr("disabled")
+                            .attr("data-lat", UserObject.details().latitude)
+                            .attr("data-long", UserObject.details().longitude)
+                            .text(userDetails.broadcasting);
+                            elem.on('click', function (e) {
+                                console.log("map clicked");
+                            });
+                        }
+                        else if (UserObject.details().isprivate) {
+                            elem.attr("disabled", "disabled")
+                            .text(userDetails.broadcasting);
+                        }                        
+                    }
+                    else {
+                        elem.removeAttr("disabled")
+                        .text(userDetails.notBroadcasting);
+                    }
+                });
+
+
+                var timer = $timeout(
+                        function () {
+                            console.log("Timeout executed", Date.now());
+                        },
+                        2000
+                    );
+
+                $scope.$on(
+                        "$destroy",
+                        function (event) {
+                            $timeout.cancel(timer);
+                        }
+                    );
+            }
+        }
+    }]);
+
 
 })();
