@@ -24,7 +24,7 @@
             </label>
             <div class="error-messages" ng-messages="form.form.registerform.email.$error" ng-if="form.registerform.email.$touched">
                 <p ng-message="email" ng-show="form.registerform.email.$dirty">Email not legit</p>
-                <p ng-message="emailvalid" ng-show="form.registerform.email.$error">Email is associated with an account</p>
+                <p ng-message="emailvalid" ng-show="form.registerform.email.$error">Email is with another account</p>
             </div>
             <label class="item item-input">
                 <input type="text" maxlength="15" username-validate="^[a-zA-Z0-9\._.-]+$" regex-validate-flags="gi" ng-model="user.username" name="username" min="2" ng-minlength="2" placeholder="Username" required>

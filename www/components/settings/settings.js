@@ -1,7 +1,7 @@
 ﻿; (function () {
         var app = angular.module('App');
-        app.controller('SettingsController', ['$scope', '$ionicPopup', '$timeout', 'UserObject', 'Settings', function ($scope, $ionicPopup, $timeout, UserObject, Settings) {
-            
+        app.controller('SettingsController', ['$scope', '$ionicPopup', '$timeout', 'UserObject', 'Settings', '$rootScope', function ($scope, $ionicPopup, $timeout, UserObject, Settings, $rootScope) {
+            $scope.form = {};
             $scope.user = UserObject.data();  
             $scope.oldpasswordInvalid = false;
 
@@ -49,21 +49,20 @@
             };
 
             $scope.settingsSubmit = function (user) {
+               
                 // check to make sure the form is completely valid
-              /*  if ($scope.settingsForm.$valid) {
-                    Settings.register(user).then(function () {
-                        $scope.user = UserObject.data();
-                        if ($scope.user.GUID) {
-                            $rootScope.username = $scope.user.username;
-                            $location.path("/dash");
-                        }
-                        else {
-                            $scope.user = "";
-                            $scope.alertNeeded = true;
-                        }
+                if ($scope.form.settingsForm.$valid) {
+                   Settings.updateUser(user).then(function () {
+                       var alertPopup = $ionicPopup.alert({
+                           title: 'Done homie!'
+                       });
+                       alertPopup.then(function (res) {
+                           console.log('Done');
+                       });
+
+
                     });
                 }
-                */
             };
         }]);
 

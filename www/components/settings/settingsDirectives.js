@@ -8,11 +8,19 @@
                 var me = attrs.ngModel;
                 var min = attrs.ngMinlength;
                 scope.$watch(me, function (value) {
+                    var theexpression = attrs.usernameupdateValidate;
+                    var flags = attrs.regexValidateFlags || '';
                     if (value) {
-                        Settings.usernameUpdated(value).then(function () {
-                            var isValid = Settings.successfulUsername();
-                            ctrl.$setValidity('usernameupdatevalid', isValid);
-                        });
+                        var regex = new RegExp(theexpression, flags);
+                        var valid = regex.test(value);
+                        ctrl.$setValidity('charactersvalid', valid);
+                        if (valid) {
+                            Settings.usernameUpdated(value).then(function () {
+                                var isValid = Settings.successfulUsername();
+                                ctrl.$setValidity('usernameupdatevalid', isValid);
+
+                            });
+                        }
                     }
                 });
             }
@@ -132,23 +140,14 @@
                     var value = elem.val();
                     if (pattern.test(value)) { 
                         Settings.emailCheck(value).then(function () {
-                            var isValid = Settings.successfulEmail();
-                            if (!isValid) {
-                                $timeout(function () {
-                                    scope.alertNeeded = true;
-                                    scope.alert = { type: 'danger', msg: updatedUserConst.emailInUse };                                    
-                                });
-                            }
-                            else {
-                                $timeout(function () {
-                                    scope.alert = {};
-                                    scope.alertNeeded = false;
-
-                                });
-                            }
+                            var isValid = Settings.successfulEmail();                           
                             ctrl.$setValidity('emailupdatevalid', isValid);
                         });
                     }
+                });
+
+                elem.bind('focusin', function () {
+                    ctrl.$setValidity('emailupdatevalid', true);
                 });
             }
         }

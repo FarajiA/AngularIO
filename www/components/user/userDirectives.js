@@ -51,7 +51,7 @@
                 };
 
                 scope.$watch(attrs.ngModel, function (newValue, oldValue) {
-                    if (newValue) {
+                    if (newValue > 0) {
                         switch (newValue) {
                             case 0:
                                 elem.attr('data-chasing', false);
