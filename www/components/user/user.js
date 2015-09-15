@@ -15,8 +15,7 @@
         $scope.broadcasting = UserObject.details().broadcast;
         
         $scope.longitude = UserObject.details().longitude;
-        $scope.latitude = UserObject.details().latitude;
-        
+        $scope.latitude = UserObject.details().latitude;       
        
        
 
