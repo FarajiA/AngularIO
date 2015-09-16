@@ -52,11 +52,12 @@ label.item-input { height: 60px;}
 .userInfo .button-bar .button span {display: block; height: 20px;}
 .userInfo .col-33 {text-align:center;}
 .userInfo button[data-chasing="false"] { background-color:#3786d0;  color:#fff; }
-.userInfo button[data-chasing="false"]:hover,button[data-chasing="false"]:focus {background-color:#0a569c;}
+.userInfo button[data-chasing="false"].activated,button[data-chasing="false"]:focus {background-color:#0a569c;}
 .userInfo button[data-chasing="true"] { background-color:#5fab87; color:#fff; }
 .userInfo button[data-chasing="true"]:focus,button[data-chasing="true"].activated { background-color:#42725C;  color:#fff; }
 .userInfo button[data-chasing="requested"] {background-color:#a333a6;  color:#fff;} 
-.userInfo button[data-chasing="requested"]:hover,button[data-chasing="requested"]:focus {background-color:#6c226e;}
+.userInfo button[data-chasing="requested"].activated,button[data-chasing="requested"]:focus {background-color:#6c226e;}
+#broadcast .broadcasting {background-color: #F7BE81;}
 
 /* Settings Page  */
 form .password {margin: 30px 0 15px;text-align: center;}

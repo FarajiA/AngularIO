@@ -14,7 +14,7 @@ var updatedUserConst = {
 }
 
 var deleteUserConst = {
-    removeUserTitle: 'Remove Chaser?',
+    removeUserTitle: 'remove chaser?',
     successfullyDeleted: '0 is no longer chasing you.',
     notsuccessfullyDeleted: 'Oops something fubbed!'
 }
@@ -27,7 +27,8 @@ var requestConst = {
     declineRequestSuccess: '0 declined'
 }
 var userDetails = {
-    broadcasting: 'View location',
+    broadcasting: 'Broadcasting',
+    viewlocation: 'View location',
     notBroadcasting: 'Not broadcasting'
 }
 

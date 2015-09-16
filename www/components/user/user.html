@@ -16,8 +16,8 @@
             </button>
         </div>
     </div>
-    <div class="row">
-        <button ng-model="broadcasting" data-private="{{private}}" class="button button-block icon">
+    <div id="broadcast" class="row">
+        <button ng-model="broadcasting" user-broadcast data-private="{{private}}" class="button button-block icon icon-left"  ng-class="{'broadcasting': broadcasting && !private || isChasing == 1 ,'private': private && isChasing != 1 }">
         </button>
     </div>
 </ion-content>
