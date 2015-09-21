@@ -1,10 +1,14 @@
 ﻿; (function () {
-    angular.module('App').controller('UserController', ['$scope', 'UserObject', '$stateParams', 'Decision', '$rootScope', function ($scope, UserObject, $stateParams, Decision, $rootScope) {
+    angular.module('App').controller('UserController', ['$scope', 'UserObject', '$stateParams', 'Decision', '$rootScope', '$interval', function ($scope, UserObject, $stateParams, Decision, $rootScope, $interval) {
         
-        var userID = $stateParams.userId;
+   var userID = $stateParams.userId;
+
+   
+
 
    UserObject.getUser(userID).then(function () {
        $rootScope.title = UserObject.details().username;
+       $scope.GUID = UserObject.details().GUID;
         $scope.username = UserObject.details().username;
         $scope.firstname = UserObject.details().firstname;
         $scope.lastname = UserObject.details().lastname;

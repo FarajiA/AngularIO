@@ -1,9 +1,0 @@
-﻿<div class="row">
-    <div class="zeroResults" ng-show="following.length === 0">
-        <h2>Not following anyone</h2>
-    </div>
-    <div id="following" class="list-group" ng-show="following.length > 0" lr-infinite-scroll="loadMore" scroll-threshold="600">
-        <button type="button" class="list-group-item" ng-click="UserDetails(follow.GUID)" ng-repeat="follow in following">{{follow.username}} - {{follow.firstname}} {{follow.lastname}}</button>
-    </div>
-</div>
-

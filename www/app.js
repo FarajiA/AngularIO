@@ -169,6 +169,52 @@ function RouteMethods($stateProvider, $urlRouterProvider, $ionicConfigProvider) 
                 }]
             }
         })
+        .state('main.traffic-chasers', {
+            url: '/traffic/chasers/:userId',
+            views: {
+                'main-traffic': {
+                    templateUrl: 'components/chasers/chasers.html',
+                    controller: 'ChasersController'
+                }
+            },
+            resolve: {
+                loadExternals: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'trafficChasers',
+                        files: [
+                            'components/chasers/chaserServices.js',
+                            'components/chasers/chasers.js'
+                        ]
+                    });
+                }],
+                data: ['$ionicSideMenuDelegate', function ($ionicSideMenuDelegate) {
+                    $ionicSideMenuDelegate.canDragContent(false);
+                }]
+            }
+        })
+        .state('main.traffic-chasing', {
+            url: '/traffic/chasing/:userId',
+            views: {
+                'main-traffic': {
+                    templateUrl: 'components/chasing/chasing.html',
+                    controller: 'ChasingController'
+                }
+            },
+            resolve: {
+                loadExternals: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'trafficChasing',
+                        files: [
+                            'components/chasing/chasingServices.js',
+                            'components/chasing/chasing.js'
+                        ]
+                    });
+                }],
+                data: ['$ionicSideMenuDelegate', function ($ionicSideMenuDelegate) {
+                    $ionicSideMenuDelegate.canDragContent(false);
+                }]
+            }
+        })
         .state('main.activity', {
             url: '/activity',
             views: {

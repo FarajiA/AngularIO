@@ -84,7 +84,8 @@
             restrict: 'A',
             require: '?ngModel',
             link: function (scope, elem, attrs, ctrl) {
-                
+                var interval;
+                var promise;
                 scope.$watch(attrs.ngModel, function (newValue, oldValue) {
                     if (newValue) {
                         if (UserObject.details().isChasing == 1 || !UserObject.details().isprivate) {
@@ -101,7 +102,27 @@
                             elem.attr("disabled", "disabled")
                             .text(userDetails.broadcasting)
                             .addClass("ion-locked");
-                        }                        
+                        }
+
+                        promise = function () {
+                            chaserBroadcast.coords(UserObject.details().GUID).then(function () {
+                                if (chaserBroadcast.data().broadcast)
+                                {
+                                    elem.attr("data-lat", chaserBroadcast.data().latitude)
+                                       .attr("data-long", chaserBroadcast.data().longitude);
+                                }
+                                else
+                                {
+                                   scope.$apply(function () {
+                                       scope.broadcasting = false;
+                                    });
+                                }
+                            });
+
+                        }
+
+                        interval = $interval(function () { promise(); }, 30000);
+
                     }
                     else {
                         elem.attr("disabled", "disabled")
@@ -109,10 +130,23 @@
                     }
                 });
 
+               
+
+
+                scope.stopCoords = function () {
+                    $interval.cancel(interval);
+                };
+
+                scope.$on('$destroy', function (event) {
+                    scope.stopCoords();
+                });
+
+
+                /*
                 var promise;
                 scope.startCoords = function () {
                     scope.stopCoords();
-                    promise = $interval(function () { scope.callAtInterval(); }, 25000, true);
+                    promise = $interval(callAtInterval, 5000, true);
                 };
                 
                 scope.stopCoords = function () {
@@ -128,6 +162,7 @@
                 scope.$on('$destroy', function (event) {
                     scope.stopCoords();
                 });
+                */
             }
         }
     }]);

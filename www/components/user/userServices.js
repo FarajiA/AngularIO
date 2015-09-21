@@ -54,8 +54,7 @@
 
         Broadcast.coords = function (guid) {
             var deffered = $q.defer();
-            var msg = { "guid": UserObject.data().GUID, "chaser": guid };
-            $http.post(baseURL + "api/chasing", msg)
+            $http.get(baseURL + "api/coordinates/" + guid)
             .success(function (d) {
                 data = d;
                 deffered.resolve();
