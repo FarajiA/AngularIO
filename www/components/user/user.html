@@ -8,8 +8,8 @@
         </div>
         <div class="col">
             <div class="button-bar">
-                <a class="button" href="#/main/traffic/chasers/{{GUID}}"><span>{{noChasers}}</span>Chasers</a>
-                <a class="button" href="#/main/traffic/chasing/{{GUID}}"><span>{{noChasing}}</span>Chasing</a>
+                <a class="button" href="#/main/{{segment}}/chasers/{{GUID}}"><span>{{noChasers}}</span>Chasers</a>
+                <a class="button" href="#/main/{{segment}}/chasing/{{GUID}}"><span>{{noChasing}}</span>Chasing</a>
             </div>
             <button user-choice ng-model="symbol" class="button button-block icon" ng-class="{'ion-star':symbol == 0 || symbol == 1 ,'ion-paper-airplane':symbol == 2 }">
                 {{isFollowing}}
@@ -22,38 +22,3 @@
     </div>
 </ion-content>
 </ion-view>
-
-
-
-<!--<div class="row">
-    <div class="userInfo row">
-        <div class="col-xs-6 name text-center">
-            <h3>{{username}}</h3>
-            <span id="firstname">{{firstname}}</span>&nbsp;<span id="lastname">{{lastname}}</span>
-        </div>
-
-        <div class="isChasing col-xs-6 text-center">
-            <div class="btn-group" role="group" aria-label="...">
-                <button type="button" id="btnFollowerNo" ng-click="userfollowers()" class="btn btn-default">
-                    <span id="follower_badge" class="badge">{{noChasers}}</span><br>Followers
-                </button>
-                <button type="button" id="btnFollingNo" ng-click="userfollowing()" class="btn btn-default">
-                    <span id='following_badge' class='badge'>{{noChasing}}</span><br />Following
-                </button>
-            </div>
-            <button type="button" class="btn btn-primary btn-lg btn-block" user-choice>
-                <span class='glyphicon glyphicon-star' aria-hidden='true' ng-show="notChasing"></span>
-                <span class='glyphicon glyphicon-star' style='color:#f8ea0a' aria-hidden='true' ng-show="yesChasing"></span>
-                <span class='glyphicon glyphicon-send' aria-hidden='true' ng-show="requested"></span>
-                {{isFollowing}}
-            </button>
-        </div>
-    </div>
-
-   
-    <div class="button-broadcast row">
-        <button id="btnBroadcast" type="button" data-enhance="false" class="btn btn-primary btn-lg btn-block"></button>
-    </div>
-   
-</div>
- -->

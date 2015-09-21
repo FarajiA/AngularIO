@@ -1,5 +1,5 @@
 ﻿; (function () {
-    angular.module('App').controller('ChasersController', ['$scope', '$stateParams', 'Chasers', function ($scope, $stateParams, Chasers) {
+    angular.module('App').controller('ChasersController', ['$scope', '$stateParams', '$location', 'Chasers', function ($scope, $stateParams, $location, Chasers) {
 
         var userID = $stateParams.userId;
 
@@ -17,8 +17,8 @@
             var chasersNo = Chasers.data().Total;
             var pagingMax = Math.ceil(chasersNo / countSet, 1);
             if ($scope.index < pagingMax && $scope.index > 0) {
-                Chasers.chasers($scope.index, userID).then(function (data) {
-                    var merged = data.Results.concat($scope.chasers);
+                Chasers.chasers($scope.index, userID).then(function () {
+                    var merged = Chasers.data().Results.concat($scope.chasers);
                     $scope.chasers = merged;
                     $scope.index++;
                 });
@@ -29,6 +29,8 @@
             $scope.$broadcast('scroll.infiniteScrollComplete');
         };
 
+        var path = $location.path().split("/") || "Unknown";
+        $scope.segment = path[2];
 
     }]);
 })();

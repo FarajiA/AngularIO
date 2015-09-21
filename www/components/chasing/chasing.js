@@ -1,5 +1,5 @@
 ﻿; (function () {
-    angular.module('App').controller('ChasingController', ['$scope', '$stateParams', 'Chasing', function ($scope, $stateParams, Chasing) {
+    angular.module('App').controller('ChasingController', ['$scope', '$stateParams','$location', 'Chasing', function ($scope, $stateParams, $location, Chasing) {
 
         var userID = $stateParams.userId;
         var chasingInit = function () {
@@ -16,8 +16,8 @@
             var chasingNo = Chasing.data().Total;
             var pagingMax = Math.ceil(chasingNo / countSet, 1);
             if ($scope.index < pagingMax && $scope.index > 0) {
-                Chasing.chasing($scope.index, userID).then(function (data) {
-                    var merged = data.Results.concat($scope.chasing);
+                Chasing.chasing($scope.index, userID).then(function () {
+                    var merged = Chasing.data().Results.concat($scope.chasing);
                     $scope.chasing = merged;
                     $scope.index++;
                 });
@@ -28,5 +28,7 @@
             $scope.$broadcast('scroll.infiniteScrollComplete');
         };
 
+        var path = $location.path().split("/") || "Unknown";
+        $scope.segment = path[2];
     }]);
 })();

@@ -15,13 +15,13 @@
                 </label>
         </form>
     </div>
-    <div id="result">
+     <div id="result">
             <div id="search" class="search">
                 <div class="zeroResults search" ng-show="searchresults.array.length === 0 && !initial.first">
                     <h2>no results</h2>
                 </div>
                 <ion-list ng-show="searchresults.array.length > 0">
-                    <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="search in searchresults.array" type="item-text-wrap" href="#/main/traffic/{{chaser.GUID}}">
+                    <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="search in searchresults.array" type="item-text-wrap" href="#/main/search/{{search.GUID}}">
                         <img ng-src="img/default_avatar.png">
                         <h2>{{search.username}}</h2>
                         <p>{{search.firstname}}&nbsp;{{search.lastname}}</p>
@@ -29,7 +29,7 @@
                 </ion-list>
                 <ion-infinite-scroll ng-if="!noMoSearch" on-infinite="loadMoreSearch(Searchquery)" distance="30%"></ion-infinite-scroll>
             </div>
-        </div>
+     </div>
 
 
     </ion-content>

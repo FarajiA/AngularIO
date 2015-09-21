@@ -118,7 +118,6 @@
                                     });
                                 }
                             });
-
                         }
 
                         interval = $interval(function () { promise(); }, 30000);
@@ -130,9 +129,6 @@
                     }
                 });
 
-               
-
-
                 scope.stopCoords = function () {
                     $interval.cancel(interval);
                 };
@@ -140,29 +136,6 @@
                 scope.$on('$destroy', function (event) {
                     scope.stopCoords();
                 });
-
-
-                /*
-                var promise;
-                scope.startCoords = function () {
-                    scope.stopCoords();
-                    promise = $interval(callAtInterval, 5000, true);
-                };
-                
-                scope.stopCoords = function () {
-                    $interval.cancel(promise);
-                };
-
-                function callAtInterval() {
-                    console.log("interval occurred");
-                }
-
-                scope.startCoords();
-
-                scope.$on('$destroy', function (event) {
-                    scope.stopCoords();
-                });
-                */
             }
         }
     }]);
