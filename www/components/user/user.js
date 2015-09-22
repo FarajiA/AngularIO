@@ -1,7 +1,16 @@
 ﻿; (function () {
-    angular.module('App').controller('UserController', ['$scope', 'UserObject', '$stateParams', 'Decision', '$location', '$ionicModal', function ($scope, UserObject, $stateParams, Decision, $location, $ionicModal) {
+    angular.module('App').controller('UserController', ['$scope', 'UserObject', '$stateParams', 'Decision', '$location', '$ionicModal', 'angularLoad', function ($scope, UserObject, $stateParams, Decision, $location, $ionicModal, angularLoad) {
         
-   var userID = $stateParams.userId;
+        var userID = $stateParams.userId;
+        angularLoad.loadScript('https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&key=AIzaSyDXOheZlzb8bgjOZKDiyFskCnrl5RV8b_Q').then(function () {
+            // Script loaded succesfully.
+            // We can now start using the functions from someplugin.js
+            console.log('GMaps Loaded');
+        }).catch(function () {
+            // There was some error loading the script. Meh
+            console.log('Couldnt load GMaps');
+        });
+
 
    UserObject.getUser(userID).then(function () {
         $scope.title = UserObject.details().username;
