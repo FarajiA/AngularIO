@@ -1,5 +1,5 @@
 ﻿; (function () {
-    angular.module('App').controller('UserController', ['$scope', 'UserObject', '$stateParams', 'Decision', '$location', function ($scope, UserObject, $stateParams, Decision, $location) {
+    angular.module('App').controller('UserController', ['$scope', 'UserObject', '$stateParams', 'Decision', '$location', '$ionicModal', function ($scope, UserObject, $stateParams, Decision, $location, $ionicModal) {
         
    var userID = $stateParams.userId;
 
@@ -23,6 +23,34 @@
    var path = $location.path().split("/") || "Unknown";
    $scope.segment = path[2];
 
+   $ionicModal.fromTemplateUrl('mapModal.html', {
+       scope: $scope,
+       animation: 'slide-in-up'
+   }).then(function (modal) {
+       $scope.modal = modal;
+   });
+   
+   $scope.openModal = function () {
+       $scope.modal.show();
+   };
+   
+   $scope.closeModal = function () {
+       $scope.modal.hide();
+   };
+        //Cleanup the modal when we're done with it!
+   $scope.$on('$destroy', function () {
+       $scope.modal.remove();
+   });
+        // Execute action on hide modal
+   $scope.$on('modal.hidden', function () {
+       // Execute action
+       console.log("modal hidden");
+   });
+        // Execute action on remove modal
+   $scope.$on('modal.removed', function () {
+       // Execute action
+       console.log("modal removed");
+   });
 
    }]);
 })();

@@ -17,8 +17,22 @@
         </div>
     </div>
     <div id="broadcast" class="row">
-        <button ng-model="broadcasting" user-broadcast data-private="{{private}}" class="button button-block icon icon-left"  ng-class="{'broadcasting': broadcasting && !private || isChasing == 1 ,'private': private && isChasing != 1 }">
+        <button ng-model="broadcasting" user-broadcast data-private="{{private}}" class="button button-block icon icon-left"  ng-class="{'broadcasting': broadcasting && !private || isChasing == 1 ,'private': private && isChasing != 1 }"  ng-click="openModal()">
         </button>
     </div>
+
+    <lazy-gmap type="application/javascript" ng-src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&key=AIzaSyDXOheZlzb8bgjOZKDiyFskCnrl5RV8b_Q"></lazy-gmap>
 </ion-content>
+
+<script id="mapModal.html" type="text/ng-template">
+  <ion-modal-view class="map-modal">
+    <ion-header-bar>
+      <h1 class="title">My Modal title</h1>
+    </ion-header-bar>
+    <ion-content>
+      Hello!
+    
+    </ion-content>
+  </ion-modal-view>
+</script>
 </ion-view>
