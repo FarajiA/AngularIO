@@ -31,6 +31,9 @@ var userDetails = {
     viewlocation: 'View location',
     notBroadcasting: 'Not broadcasting'
 }
+var mapsAPI = {
+    url: '//maps.googleapis.com/maps/api/js?v=3&sensor=true'
+}
 //
 ; (function () {
     'use strict';
@@ -102,8 +105,7 @@ var app = angular.module('App', [
                 'oc.lazyLoad',
                 'ionic',
                 'LocalStorageModule',
-                'angularLoad',
-                'ngCordova'
+                'angularLoad'
 ]);
 
 app.run(function ($ionicPlatform, $ionicSideMenuDelegate, $rootScope, UserObject, $state, $q) {
@@ -225,6 +227,9 @@ function RouteMethods($stateProvider, $urlRouterProvider, $ionicConfigProvider) 
                     return $ocLazyLoad.load({
                         name: 'trafficDetails',
                         files: [
+                            'lib/lodash.underscore.js',
+                            'lib/angular-simple-logger.js',
+                            'lib/angular-google-maps.js',
                             'components/user/userServices.js',
                             'components/user/user.js',
                             'components/user/userDirectives.js'
