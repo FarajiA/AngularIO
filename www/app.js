@@ -31,12 +31,9 @@ var userDetails = {
     viewlocation: 'View location',
     notBroadcasting: 'Not broadcasting'
 }
-
-
-
+//
 ; (function () {
     'use strict';
-
     angular.module('angularLoad', [])
 		.service('angularLoad', ['$document', '$q', '$timeout', function ($document, $q, $timeout) {
 		    var document = $document[0];
@@ -105,7 +102,8 @@ var app = angular.module('App', [
                 'oc.lazyLoad',
                 'ionic',
                 'LocalStorageModule',
-                'angularLoad'
+                'angularLoad',
+                'ngCordova'
 ]);
 
 app.run(function ($ionicPlatform, $ionicSideMenuDelegate, $rootScope, UserObject, $state, $q) {
