@@ -1,10 +1,9 @@
 ﻿; (function () {
     var app = angular.module('App');
     app.requires.push('uiGmapgoogle-maps');
-    app.controller('UserController', ['$scope', 'UserObject', '$stateParams', 'Decision', '$location', '$ionicModal', 'angularLoad', '$timeout','$log',
-        function ($scope, UserObject, $stateParams, Decision, $location, $ionicModal, angularLoad, $timeout, $log) {
+    app.controller('UserController', ['$scope', 'UserObject', '$stateParams', 'Decision', '$location', '$ionicModal', 'angularLoad', '$timeout','$log','uiGmapGoogleMapApi',
+        function ($scope, UserObject, $stateParams, Decision, $location, $ionicModal, angularLoad, $timeout, $log, GoogleMapApi) {                
 
-/*
    var userID = $stateParams.userId;
    UserObject.getUser(userID).then(function () {
         $scope.title = UserObject.details().username;
@@ -17,30 +16,25 @@
         $scope.isChasing = $scope.symbol = UserObject.details().isChasing;
         $scope.private = UserObject.details().isprivate;
         $scope.broadcasting = UserObject.details().broadcast;        
-        $scope.longitude = UserObject.details().longitude;
-        $scope.latitude = UserObject.details().latitude;
+        $scope.longitude = Number(UserObject.details().longitude);
+        $scope.latitude = Number(UserObject.details().latitude);
 
         if ($scope.broadcasting) {
-            
-        }      
+           
+            GoogleMapApi.then(function () {
 
-                
-
-   });    
-*/
-           // angularLoad.loadScript(mapsAPI.url).then(function () {
-
-                $scope.map = { center: { latitude: 40.1451, longitude: -99.6680 }, zoom: 4 };
+                $scope.map = { center: { latitude: 51.219053, longitude: 4.404418 }, zoom: 12 };
+                /*
+                $scope.map = { center: { latitude: $scope.latitude, longitude: $scope.longitude }, zoom: 8 };
                 $scope.options = { disableDefaultUI: true };
-                $scope.coordsUpdates = 0;
-                $scope.dynamicMoveCtr = 0;
                 $scope.marker = {
                     id: 0,
                     coords: {
-                        latitude: 40.1451,
-                        longitude: -99.6680
+                        latitude: $scope.latitude,
+                        longitude: $scope.longitude
                     },
                     options: { draggable: true },
+                    icon: '../img/checkered_chaser.png',
                     events: {
                         dragend: function (marker, eventName, args) {
                             $log.log('marker dragend');
@@ -58,29 +52,39 @@
                         }
                     }
                 };
-                $scope.$watchCollection("marker.coords", function (newVal, oldVal) {
-                    if (_.isEqual(newVal, oldVal))
-                        return;
-                    $scope.coordsUpdates++;
-                });
+                */
 
-                $timeout(function () {
-                    $scope.marker.coords = {
-                        latitude: 42.1451,
-                        longitude: -100.6680
-                    };
-                    $scope.dynamicMoveCtr++;
-                    $timeout(function () {
-                        $scope.marker.coords = {
-                            latitude: 43.1451,
-                            longitude: -102.6680
-                        };
-                        $scope.dynamicMoveCtr++;
-                    }, 2000);
-                }, 1000);
+            },
+             function(error) {
+                 // Do something with the error if it fails
+                 console.log("Error in Api call");
+             });
+               
+            $scope.$watchCollection("marker.coords", function (newVal, oldVal) {
+                if (_.isEqual(newVal, oldVal))
+                    return;
+                $scope.coordsUpdates++;
+            });
 
-
-                /*
+            /*
+                 $timeout(function () {
+                     $scope.marker.coords = {
+                         latitude: 42.1451,
+                         longitude: -100.6680
+                     };
+                     $scope.dynamicMoveCtr++;
+                     $timeout(function () {
+                         $scope.marker.coords = {
+                             latitude: 43.1451,
+                             longitude: -102.6680
+                         };
+                         $scope.dynamicMoveCtr++;
+                     }, 2000);
+                 }, 1000);
+            
+            */
+        } 
+         /*
                 https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&key=AIzaSyDXOheZlzb8bgjOZKDiyFskCnrl5RV8b_Q
                 var map;
                 var mapInstance;
@@ -185,12 +189,10 @@
 
 
 
-
-            }).catch(function () {
-                console.log('Couldnt load GMaps');
-            });
+        }
+});
  */
-
+   });
 
    var path = $location.path().split("/") || "Unknown";
    $scope.segment = path[2];

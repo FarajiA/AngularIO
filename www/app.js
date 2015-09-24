@@ -486,7 +486,7 @@ function RouteMethods($stateProvider, $urlRouterProvider, $ionicConfigProvider) 
                       'lib/angular-messages.js',
                       'components/settings/settingsServices.js',
                       'components/settings/settingsDirectives.js',
-                      'components/settings/settings.js'
+                      'components/settings/settings.js',
                   ]
               });
           }],
@@ -562,7 +562,8 @@ function RouteMethods($stateProvider, $urlRouterProvider, $ionicConfigProvider) 
 
 function ocLazyLoadProvider($ocLazyLoadProvider) {
     $ocLazyLoadProvider.config({
-        debug: true
+        debug: true,
+        asyncLoader: $script
     });
 }
 
