@@ -21,68 +21,6 @@
 
         if ($scope.broadcasting) {
            
-            GoogleMapApi.then(function () {
-
-                $scope.map = { center: { latitude: 51.219053, longitude: 4.404418 }, zoom: 12 };
-                /*
-                $scope.map = { center: { latitude: $scope.latitude, longitude: $scope.longitude }, zoom: 8 };
-                $scope.options = { disableDefaultUI: true };
-                $scope.marker = {
-                    id: 0,
-                    coords: {
-                        latitude: $scope.latitude,
-                        longitude: $scope.longitude
-                    },
-                    options: { draggable: true },
-                    icon: '../img/checkered_chaser.png',
-                    events: {
-                        dragend: function (marker, eventName, args) {
-                            $log.log('marker dragend');
-                            var lat = marker.getPosition().lat();
-                            var lon = marker.getPosition().lng();
-                            $log.log(lat);
-                            $log.log(lon);
-
-                            $scope.marker.options = {
-                                draggable: true,
-                                labelContent: "lat: " + $scope.marker.coords.latitude + ' ' + 'lon: ' + $scope.marker.coords.longitude,
-                                labelAnchor: "100 0",
-                                labelClass: "marker-labels"
-                            };
-                        }
-                    }
-                };
-                */
-
-            },
-             function(error) {
-                 // Do something with the error if it fails
-                 console.log("Error in Api call");
-             });
-               
-            $scope.$watchCollection("marker.coords", function (newVal, oldVal) {
-                if (_.isEqual(newVal, oldVal))
-                    return;
-                $scope.coordsUpdates++;
-            });
-
-            /*
-                 $timeout(function () {
-                     $scope.marker.coords = {
-                         latitude: 42.1451,
-                         longitude: -100.6680
-                     };
-                     $scope.dynamicMoveCtr++;
-                     $timeout(function () {
-                         $scope.marker.coords = {
-                             latitude: 43.1451,
-                             longitude: -102.6680
-                         };
-                         $scope.dynamicMoveCtr++;
-                     }, 2000);
-                 }, 1000);
-            
-            */
         } 
          /*
                 https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&key=AIzaSyDXOheZlzb8bgjOZKDiyFskCnrl5RV8b_Q
@@ -206,6 +144,69 @@
    
    $scope.openModal = function () {
        $scope.modal.show();
+
+       GoogleMapApi.then(function () {
+
+           $scope.map = { center: { latitude: 51.219053, longitude: 4.404418 }, zoom: 12 };
+
+           $scope.map = { center: { latitude: $scope.latitude, longitude: $scope.longitude }, zoom: 8 };
+           $scope.options = { disableDefaultUI: true };
+           $scope.marker = {
+               id: 0,
+               coords: {
+                   latitude: $scope.latitude,
+                   longitude: $scope.longitude
+               },
+               options: { draggable: true },
+               icon: '../img/checkered_chaser.png',
+               events: {
+                   dragend: function (marker, eventName, args) {
+                       $log.log('marker dragend');
+                       var lat = marker.getPosition().lat();
+                       var lon = marker.getPosition().lng();
+                       $log.log(lat);
+                       $log.log(lon);
+
+                       $scope.marker.options = {
+                           draggable: true,
+                           labelContent: "lat: " + $scope.marker.coords.latitude + ' ' + 'lon: ' + $scope.marker.coords.longitude,
+                           labelAnchor: "100 0",
+                           labelClass: "marker-labels"
+                       };
+                   }
+               }
+           };
+
+
+       },
+        function (error) {
+            // Do something with the error if it fails
+            console.log("Error in Api call");
+        });
+
+       $scope.$watchCollection("marker.coords", function (newVal, oldVal) {
+           if (_.isEqual(newVal, oldVal))
+               return;
+           $scope.coordsUpdates++;
+       });
+
+       /*
+            $timeout(function () {
+                $scope.marker.coords = {
+                    latitude: 42.1451,
+                    longitude: -100.6680
+                };
+                $scope.dynamicMoveCtr++;
+                $timeout(function () {
+                    $scope.marker.coords = {
+                        latitude: 43.1451,
+                        longitude: -102.6680
+                    };
+                    $scope.dynamicMoveCtr++;
+                }, 2000);
+            }, 1000);
+       
+       */
    };
    
    $scope.closeModal = function () {

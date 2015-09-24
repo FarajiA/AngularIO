@@ -34,7 +34,7 @@ var userDetails = {
 var mapsAPI = {
     url: '//maps.googleapis.com/maps/api/js?v=3&sensor=true'
 }
-//
+/*
 ; (function () {
     'use strict';
     angular.module('angularLoad', [])
@@ -71,7 +71,7 @@ var mapsAPI = {
 			 * Dynamically loads the given script
 			 * @param src The url of the script to load dynamically
 			 * @returns {*} Promise that will be resolved once the script has been loaded.
-			 */
+			
 		    this.loadScript = loader(function (src) {
 		        var script = document.createElement('script');
 
@@ -85,7 +85,7 @@ var mapsAPI = {
 			 * Dynamically loads the given CSS file
 			 * @param href The url of the CSS to load dynamically
 			 * @returns {*} Promise that will be resolved once the CSS file has been loaded.
-			 */
+		
 		    this.loadCSS = loader(function (href) {
 		        var style = document.createElement('link');
 
@@ -98,7 +98,7 @@ var mapsAPI = {
 		    });
 		}]);
 })();
-
+*/
 
 ; (function () {
 var app = angular.module('App', [
