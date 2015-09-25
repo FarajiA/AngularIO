@@ -1,105 +1,50 @@
 ﻿<ion-view title="Settings">
    
-    <ion-content has-header="true" padding="true">
-    
-<form name="form.settingsForm" ng-submit="settingsSubmit(user)" novalidate>
-        <div class="list settingsForm">
-            <label class="item item-input">
-                <input type="text" placeholder="First Name" name="firstname" maxlength="30" ng-model="user.firstname" ng-minlength="2" required>
-                <i class="icon ion-alert error" ng-show="form.settingsForm.firstname.$invalid && form.settingsForm.firstname.$touched"></i>
-            </label>
-            <label class="item item-input">
-                <input type="text" placeholder="Last Name" name="lastname" maxlength="30" ng-model="user.lastname" ng-minlength="2" required>
-                <i class="icon ion-alert error" ng-show="form.settingsForm.lastname.$invalid && form.settingsForm.lastname.$touched"></i>
-            </label>
-            <label class="item item-input">
-                <input type="email" maxlength="30" placeholder="Email" name="email" emailupdate-validate ng-model="user.email" required>
-                <i class="icon ion-alert error" ng-show="form.settingsForm.email.$invalid && form.settingsForm.email.$touched"></i>
-            </label>
-            <div class="error-messages" ng-messages="form.settingsForm.email.$error" ng-if="form.settingsForm.email.$touched">
-                <p ng-message="email" ng-show="form.settingsForm.email.$invalid">Email not legit</p>
-                <p ng-message="emailupdatevalid" ng-show="!form.settingsForm.$error.emailupdatevalid">Email is with another account</p>
-            </div>
-            <label class="item item-input">
-                <input type="text" maxlength="15" usernameupdate-validate="^[a-zA-Z0-9\._.-]+$" regex-validate-flags="gi" ng-model="user.username" name="username" min="2" ng-minlength="2" placeholder="Username" required>
-                <i class="icon ion-checkmark success" ng-show="!form.settingsForm.username.$error.charactersvalid && !form.settingsForm.username.$invalid"></i>
-                <i class="icon ion-alert error" ng-show="form.settingsForm.username.$invalid && form.settingsForm.username.$touched"></i>
-            </label>
-            <div class="error-messages" ng-messages="form.settingsForm.username.$error" ng-if="form.settingsForm.username.$touched">
-                <p ng-message="usernameupdatevalid" ng-show="form.settingsForm.username.$error.usernamevalid">Taken</p>
-                <p ng-message="charactersvalid" ng-show="form.settingsForm.username.$error.charactersvalid">Periods, underscores, and dashes only</p>
-            </div>
-            <div class="private">
-                <ion-toggle  ng-model="user.isprivate">
-                    Private
-                </ion-toggle>
-            </div>
+    <ion-content has-header="true" padding="true" has-bouncing="false">
+
+        <form name="form.settingsForm" ng-submit="settingsSubmit(user)" novalidate>
+            <div class="list settingsForm">
+                <label class="item item-input">
+                    <input type="text" placeholder="First Name" name="firstname" maxlength="30" ng-model="user.firstname" ng-minlength="2" required>
+                    <i class="icon ion-alert error" ng-show="form.settingsForm.firstname.$invalid && form.settingsForm.firstname.$touched"></i>
+                </label>
+                <label class="item item-input">
+                    <input type="text" placeholder="Last Name" name="lastname" maxlength="30" ng-model="user.lastname" ng-minlength="2" required>
+                    <i class="icon ion-alert error" ng-show="form.settingsForm.lastname.$invalid && form.settingsForm.lastname.$touched"></i>
+                </label>
+                <label class="item item-input">
+                    <input type="email" maxlength="30" placeholder="Email" name="email" emailupdate-validate ng-model="user.email" required>
+                    <i class="icon ion-alert error" ng-show="form.settingsForm.email.$invalid && form.settingsForm.email.$touched"></i>
+                </label>
+                <div class="error-messages" ng-messages="form.settingsForm.email.$error" ng-if="form.settingsForm.email.$touched">
+                    <p ng-message="email" ng-show="form.settingsForm.email.$invalid">Email not legit</p>
+                    <p ng-message="emailupdatevalid" ng-show="!form.settingsForm.$error.emailupdatevalid">Email is with another account</p>
+                </div>
+                <label class="item item-input">
+                    <input type="text" maxlength="15" usernameupdate-validate="^[a-zA-Z0-9\._.-]+$" regex-validate-flags="gi" ng-model="user.username" name="username" min="2" ng-minlength="2" placeholder="Username" required>
+                    <i class="icon ion-checkmark success" ng-show="!form.settingsForm.username.$error.charactersvalid && !form.settingsForm.username.$invalid"></i>
+                    <i class="icon ion-alert error" ng-show="form.settingsForm.username.$invalid && form.settingsForm.username.$touched"></i>
+                </label>
+                <div class="error-messages" ng-messages="form.settingsForm.username.$error" ng-if="form.settingsForm.username.$touched">
+                    <p ng-message="usernameupdatevalid" ng-show="form.settingsForm.username.$error.usernamevalid">Taken</p>
+                    <p ng-message="charactersvalid" ng-show="form.settingsForm.username.$error.charactersvalid">Periods, underscores, and dashes only</p>
+                </div>
+                <div class="private">
+                    <ion-toggle ng-model="user.isprivate">
+                        Private
+                    </ion-toggle>
+                </div>
 
                 <div class="password"><button type="button" class="button button-royal" ng-click="updatePassword()">Change Password</button></div>
-        </div>
+            </div>
 
-        <button type="submit" class="button button-full button-outline button-assertive">
-            Save Changes
-        </button>
-    </form> 
-      
-        
-         
-</ion-content>
+            <button type="submit" class="button button-full button-outline button-assertive">
+                Save Changes
+            </button>
+        </form>
+
+
+
+    </ion-content>
 
 </ion-view>
-<!-- 
-
-    username-validate="^[a-zA-Z0-9\._.-]+$" regex-validate-flags="gi"
-
-<div class="row">
-    <alert type="{{alert.type}}" close="closeAlert()" ng-show="alertNeeded">{{alert.msg}}</alert>
-    <form name="settingsForm" ng-submit="settingsSubmit(user)" novalidate>
-        <div class="form-group" ng-class="{ 'has-error' : settingsForm.firstname.$invalid && !settingsForm.firstname.$pristine }">
-            <input type="text" class="form-control" ng-model="user.firstname" name="firstname" placeholder="First Name" ng-minlength="2" required>
-        </div>
-
-        <div class="form-group has-feedback" ng-class="{ 'has-error' : settingsForm.lastname.$invalid && !settingsForm.lastname.$pristine }">
-            <input type="text" class="form-control" ng-model="user.lastname" name="lastname" placeholder="Last Name" ng-minlength="2" required>
-        </div>
-        <div class="form-group has-feedback" ng-class="{ 'has-error' : settingsForm.email.$invalid && !settingsForm.email.$pristine || settingsForm.email.$error.emailvalid }">
-            <input type="email" class="form-control" emailupdate-validate ng-model="user.email" name="email" placeholder="Email" required>
-            <span class="glyphicon glyphicon-remove form-control-feedback" ng-show="settingsForm.email.$error.emailvalid && !settingsForm.email.$pristine" aria-hidden="true"></span>
-        </div>
-        <div class="form-group has-feedback" ng-class="{ 'has-error' : settingsForm.username.$invalid && !settingsForm.username.$pristine || settingsForm.username.$error.usernameupdatevalid ,
-             'has-success' : !settingsForm.username.$invalid && !settingsForm.username.$pristine && !settingsForm.username.$error.usernameupdatevalid}">
-            <input type="text" class="form-control" usernameupdate-validate ng-model="user.username" name="username" min="2" ng-minlength="2" placeholder="Username" required>
-            <span class="glyphicon glyphicon-ok form-control-feedback" ng-show="!settingsForm.username.$error.usernamevalid && !settingsForm.username.$pristine && settingsForm.username.$valid" aria-hidden="true"></span>
-            <span class="glyphicon glyphicon-remove form-control-feedback" ng-show="settingsForm.username.$error.usernameupdatevalid && !settingsForm.username.$pristine" aria-hidden="true"></span>
-        </div>
-        <div class="form-group has-feedback">
-            <button type="button" class="btn btn-default btn-lg" ng-click="updatePassword()">Change Password</button>
-        </div>
-
-        <hr />
-        <button type="submit" style="width:50%;display:inline-block" class="btn btn-primary btn-lg btn-block">Save Changes</button>
-    </form>
-</div>
-
-
-<script type="text/ng-template" id="myModalContent.html">
-    <div style="text-align:center;" class="modal-header">
-        <h3 class="modal-title">Change Password</h3>
-    </div>
-    <div class="modal-body">
-        <form name="passwordForm" novalidate>
-            <div class="form-group has-feedback" ng-class="{ 'has-error' : passwordForm.password.$invalid && !passwordForm.password.$pristine }">
-                <input type="password" class="form-control" ng-model="user.password" name="password" placeholder="Password" maxlength="12" required>
-            </div>
-            <div class="form-group has-feedback" ng-class="{ 'has-error' : passwordForm.passwordConfirm.$invalid && !passwordForm.passwordConfirm.$pristine}">
-                <input type="password" class="form-control" ng-model="user.passwordConfirm" pwudpate-check="user.password" name="passwordConfirm" placeholder="Confirm Password" maxlength="12" required>
-                <span class="glyphicon glyphicon-remove form-control-feedback" ng-show="passwordForm.passwordConfirm.$error.pwmatch && !passwordForm.passwordConfirm.$pristine" aria-hidden="true"></span>
-            </div>
-        </form>
-    </div>
-    <div class="modal-footer">
-        <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
-        <button class="btn btn-primary" ng-click="updatePassword()">Update Password</button>
-    </div>
-</script>
--->

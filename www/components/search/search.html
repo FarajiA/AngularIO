@@ -6,7 +6,7 @@
     <ion-nav-buttons side="right">
         <button class="button button-icon icon ion-gear-a" ui-sref="settings"></button>
     </ion-nav-buttons>
-    <ion-content has-header="true" padding="true">
+    <ion-content has-header="true" padding="true" has-bouncing="false">
         <form name="searchForm">
             <div class="list list-inset">
                 <label class="item item-input">
@@ -14,8 +14,8 @@
                     <input type="text" min="2" name="search" auto-search ng-model="Searchquery" placeholder="Search users">
                 </label>
         </form>
-    </div>
-     <div id="result">
+        </div>
+        <div id="result">
             <div id="search" class="search">
                 <div class="zeroResults search" ng-show="searchresults.array.length === 0 && !initial.first">
                     <h2>no results</h2>
@@ -29,7 +29,7 @@
                 </ion-list>
                 <ion-infinite-scroll ng-if="!noMoSearch" on-infinite="loadMoreSearch(Searchquery)" distance="30%"></ion-infinite-scroll>
             </div>
-     </div>
+        </div>
 
 
     </ion-content>

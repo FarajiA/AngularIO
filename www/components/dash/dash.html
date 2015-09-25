@@ -1,4 +1,4 @@
-﻿<ion-view title="Dashboard">
+﻿<ion-view title="">
 
     <ion-nav-buttons side="left">
         <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
@@ -7,10 +7,10 @@
         <button class="button button-icon icon ion-gear-a" ui-sref="settings"></button>
     </ion-nav-buttons>
 
-    <ion-content has-header="true" padding="true">
-        <h1>Dashboard</h1>
-        <a class="button button-halfwidth" nav-clear ui-sref="main.settings">Blank Search Section</a>
-        <a class="button button-halfwidth pull-right" nav-clear ui-sref="main.search">Main Search Section</a>
+    <ion-content has-header="true" padding="true" id="dash">       
+
+        <button class="button button-large icon ion-radio-waves" ng-class="user.broadcasting ? 'broadcasting':'notbroadcasting'"></button>
+
     </ion-content>
 
 </ion-view>
