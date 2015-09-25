@@ -71,3 +71,19 @@ form .private .item {border-left:0;border-right:0;border-bottom:0;font-weight:bo
 .map-modal .scroll {height:100%}
 .angular-google-map { height: 100%; }
 .angular-google-map-container{height: 100%;}
+#mapbanner {
+position: absolute;
+top: 0px;
+width: 100%;background-color: #fff;
+z-index: 2;
+opacity: 0.5;
+filter: alpha(opacity=60);
+height:50px;
+text-align: center;
+}
+#mapbanner .mapTitle{display: inline-block;
+    height: 50px;
+    font-size: 30px;
+    padding-top: 12px;
+}
+#mapbanner a.button {float:left}

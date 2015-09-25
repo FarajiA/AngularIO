@@ -26,10 +26,16 @@
 
 <script id="mapModal.html" type="text/ng-template">
   <ion-modal-view class="map-modal"> 
-    <ion-content> <ui-gmap-google-map center='map.center' zoom='map.zoom' draggable="true" options="options">
-    <ui-gmap-marker coords="map.center" idkey="01">
-        <!-- <ui-gmap-marker coords="map.center" options="marker.options" events="marker.events" idkey="marker.id"> -->
-        </ui-gmap-marker>
+    <ion-content has-bouncing="false"> 
+    <div id="mapbanner">
+    <a ng-click="closeModal()" class="button icon-left ion-close button-clear button-dark"></a>
+    <span class="mapTitle">{{username}}</span>
+    </div>
+    <ui-gmap-google-map center='map.center' zoom='map.zoom' draggable="true" options="options">
+    <ui-gmap-marker coords="chaserMarker.coords" options="chaserMarker.options" idkey="chaserMarker.id">
+    </ui-gmap-marker>
+    <ui-gmap-marker coords="userMarker.coords" options="userMarker.options" idkey="userMarker.id">
+    </ui-gmap-marker>
     </ui-gmap-google-map>
         
     </ion-content>

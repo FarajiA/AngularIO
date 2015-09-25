@@ -110,6 +110,10 @@
                                 {
                                     elem.attr("data-lat", chaserBroadcast.data().latitude)
                                        .attr("data-long", chaserBroadcast.data().longitude);
+                                    scope.chaserMarker.coords = {
+                                        latitude: Number(chaserBroadcast.data().latitude),
+                                        longitude: Number(chaserBroadcast.data().longitude)
+                                    };
                                 }
                                 else
                                 {

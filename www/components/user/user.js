@@ -1,8 +1,8 @@
 ﻿; (function () {
     var app = angular.module('App');
     app.requires.push('uiGmapgoogle-maps');
-    app.controller('UserController', ['$scope', 'UserObject', '$stateParams', 'Decision', '$location', '$ionicModal', 'angularLoad', '$timeout','$log','uiGmapGoogleMapApi',
-        function ($scope, UserObject, $stateParams, Decision, $location, $ionicModal, angularLoad, $timeout, $log, GoogleMapApi) {                
+    app.controller('UserController', ['$scope', 'UserObject', '$stateParams', 'Decision', '$location', '$ionicModal', '$interval', 'uiGmapGoogleMapApi','$cordovaGeolocation','$ionicPopup',
+        function ($scope, UserObject, $stateParams, Decision, $location, $ionicModal, $interval, GoogleMapApi, $cordovaGeolocation, $ionicPopup) {
 
    var userID = $stateParams.userId;
    UserObject.getUser(userID).then(function () {
@@ -132,81 +132,111 @@
  */
    });
 
-   var path = $location.path().split("/") || "Unknown";
-   $scope.segment = path[2];
+var path = $location.path().split("/") || "Unknown";
+$scope.segment = path[2];
 
-   $ionicModal.fromTemplateUrl('mapModal.html', {
-       scope: $scope,
-       animation: 'slide-in-up'
-   }).then(function (modal) {
+
+var watchOptions = {
+    timeout: 3000,
+    enableHighAccuracy: false // may cause errors if true
+};
+
+var posOptions = { timeout: 10000, enableHighAccuracy: false };
+$scope.alertSeen = false;
+
+$ionicModal.fromTemplateUrl('mapModal.html', {
+  scope: $scope,
+  animation: 'slide-in-up'
+}).then(function (modal) {
        $scope.modal = modal;
-   });
+});
    
    $scope.openModal = function () {
        $scope.modal.show();
 
-       GoogleMapApi.then(function () {
-
-           $scope.map = { center: { latitude: 51.219053, longitude: 4.404418 }, zoom: 12 };
-
-           $scope.map = { center: { latitude: $scope.latitude, longitude: $scope.longitude }, zoom: 8 };
+       GoogleMapApi.then(function (maps) {
+           $scope.map = { center: { latitude: $scope.latitude, longitude: $scope.longitude }, zoom: 12 };
            $scope.options = { disableDefaultUI: true };
-           $scope.marker = {
+           $scope.chaserMarker = {
                id: 0,
                coords: {
                    latitude: $scope.latitude,
                    longitude: $scope.longitude
                },
-               options: { draggable: true },
-               icon: '../img/checkered_chaser.png',
-               events: {
-                   dragend: function (marker, eventName, args) {
-                       $log.log('marker dragend');
-                       var lat = marker.getPosition().lat();
-                       var lon = marker.getPosition().lng();
-                       $log.log(lat);
-                       $log.log(lon);
-
-                       $scope.marker.options = {
-                           draggable: true,
-                           labelContent: "lat: " + $scope.marker.coords.latitude + ' ' + 'lon: ' + $scope.marker.coords.longitude,
-                           labelAnchor: "100 0",
-                           labelClass: "marker-labels"
-                       };
-                   }
-               }
+               options: { icon: 'img/checkered_chaser.png' },
+               
            };
+          
+       $scope.$watchCollection("chaserMarker.coords", function (newVal, oldVal) {
+           if (_.isEqual(newVal, oldVal))
+               return;
+           $scope.coordsUpdates++;
+       });
+       
+       $cordovaGeolocation
+             .getCurrentPosition(posOptions)
+             .then(function (position) {
+                 $scope.userLat = position.coords.latitude
+                 $scope.userLong = position.coords.longitude
 
+                 $scope.userMarker = {
+                     id: 1,
+                     coords: {
+                         latitude: $scope.userLat,
+                         longitude: $scope.userLong
+                     },
+                     options: { icon: 'img/map_dot.png' },
+                 };
+
+             }, function (err) {
+                 // error
+                 if (!$scope.alertSeen) {
+                     $scope.alertSeen = true;
+                     $ionicPopup.alert({
+                         title: mapsPrompt.title,
+                         template: mapsPrompt.text
+                     }).then(function (res) {
+                         console.log("Error with alert");
+                     });
+                 }
+                 console.log("Position Coordinates error");
+             });
+
+
+       var watch = $cordovaGeolocation.watchPosition(watchOptions);
+       watch.then(
+         null,
+         function (err) {
+             // error
+             if (!$scope.alertSeen) {
+                 $ionicPopup.alert({
+                     title: mapsPrompt.title,
+                     template: mapsPrompt.text
+                 });
+                 alertPopup.then(function (res) {
+                     $scope.alertSeen = true;
+                 });
+             }
+         },
+         function (position) {
+             $scope.userMarker = {
+                 id: 1,
+                 coords: {
+                     latitude: position.coords.latitude,
+                     longitude: position.coords.longitude
+                 },
+                 options: { icon: 'img/map_dot.png' },
+             };
+         });
+
+       //watch.clearWatch();
 
        },
         function (error) {
             // Do something with the error if it fails
             console.log("Error in Api call");
-        });
+        });      
 
-       $scope.$watchCollection("marker.coords", function (newVal, oldVal) {
-           if (_.isEqual(newVal, oldVal))
-               return;
-           $scope.coordsUpdates++;
-       });
-
-       /*
-            $timeout(function () {
-                $scope.marker.coords = {
-                    latitude: 42.1451,
-                    longitude: -100.6680
-                };
-                $scope.dynamicMoveCtr++;
-                $timeout(function () {
-                    $scope.marker.coords = {
-                        latitude: 43.1451,
-                        longitude: -102.6680
-                    };
-                    $scope.dynamicMoveCtr++;
-                }, 2000);
-            }, 1000);
-       
-       */
    };
    
    $scope.closeModal = function () {
