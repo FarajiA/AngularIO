@@ -3,12 +3,12 @@
         var data = [];
         var User = {};
 
-        User.broadcast = function () {
+        User.broadcast = function (lat, long, on) {
             var deffered = $q.defer();
-            var guid = UserObject.data().GUID;      
-            var msg = { "guid": guid, "password": password };
+            var guid = UserObject.data().GUID;
+            var msg = { "GUID": guid, "latitude": lat, "longitude": long, "on": on };
 
-            $http.put(baseURL + "api/users/broadcast/")
+            $http.put(baseURL + "api/users/broadcast/", msg)
             .success(function (d) {
                 data = d;
                 deffered.resolve();

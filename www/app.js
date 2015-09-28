@@ -64,6 +64,10 @@ app.run(function ($ionicPlatform, $ionicSideMenuDelegate, $rootScope, UserObject
         $rootScope.$broadcast('update_Chasers', args);
     });
 
+    $rootScope.$on('emit_Broadcasting', function (event, args) {
+        $rootScope.$broadcast('update_location', args);
+    });
+
     UserObject.fillAuthData();
 
     $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
@@ -264,6 +268,9 @@ function RouteMethods($stateProvider, $urlRouterProvider, $ionicConfigProvider) 
                     return $ocLazyLoad.load({
                         name: 'activityDetails',
                         files: [
+                            'lib/lodash.underscore.js',
+                            'lib/angular-simple-logger.js',
+                            'lib/angular-google-maps.js',
                             'components/user/userServices.js',
                             'components/user/user.js',
                             'components/user/userDirectives.js'
@@ -358,6 +365,9 @@ function RouteMethods($stateProvider, $urlRouterProvider, $ionicConfigProvider) 
                     return $ocLazyLoad.load({
                         name: 'searchDetails',
                         files: [
+                            'lib/lodash.underscore.js',
+                            'lib/angular-simple-logger.js',
+                            'lib/angular-google-maps.js',
                             'components/user/userServices.js',
                             'components/user/user.js',
                             'components/user/userDirectives.js'
@@ -613,10 +623,45 @@ app.factory('UserObject', ['$http', '$q', 'localStorageService', '$rootScope', f
     UserObject.fillAuthData = _fillAuthData;
     return UserObject;
 }]);
+
+app.factory('Dash', ['$http', '$q', 'UserObject', function ($http, $q, UserObject) {
+    var data = [];
+    var User = {};
+
+    User.broadcast = function (lat, long, on) {
+        var deffered = $q.defer();
+        var guid = UserObject.data().GUID;
+        var msg = { "GUID": guid, "latitude": lat, "longitude": long, "on": on };
+
+        $http.put(baseURL + "api/users/broadcast/", msg)
+        .success(function (d) {
+            data = d;
+            deffered.resolve();
+        })
+        .error(function (data, status) {
+            console.log("Request failed " + status);
+        });
+        return deffered.promise;
+    };
+
+    User.data = function () { return data };
+    return User;
+}]);
     
 
 /************ init ****************/
-app.controller('initController', ['$scope', 'UserObject', '$rootScope', function ($scope, UserObject, $rootScope) {
+app.controller('initController', ['$scope', 'UserObject', '$rootScope','Dash', function ($scope, UserObject, $rootScope, Dash) {
+
+    $scope.$on('update_location', function (event, args) {
+        if (args.action === "turn-on") {
+            console.log("Watch Coords here");
+        }
+        else if (args.action === "turn-off") {
+            console.log("Turn off");
+        }
+                
+    });
+
 
 
 }]);

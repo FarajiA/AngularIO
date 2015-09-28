@@ -20,7 +20,14 @@
         $scope.latitude = Number(UserObject.details().latitude);
 
         if ($scope.broadcasting) {
-           
+            $scope.chaserMarker = {
+                id: 0,
+                coords: {
+                    latitude: $scope.latitude,
+                    longitude: $scope.longitude
+                },
+                options: { icon: 'img/checkered_chaser.png' },
+            }
         } 
          /*
                 https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&key=AIzaSyDXOheZlzb8bgjOZKDiyFskCnrl5RV8b_Q
@@ -141,8 +148,10 @@ var watchOptions = {
     enableHighAccuracy: false // may cause errors if true
 };
 
-var posOptions = { timeout: 10000, enableHighAccuracy: false };
+var posOptions = { timeout: 10000, enableHighAccuracy: false, maximumAge: 90000 };
 $scope.alertSeen = false;
+
+var watch = $cordovaGeolocation.watchPosition(watchOptions);
 
 $ionicModal.fromTemplateUrl('mapModal.html', {
   scope: $scope,
@@ -156,16 +165,7 @@ $ionicModal.fromTemplateUrl('mapModal.html', {
 
        GoogleMapApi.then(function (maps) {
            $scope.map = { center: { latitude: $scope.latitude, longitude: $scope.longitude }, zoom: 12 };
-           $scope.options = { disableDefaultUI: true };
-           $scope.chaserMarker = {
-               id: 0,
-               coords: {
-                   latitude: $scope.latitude,
-                   longitude: $scope.longitude
-               },
-               options: { icon: 'img/checkered_chaser.png' },
-               
-           };
+           $scope.options = { disableDefaultUI: true };           ;
           
        $scope.$watchCollection("chaserMarker.coords", function (newVal, oldVal) {
            if (_.isEqual(newVal, oldVal))
@@ -173,6 +173,7 @@ $ionicModal.fromTemplateUrl('mapModal.html', {
            $scope.coordsUpdates++;
        });
        
+         
        $cordovaGeolocation
              .getCurrentPosition(posOptions)
              .then(function (position) {
@@ -200,10 +201,8 @@ $ionicModal.fromTemplateUrl('mapModal.html', {
                      });
                  }
                  console.log("Position Coordinates error");
-             });
-
-
-       var watch = $cordovaGeolocation.watchPosition(watchOptions);
+             });         
+       
        watch.then(
          null,
          function (err) {
@@ -220,7 +219,7 @@ $ionicModal.fromTemplateUrl('mapModal.html', {
          },
          function (position) {
              $scope.userMarker = {
-                 id: 1,
+                 id: 2,
                  coords: {
                      latitude: position.coords.latitude,
                      longitude: position.coords.longitude
@@ -245,6 +244,7 @@ $ionicModal.fromTemplateUrl('mapModal.html', {
         //Cleanup the modal when we're done with it!
    $scope.$on('$destroy', function () {
        $scope.modal.remove();
+       watch.clearWatch();
    });
         // Execute action on hide modal
    $scope.$on('modal.hidden', function () {
