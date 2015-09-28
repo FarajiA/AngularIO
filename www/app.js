@@ -650,7 +650,14 @@ app.factory('Dash', ['$http', '$q', 'UserObject', function ($http, $q, UserObjec
     
 
 /************ init ****************/
-app.controller('initController', ['$scope', 'UserObject', '$rootScope','Dash', function ($scope, UserObject, $rootScope, Dash) {
+    app.controller('initController', ['$scope', 'UserObject', '$rootScope','$cordovaCamera', '$cordovaFileTransfer', '$ionicModal', 'Dash', function ($scope, UserObject, $rootScope, $cordovaCamera, $cordovaFileTransfer,$ionicModal, Dash) {
+        
+    $ionicModal.fromTemplateUrl('photo-modal.html', {
+        scope: $scope,
+        animation: 'slide-in-up'
+    }).then(function (modal) {
+        $scope.modal = modal;
+    });
 
     $scope.$on('update_location', function (event, args) {
         if (args.action === "turn-on") {
@@ -658,9 +665,94 @@ app.controller('initController', ['$scope', 'UserObject', '$rootScope','Dash', f
         }
         else if (args.action === "turn-off") {
             console.log("Turn off");
-        }
-                
-    });
+        }                
+    });    
+    /*
+    var params = new Object();
+    params.headers = { Authorization: log_cred };
+    options.params = params;
+    */
+    $scope.openModal = function () {
+        $scope.modal.show();
+    };
+
+    $scope.closeModal = function () {
+        $scope.modal.hide();
+    };
+
+    $scope.data = { "ImageURI": "Select Image" };
+    $scope.takePicture = function () {
+        var options = {
+            quality: 50,
+            destinationType: Camera.DestinationType.FILE_URL,
+            sourceType: Camera.PictureSourceType.CAMERA
+        };
+        $cordovaCamera.getPicture(options).then(
+          function (imageData) {
+              $scope.picData = imageData;
+              $scope.ftLoad = true;
+              $localstorage.set('fotoUp', imageData);
+              $ionicLoading.show({ template: 'Foto acquisita...', duration: 500 });
+          },
+          function (err) {
+              $ionicLoading.show({ template: 'Errore di caricamento...', duration: 500 });
+          })
+    }
+
+    $scope.selectPicture = function () {
+        var options = {
+            quality: 50,
+            destinationType: Camera.DestinationType.FILE_URI,
+            sourceType: Camera.PictureSourceType.PHOTOLIBRARY
+        };
+
+        $cordovaCamera.getPicture(options).then(
+          function (imageURI) {
+              window.resolveLocalFileSystemURI(imageURI, function (fileEntry) {
+                  $scope.picData = fileEntry.nativeURL;
+                  $scope.ftLoad = true;
+                  var image = document.getElementById('myImage');
+                  image.src = fileEntry.nativeURL;
+              });
+              $ionicLoading.show({ template: 'Foto acquisita...', duration: 500 });
+          },
+          function (err) {
+              $ionicLoading.show({ template: 'Errore di caricamento...', duration: 500 });
+          })
+    };
+
+    $scope.uploadPicture = function () {
+        $ionicLoading.show({ template: 'Sto inviando la foto...' });
+        var fileURL = $scope.picData;
+        var options = new FileUploadOptions();
+        options.fileKey = "file";
+        options.fileName = fileURL.substr(fileURL.lastIndexOf('/') + 1);
+        options.mimeType = "image/jpeg";
+        options.chunkedMode = true;
+
+        var params = {};
+        params.value1 = "someparams";
+        params.value2 = "otherparams";
+
+        options.params = params;
+
+        var ft = new FileTransfer();
+        ft.upload(fileURL, encodeURI("http://www.yourdomain.com/upload.php"), viewUploadedPictures, function (error) {
+            $ionicLoading.show({ template: 'Errore di connessione...' });
+            $ionicLoading.hide();
+        }, options);
+    }
+
+
+    /*
+    $scope.takephoto = function () {
+
+    }
+
+    $scope.uploadPhoto = function () {
+
+    }
+    */
 
 
 

@@ -11,6 +11,20 @@ button.button-outline.button-full {border-right-width: thin; border-left-width: 
 .button-bar .button {background-color: #FFF2EE;}
 .button-bar .button.active {background-color: #E1D6D2;}
 .button-bar .button.actived {background-color: #E1D6D2;}
+/* Side menu */
+.sidemenu-header {text-align:center;border-color: #111; background-color: #444444;color: #fff;height: 215px;}
+.sidemenu-header h1 {text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 17px;
+  font-weight: 500;
+  line-height: 44px;
+  color:#fff;
+  margin-top: 0;
+}
+.sidemenu-header .profile {display: block;padding-top: 10px;}
+.sidemenu-header .profile img {max-height:150px; max-width:150px;height: 215px;border-radius: 50%;} 
+.photo-modal {width:200px;min-height: 50px !important;max-height: 175px;text-align: center;background-color: #FFF2EE;}
+.photo-modal .choice-buttons a {width: 150px;}
 /* Global spinner */
 .loading {background-color: transparent !important;}
 .button .icon {top:1px}
