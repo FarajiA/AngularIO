@@ -2,7 +2,7 @@
     var app = angular.module('App');
     app.controller('TrafficController', ['$scope', 'Traffic', '$ionicPopup', function ($scope, Traffic, $ionicPopup) {
         $scope.showChasers = true;
-
+        $scope.imageURL = imageURL;
         $scope.$on('update_Chasers', function (event, args) {
             //$scope.message = 'ONE: ' + args.action;
             if (args.action === "add")

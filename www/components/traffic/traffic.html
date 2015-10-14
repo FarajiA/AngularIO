@@ -19,7 +19,7 @@
                 </div>
                 <ion-list ng-show="chasers.length > 0">
                     <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="chaser in chasers" type="item-text-wrap" href="#/main/traffic/{{chaser.GUID}}">
-                        <img ng-src="img/default_avatar.png">
+                        <img ng-src="{{chaser.photo && imageURL + chaser.GUID + '.png' || 'img/default_avatar.png' }}">
                         <h2>{{chaser.username}}</h2>
                         <p>{{chaser.firstname}}&nbsp;{{chaser.lastname}}</p>
                         <i class="icon ion-ios-arrow-thin-left icon-accessory"></i>
@@ -37,7 +37,7 @@
                 </div>
                 <ion-list ng-show="chasing.length > 0" lr-infinite-scroll="loadMoreChasing" scroll-threshold="600">
                     <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="chaser in chasing" type="item-text-wrap" href="#/main/traffic/{{chaser.GUID}}">
-                        <img ng-src="img/default_avatar.png">
+                        <img ng-src="{{chaser.photo && imageURL + chaser.GUID + '.png' || 'img/default_avatar.png' }}">
                         <h2>{{chaser.username}}</h2>
                         <p>{{chaser.firstname}}&nbsp;{{chaser.lastname}}</p>
                     </ion-item>

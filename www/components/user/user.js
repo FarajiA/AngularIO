@@ -1,10 +1,12 @@
 ﻿; (function () {
     var app = angular.module('App');
     app.requires.push('uiGmapgoogle-maps');
-    app.controller('UserController', ['$scope', 'UserObject', '$stateParams', 'Decision', '$location', '$ionicModal', '$interval', 'uiGmapGoogleMapApi','$cordovaGeolocation','$ionicPopup',
-        function ($scope, UserObject, $stateParams, Decision, $location, $ionicModal, $interval, GoogleMapApi, $cordovaGeolocation, $ionicPopup) {
+    app.controller('UserController', ['$scope', 'UserObject', '$stateParams', 'Decision', '$location', '$ionicModal', '$interval', 'uiGmapGoogleMapApi','$cordovaGeolocation','$ionicPopup', '$ionicPlatform', 'GeoAlert',
+        function ($scope, UserObject, $stateParams, Decision, $location, $ionicModal, $interval, GoogleMapApi, $cordovaGeolocation, $ionicPopup, $ionicPlatform, GeoAlert) {
 
-   var userID = $stateParams.userId;
+            var userID = $stateParams.userId;
+            $scope.imageURL = imageURL;
+
    UserObject.getUser(userID).then(function () {
         $scope.title = UserObject.details().username;
         $scope.GUID = UserObject.details().GUID;
@@ -18,6 +20,7 @@
         $scope.broadcasting = UserObject.details().broadcast;        
         $scope.longitude = Number(UserObject.details().longitude);
         $scope.latitude = Number(UserObject.details().latitude);
+        $scope.photo = UserObject.details().photo;
 
         if ($scope.broadcasting) {
             $scope.chaserMarker = {
@@ -137,7 +140,7 @@
         }
 });
  */
-   });
+});
 
 var path = $location.path().split("/") || "Unknown";
 $scope.segment = path[2];
@@ -148,11 +151,12 @@ var watchOptions = {
     enableHighAccuracy: false // may cause errors if true
 };
 
-var posOptions = { timeout: 10000, enableHighAccuracy: false, maximumAge: 90000 };
-$scope.alertSeen = false;
+var geo_options = { timeout: 10000, enableHighAccuracy:false };
+var posOptions = { maximumAge: 0, timeout: 20000, enableHighAccuracy: false };
+
+//var posOptions = { timeout: 10000, enableHighAccuracy: false, maximumAge: 90000 };
 
 var watch = $cordovaGeolocation.watchPosition(watchOptions);
-
 $ionicModal.fromTemplateUrl('mapModal.html', {
   scope: $scope,
   animation: 'slide-in-up'
@@ -166,77 +170,142 @@ $ionicModal.fromTemplateUrl('mapModal.html', {
        GoogleMapApi.then(function (maps) {
            $scope.map = { center: { latitude: $scope.latitude, longitude: $scope.longitude }, zoom: 12 };
            $scope.options = { disableDefaultUI: true };           ;
-          
+           $scope.userMarker = {
+               id: 1,
+               options: { icon: 'img/map_dot.png' },
+           };
+
        $scope.$watchCollection("chaserMarker.coords", function (newVal, oldVal) {
            if (_.isEqual(newVal, oldVal))
                return;
            $scope.coordsUpdates++;
        });
-       
-         
-       $cordovaGeolocation
+
+       $ionicPlatform.ready(function () {
+           $cordovaGeolocation
              .getCurrentPosition(posOptions)
              .then(function (position) {
-                 $scope.userLat = position.coords.latitude
-                 $scope.userLong = position.coords.longitude
-
-                 $scope.userMarker = {
-                     id: 1,
-                     coords: {
-                         latitude: $scope.userLat,
-                         longitude: $scope.userLong
-                     },
-                     options: { icon: 'img/map_dot.png' },
-                 };
+                 $scope.userMarker.coords = {
+                     latitude: position.coords.latitude,
+                     longitude: position.coords.longitude
+                 }
 
              }, function (err) {
                  // error
-                 if (!$scope.alertSeen) {
+                 var seen = GeoAlert.getGeoalert();
+                 if (seen) 
+                     return 
+
                      $scope.alertSeen = true;
                      $ionicPopup.alert({
                          title: mapsPrompt.title,
                          template: mapsPrompt.text
                      }).then(function (res) {
-                         console.log("Error with alert");
+                         GeoAlert.setGeoalert(true);
                      });
-                 }
+            
                  console.log("Position Coordinates error");
-             });         
+             });
+       });
        
-       watch.then(
-         null,
-         function (err) {
-             // error
-             if (!$scope.alertSeen) {
-                 $ionicPopup.alert({
-                     title: mapsPrompt.title,
-                     template: mapsPrompt.text
+    /*
+       function geoLocateSuccess(position) {
+           $scope.userLat = position.coords.latitude
+           $scope.userLong = position.coords.longitude
+           $scope.userMarker = {
+               id: 1,
+               coords: {
+                   latitude: $scope.userLat,
+                   longitude: $scope.userLong
+               },
+               options: { icon: 'img/map_dot.png' },
+           };
+       }
+
+       function geoLocateError(error) {
+           $ionicPopup.alert({
+               title: mapsPrompt.title,
+               template: mapsPrompt.text + "\n" + error.message
+           }).then(function (res) {
+               GeoAlert.setGeoalert(true);
+           });
+           //bootbox.alert("Something went wrong. " + "\n" + error.message);
+       }
+
+       if (navigator.geolocation) {
+           navigator.geolocation.getCurrentPosition(geoLocateSuccess, geoLocateError, posOptions);
+       } else {
+           console.log('not supported');
+       }
+      /*
+      document.addEventListener("deviceready", onDeviceReady, false);    
+       
+      
+           $cordovaGeolocation
+                 .getCurrentPosition(posOptions)
+                 .then(function (position) {
+                     $scope.userLat = position.coords.latitude
+                     $scope.userLong = position.coords.longitude
+
+                     $scope.userMarker = {
+                         id: 1,
+                         coords: {
+                             latitude: $scope.userLat,
+                             longitude: $scope.userLong
+                         },
+                         options: { icon: 'img/map_dot.png' },
+                     };
+
+                     watch.then(null, function (err) {
+                         // error
+                         var seen = GeoAlert.getGeoalert();
+                         if (seen)
+                             return
+                         else {
+                             $ionicPopup.alert({
+                                 title: mapsPrompt.title,
+                                 template: mapsPrompt.text
+                             }).then(function (res) {
+                                 GeoAlert.setGeoalert(true);
+                             });
+                         }
+                     },
+                       function (position) {
+                           $scope.userMarker = {
+                               id: 2,
+                               coords: {
+                                   latitude: position.coords.latitude,
+                                   longitude: position.coords.longitude
+                               },
+                               options: { icon: 'img/map_dot.png' },
+                           };
+                       });
+
+
+                 }, function (err) {
+                     // error
+                     var seen = GeoAlert.getGeoalert();
+                     if (seen) 
+                         return 
+                     else {
+                             $ionicPopup.alert({
+                                 title: mapsPrompt.title,
+                                 template: mapsPrompt.text
+                             }).then(function (res) {
+                                 console.log("Done with alert");
+                                 GeoAlert.setGeoalert(true);
+                             });                      
+                     }
                  });
-                 alertPopup.then(function (res) {
-                     $scope.alertSeen = true;
-                 });
-             }
-         },
-         function (position) {
-             $scope.userMarker = {
-                 id: 2,
-                 coords: {
-                     latitude: position.coords.latitude,
-                     longitude: position.coords.longitude
-                 },
-                 options: { icon: 'img/map_dot.png' },
-             };
-         });
+      
+          */
+   },
+function (error) {
+      // Do something with the error if it fails
+       console.log("Error in Api call");
+});      
 
-       //watch.clearWatch();
-
-       },
-        function (error) {
-            // Do something with the error if it fails
-            console.log("Error in Api call");
-        });      
-
-   };
+};
    
    $scope.closeModal = function () {
        $scope.modal.hide();

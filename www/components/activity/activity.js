@@ -3,7 +3,7 @@
     app.controller('ActivityController', ['$scope', 'Activity', '$ionicPopup', '$rootScope', function ($scope, Activity, $ionicPopup, $rootScope) {
 
         $scope.showBroadcasters = true;
-
+        $scope.imageURL = imageURL;
         $scope.broadcastingIndex = 0;
         Activity.broadcasting($scope.broadcastingIndex).then(function () {
             $scope.broadcasting = Activity.broadcastData().Results;

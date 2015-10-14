@@ -2,6 +2,7 @@
     angular.module('App').controller('ChasersController', ['$scope', '$stateParams', '$location', 'Chasers', function ($scope, $stateParams, $location, Chasers) {
 
         var userID = $stateParams.userId;
+        $scope.imageURL = imageURL;
 
         var chasersInit = function () {
             $scope.index = 0;

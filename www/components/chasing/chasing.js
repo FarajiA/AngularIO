@@ -1,6 +1,7 @@
 ﻿; (function () {
     angular.module('App').controller('ChasingController', ['$scope', '$stateParams','$location', 'Chasing', function ($scope, $stateParams, $location, Chasing) {
 
+        $scope.imageURL = imageURL;
         var userID = $stateParams.userId;
         var chasingInit = function () {
             $scope.index = 0;

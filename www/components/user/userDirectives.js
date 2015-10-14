@@ -94,9 +94,6 @@
                             .attr("data-long", UserObject.details().longitude)
                             .text(userDetails.viewlocation)
                             .removeClass("ion-locked");
-                            elem.on('click', function (e) {
-                                console.log("map clicked");
-                            });
                         }
                         else if (UserObject.details().isprivate) {
                             elem.attr("disabled", "disabled")

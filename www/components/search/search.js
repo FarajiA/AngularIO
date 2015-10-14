@@ -5,7 +5,8 @@
         $scope.searchIndex = { index: 0 }
         $scope.searchCount = { figure: 0 }
         $scope.searchresults = { array: [] }
-        $scope.initial = {first: true}
+        $scope.initial = { first: true }
+        $scope.imageURL = imageURL;
 
         $scope.loadMoreSearch = function (search) {           
                 var pagingMax = Math.ceil($scope.searchCount.figure / countSet, 1);
