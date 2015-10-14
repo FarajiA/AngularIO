@@ -119,6 +119,7 @@ label.item-input { height: 60px;}
 .userInfo button[data-chasing="requested"] {background-color:#a333a6;  color:#fff;} 
 .userInfo button[data-chasing="requested"].activated,button[data-chasing="requested"]:focus {background-color:#6c226e;}
 #broadcast .broadcasting {background-color: #F7BE81;}
+.userInfo button .spinner-lines {stroke: #fff;position: relative;top: 8px;}
 
 /* Settings Page  */
 form .password {margin: 30px 0 15px;text-align: center;}

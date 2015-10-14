@@ -635,9 +635,11 @@ app.factory('UserObject', ['$http', '$q', 'localStorageService', '$rootScope', f
 
     UserObject.logout = function () {
         localStorageService.remove('authorizationData');
+        localStorageService.remove('chaserImage');
         _authentication.isAuth = false;
         _authentication.userName = "";
         _authentication.useRefreshTokens = false;
+        return _authentication;
     }
 
     UserObject.setUser = function (guid) {
@@ -735,9 +737,7 @@ app.factory('GeoAlert', function () {
 
 /************ init ****************/
 app.controller('initController', ['$scope', '$timeout', 'UserObject', '$cordovaCamera', '$cordovaFileTransfer', '$ionicModal', '$ionicPlatform', 'localStorageService', '$ionicLoading', '$rootScope', '$state', function ($scope, $timeout, UserObject, $cordovaCamera, $cordovaFileTransfer, $ionicModal, $ionicPlatform, localStorageService, $ionicLoading, $rootScope, $state) {
-
     
-
     $ionicModal.fromTemplateUrl('photo-modal.html', {
         scope: $scope,
         animation: 'slide-in-up'
@@ -778,9 +778,9 @@ app.controller('initController', ['$scope', '$timeout', 'UserObject', '$cordovaC
     });
 
     $scope.logout = function () {
-        var out = UserObject.logout;
+        var out = UserObject.logout();
         if (!out.isAuth)
-            $state.go(toState.name);
+            $state.go('login');
     };
 
     $scope.type = 'circle';

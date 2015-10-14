@@ -4,9 +4,10 @@
         $scope.showChasers = true;
         $scope.imageURL = imageURL;
         $scope.$on('update_Chasers', function (event, args) {
-            //$scope.message = 'ONE: ' + args.action;
-            if (args.action === "add")
-                  chasersInit();
+            if (args.action === "chasers")
+                chasersInit();
+            if (args.action === "chasing")
+                chasingInit();
         });
 
         var chasersInit = function () {

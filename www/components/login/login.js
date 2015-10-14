@@ -11,12 +11,15 @@
 
                     if ($scope.user.GUID) {
                         UserObject.setUser($scope.user.GUID).then(function () {
-                            $scope.user = UserObject.data();
+                            $scope.user = {};
+                            $scope.user.username = "";
+                            $scope.user.password = "";
+                            $scope.form.loginform.$setPristine();
                             $state.go('main.dash');
                         });                        
                     }
                     else {
-                       $scope.user = "";
+                       $scope.user = {};
                        alert("No account found");
                     }
                 });

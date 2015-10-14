@@ -66,7 +66,7 @@
                             $scope.requests.splice(index, 1);
                             $rootScope.chasersNo = ($rootScope.chasersNo + 1);
                             $rootScope.requestsNo = ($rootScope.requestsNo - 1);
-                            $scope.$emit('emit_Chasers', { action: "add" });
+                            $scope.$emit('emit_Chasers', { action: "chasers" });
                         });
                     }
                 });

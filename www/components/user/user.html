@@ -12,6 +12,7 @@
                 <a class="button" href="#/main/{{segment}}/chasing/{{GUID}}"><span>{{noChasing}}</span>Chasing</a>
             </div>
             <button user-choice ng-model="symbol" class="button button-block icon" ng-class="{'ion-star':symbol == 0 || symbol == 1 ,'ion-paper-airplane':symbol == 2 }">
+                <ion-spinner icon="lines" ng-show="loadingFollow"></ion-spinner>
                 {{isFollowing}}
             </button>
         </div>

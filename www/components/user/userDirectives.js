@@ -25,7 +25,8 @@
                                     elem.attr('data-chasing', true);
                                     scope.isFollowing = activityConst.following;
                                     UserObject.details().isChasing = true;
-                                    scope.noChasers++;
+                                    scope.$emit('emit_Chasers', { action: "chasers" });
+                                    //scope.noChasers++;
                                     //$rootScope.followingNo++;
                                     scope.notChasing = false;
                                     scope.yesChasing = true;
@@ -41,7 +42,8 @@
                                 elem.attr('data-chasing', false);
                                 scope.isFollowing = activityConst.follow;
                                 UserObject.details().isChasing = false;
-                                scope.noChasers--;
+                                scope.$emit('emit_Chasers', { action: "chasing" });
+                                //scope.noChasers--;
                                 //$rootScope.followingNo--;
                                 scope.notChasing = true;
                                 scope.yesChasing = false;
@@ -51,6 +53,7 @@
                 };
 
                 scope.$watch(attrs.ngModel, function (newValue, oldValue) {
+                        //scope.symbol = newValue;
                         switch (newValue) {
                             case 0:
                                 elem.attr('data-chasing', false);
@@ -68,12 +71,18 @@
                 });
 
                 elem.on('click', function (e) {
-                    if (UserObject.details().isprivate && UserObject.details().isChasing == 0) 
+                    scope.$apply(function () {
+                        scope.symbol = 3;
+                        scope.loadingFollow = true;
+                    });
+                    /*
+                    if (UserObject.details().isprivate && UserObject.details().isChasing == 0)
                         UserRequest();
                     else if (!UserObject.details().isprivate && UserObject.details().isChasing == 1)
                         UserUnfollow();
                     else 
                         UserFollow();
+                        */
                 });
             }
         }
