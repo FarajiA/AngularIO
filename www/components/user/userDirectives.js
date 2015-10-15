@@ -10,9 +10,7 @@
                             Decision.request(UserObject.details().GUID).then(function () {
                                 if (Decision.data() === 1) {
                                     elem.attr('data-chasing', "requested").attr("disabled", "disabled");
-                                    scope.isFollowing = activityConst.requested;
-                                    scope.notChasing = false;
-                                    scope.requested = true;
+                                    scope.symbol = 2;
                                 }
                             });
                         });
@@ -23,13 +21,10 @@
                             Decision.follow(UserObject.details().GUID).then(function () {
                                 if (Decision.data() === 1) {
                                     elem.attr('data-chasing', true);
-                                    scope.isFollowing = activityConst.following;
                                     UserObject.details().isChasing = true;
-                                    scope.$emit('emit_Chasers', { action: "chasers" });
-                                    //scope.noChasers++;
-                                    //$rootScope.followingNo++;
-                                    scope.notChasing = false;
-                                    scope.yesChasing = true;
+                                    scope.noChasers++;
+                                    scope.symbol = 1;
+                                    scope.$emit('emit_Chasers', { action: "chasing" });
                                 }
                             });
                         });
@@ -40,20 +35,19 @@
                         Decision.unfollow(UserObject.details().GUID).then(function () {
                             if (Decision.data() === 1) {
                                 elem.attr('data-chasing', false);
-                                scope.isFollowing = activityConst.follow;
                                 UserObject.details().isChasing = false;
+                                scope.noChasers--;
+                                scope.symbol = 0;
                                 scope.$emit('emit_Chasers', { action: "chasing" });
-                                //scope.noChasers--;
-                                //$rootScope.followingNo--;
-                                scope.notChasing = true;
-                                scope.yesChasing = false;
                             }
                         });
                     });
                 };
 
                 scope.$watch(attrs.ngModel, function (newValue, oldValue) {
-                        //scope.symbol = newValue;
+                    if (newValue >= 0 && newValue < 3) {
+                        scope.loadingFollow = false;
+                    }
                         switch (newValue) {
                             case 0:
                                 elem.attr('data-chasing', false);
@@ -67,7 +61,7 @@
                                 elem.attr('data-chasing', "requested").attr("disabled", "disabled");
                                 scope.isFollowing = activityConst.requested;
                                 break;
-                    }
+                        }
                 });
 
                 elem.on('click', function (e) {
@@ -75,14 +69,14 @@
                         scope.symbol = 3;
                         scope.loadingFollow = true;
                     });
-                    /*
+                 
                     if (UserObject.details().isprivate && UserObject.details().isChasing == 0)
                         UserRequest();
                     else if (!UserObject.details().isprivate && UserObject.details().isChasing == 1)
                         UserUnfollow();
                     else 
                         UserFollow();
-                        */
+                      
                 });
             }
         }

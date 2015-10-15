@@ -5,8 +5,8 @@ var imageURL = "http://localhost:3536/photos/";
 
 var countSet = 10;
 var activityConst = {
-    following: 'Following',
-    follow: 'Follow',
+    following: 'Chasing',
+    follow: 'Chase',
     requested: 'Requested'
 }
 var updatedUserConst = {
