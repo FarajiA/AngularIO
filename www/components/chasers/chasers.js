@@ -1,14 +1,16 @@
 ﻿; (function () {
-    angular.module('App').controller('ChasersController', ['$scope', '$stateParams', '$location', 'Chasers', function ($scope, $stateParams, $location, Chasers) {
+    angular.module('App').controller('ChasersController', ['$scope', '$stateParams', '$location', 'Chasers', '$ionicLoading', function ($scope, $stateParams, $location, Chasers, $ionicLoading) {
 
         var userID = $stateParams.userId;
         $scope.imageURL = imageURL;
 
         var chasersInit = function () {
+            $ionicLoading.show();
             $scope.index = 0;
             Chasers.chasers($scope.index, userID).then(function () {
                 $scope.chasers = Chasers.data().Results;
                 $scope.index++;
+                $ionicLoading.hide();
             });
         };
 

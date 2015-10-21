@@ -1,6 +1,6 @@
 ﻿; (function () {
     var app = angular.module('App');
-    app.controller('TrafficController', ['$scope', 'Traffic', '$ionicPopup', function ($scope, Traffic, $ionicPopup) {
+    app.controller('TrafficController', ['$scope', 'Traffic', '$ionicPopup', '$ionicLoading', function ($scope, Traffic, $ionicPopup, $ionicLoading) {
         $scope.showChasers = true;
         $scope.imageURL = imageURL;
         $scope.$on('update_Chasers', function (event, args) {
@@ -11,8 +11,10 @@
         });
 
         var chasersInit = function () {
+            $ionicLoading.show();
             $scope.chasersindex = 0;
             Traffic.chasers($scope.chasersindex).then(function (data) {
+                $ionicLoading.hide();
                 $scope.chasers = data.Results;
                 $scope.chasersNo = data.Total;
                 $scope.noMoChasers = ($scope.chasersNo <= countSet);
@@ -38,8 +40,10 @@
         };
         
         var chasingInit = function () {
+            $ionicLoading.show();
             $scope.chasingindex = 0;
             Traffic.chasing($scope.chasingindex).then(function (data) {
+                $ionicLoading.hide();
                 $scope.chasing = data.Results;
                 $scope.chasingNo = data.Total;
                 $scope.noMoChasing = ($scope.chasingNo <= countSet);

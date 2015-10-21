@@ -1,14 +1,14 @@
 ﻿; (function () {
 
     var app = angular.module('App');
-    app.controller('RegisterController', ['$scope', '$state', 'UserObject', function ($scope, $state, UserObject) {
+    app.controller('RegisterController', ['$scope', '$state', 'UserObject', '$ionicLoading', function ($scope, $state, UserObject, $ionicLoading) {
        
         $scope.form = {};
         // function to submit the form after all validation has occurred
         $scope.submitRegister = function (user) {
             // check to make sure the form is completely valid
             if ($scope.form.registerform.$valid) {
-                
+               $ionicLoading.show();
                UserObject.register(user).then(function () {
                     $scope.user = UserObject.data();
                     if ($scope.user.GUID) {

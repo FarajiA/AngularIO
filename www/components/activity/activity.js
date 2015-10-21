@@ -1,16 +1,23 @@
 ﻿; (function () {
     var app = angular.module('App');
-    app.controller('ActivityController', ['$scope', 'Activity', '$ionicPopup', '$rootScope', function ($scope, Activity, $ionicPopup, $rootScope) {
+    app.controller('ActivityController', ['$scope', 'Activity', '$ionicPopup', '$rootScope', '$ionicLoading', function ($scope, Activity, $ionicPopup, $rootScope, $ionicLoading) {
 
         $scope.showBroadcasters = true;
         $scope.imageURL = imageURL;
-        $scope.broadcastingIndex = 0;
-        Activity.broadcasting($scope.broadcastingIndex).then(function () {
-            $scope.broadcasting = Activity.broadcastData().Results;
-            $rootScope.broadcastingNo = Activity.broadcastData().Total;
-            $scope.noMoBroadcasters = ($rootScope.broadcastingNo <= countSet);
-            $scope.broadcastingIndex++;
-        });
+
+        var activityInit = function () {
+            $ionicLoading.show();
+            $scope.broadcastingIndex = 0;
+            Activity.broadcasting($scope.broadcastingIndex).then(function () {
+                $ionicLoading.hide();
+                $scope.broadcasting = Activity.broadcastData().Results;
+                $rootScope.broadcastingNo = Activity.broadcastData().Total;
+                $scope.noMoBroadcasters = ($rootScope.broadcastingNo <= countSet);
+                $scope.broadcastingIndex++;
+            });
+        };
+
+        activityInit();
 
         $scope.loadMoreBroadcasters = function () {
             var pagingMax = Math.ceil($rootScope.broadcastingNo / countSet, 1);
@@ -27,14 +34,19 @@
             $scope.$broadcast('scroll.infiniteScrollComplete');
         };
 
+        var requestInit = function () {
+            $ionicLoading.show();
+            $scope.requestIndex = 0;
+            Activity.request($scope.requestIndex).then(function () {
+                $ionicLoading.hide();
+                $scope.requests = Activity.requestData().Results;
+                $rootScope.requestsNo = Activity.requestData().Total;
+                $scope.noMoRequests = ($rootScope.requestsNo <= countSet);
+                $scope.requestIndex++;
+            });
+        };
 
-        $scope.requestIndex = 0;
-        Activity.request($scope.requestIndex).then(function () {
-            $scope.requests = Activity.requestData().Results;
-            $rootScope.requestsNo = Activity.requestData().Total;
-            $scope.noMoRequests = ($rootScope.requestsNo <= countSet);
-            $scope.requestIndex++;
-        });
+        requestInit();
 
         $scope.loadMoreRequests = function () {
             var pagingMax = Math.ceil($rootScope.requestsNo / countSet, 1);

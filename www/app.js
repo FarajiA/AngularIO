@@ -1,7 +1,7 @@
-//var baseURL = "http://localhost:3536/";
-//var imageURL = "http://localhost:3536/photos/";
-var baseURL = "http://ch-mo.com/";
-var imageURL = "http://ch-mo.com/photos/"
+var baseURL = "http://localhost:3536/";
+var imageURL = "http://localhost:3536/photos/";
+//var baseURL = "http://ch-mo.com/";
+//var imageURL = "http://ch-mo.com/photos/"
 
 var countSet = 10;
 var activityConst = {
@@ -173,7 +173,8 @@ function RouteMethods($stateProvider, $urlRouterProvider, $ionicConfigProvider) 
     $stateProvider.state('main', {
         url: '/main',
         templateUrl: 'components/layout/main.html',
-        abstract: true
+        abstract: true,
+        controller: "initController"
     })
     // Each tab has its own nav history stack:
     .state('main.dash', {
@@ -738,6 +739,20 @@ app.factory('GeoAlert', function () {
 /************ init ****************/
 app.controller('initController', ['$scope', '$timeout', 'UserObject', '$cordovaCamera', '$cordovaFileTransfer', '$ionicModal', '$ionicPlatform', 'localStorageService', '$ionicLoading', '$rootScope', '$state', function ($scope, $timeout, UserObject, $cordovaCamera, $cordovaFileTransfer, $ionicModal, $ionicPlatform, localStorageService, $ionicLoading, $rootScope, $state) {
     
+    /*
+    $scope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
+        $ionicLoading.show();
+    });
+
+
+    $scope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {       
+        $timeout(function () {
+            $ionicLoading.hide();
+        }, 2000);
+    });
+    */
+    
+
     $ionicModal.fromTemplateUrl('photo-modal.html', {
         scope: $scope,
         animation: 'slide-in-up'
@@ -745,7 +760,7 @@ app.controller('initController', ['$scope', '$timeout', 'UserObject', '$cordovaC
         $scope.modal = modal;
     });
 
-        $ionicModal.fromTemplateUrl('crop-modal.html', {
+    $ionicModal.fromTemplateUrl('crop-modal.html', {
         scope: $scope,
         animation: 'slide-in-up'
     }).then(function (modal) {

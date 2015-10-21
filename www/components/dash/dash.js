@@ -3,7 +3,7 @@
     app.controller('DashController', ['$scope', 'UserObject', 'Dash', '$cordovaGeolocation', '$ionicPopup','$ionicLoading',
         function ($scope, UserObject, Dash, $cordovaGeolocation, $ionicPopup, $ionicLoading) {
 
-        
+        $ionicLoading.hide()
         $scope.broadcastloading = false;
         $scope.user = UserObject.data();
         var posOptions = { timeout: 10000, enableHighAccuracy: false };
@@ -49,8 +49,7 @@
                     });  
                 });
             }
-        }
-            
+        }           
 
         
 

@@ -1,10 +1,11 @@
 ﻿; (function () {
 
-    angular.module('App').controller('LoginController', ['$scope', '$state', 'UserObject', function ($scope, $state, UserObject) {       
+    angular.module('App').controller('LoginController', ['$scope', '$state', 'UserObject','$ionicLoading', function ($scope, $state, UserObject, $ionicLoading) {
 
         $scope.form = {};
         //function to submit the form after all validation has occurred
         $scope.submitLogin = function (user) {
+            $ionicLoading.show();
             if ($scope.form.loginform.$valid) {
                 UserObject.login(user).then(function () {
                     $scope.user = UserObject.data();
