@@ -42,7 +42,7 @@
                     longitude: $scope.longitude
                 },
                 options: { icon: 'img/checkered_chaser.png' },
-            }
+            };
             
             $ionicPlatform.ready(function () {
                 watch = $cordovaGeolocation.watchPosition(options);
@@ -58,11 +58,11 @@
                           GeoAlert.setGeoalert(true);
                       });
                   }, function (position) {
-                      $scope.userMarker.coords = {
-                          latitude: position.coords.latitude,
-                          longitude: position.coords.longitude
-                      }
-                  });
+                    $scope.userMarker.coords = {
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude
+                    };
+                });
             });
         } 
 });

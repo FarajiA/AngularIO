@@ -28,7 +28,7 @@
             var pagingMax = Math.ceil($scope.chasersNo / countSet, 1);
             if ($scope.chasersindex < pagingMax && $scope.chasersindex > 0) {
                 Traffic.chasers($scope.chasersindex).then(function (data) {
-                    var merged = data.Results.concat($scope.chasers);
+                    var merged = $scope.chasers.concat(data.Results);
                     $scope.chasers = merged;
                     $scope.chasersindex++;
                 });
@@ -38,18 +38,18 @@
 
             $scope.$broadcast('scroll.infiniteScrollComplete');
         };
-        
-        var chasingInit = function () {
+
+        var chasingInit = function() {
             $ionicLoading.show();
             $scope.chasingindex = 0;
-            Traffic.chasing($scope.chasingindex).then(function (data) {
+            Traffic.chasing($scope.chasingindex).then(function(data) {
                 $ionicLoading.hide();
                 $scope.chasing = data.Results;
                 $scope.chasingNo = data.Total;
                 $scope.noMoChasing = ($scope.chasingNo <= countSet);
                 $scope.chasingindex++;
             });
-        }
+        };
 
         chasingInit();
 
@@ -57,7 +57,7 @@
             var pagingMax = Math.ceil($scope.chasingNo / countSet, 1);
             if ($scope.chasingindex < pagingMax && $scope.chasersindex > 0) {
                 Traffic.chasing($scope.chasingindex).then(function (data) {
-                    var merged = data.Results.concat($scope.chasing);
+                    var merged = $scope.chasing.concat(data.Results);
                     $scope.chasing = merged;
                     $scope.chasingindex++;
                 });

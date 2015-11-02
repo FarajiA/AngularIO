@@ -1,14 +1,30 @@
 ﻿<ion-view title="Contacts">
-
-
     <ion-nav-buttons side="left">
         <button class="button button-clear ion-chevron-left" ng-click="back()"></button>
     </ion-nav-buttons>
 
     <ion-content has-header="true" padding="true">
-        <h1>Contacts</h1>
-
-
+        <form name="searchForm">
+            <div class="list list-inset">
+                <label class="item item-input">
+                    <i class="icon ion-search placeholder-icon"></i>
+                    <input type="text" min="2" name="search" ng-model="ContactsSearch" placeholder="Search contacts" />
+                </label>
+            </div>
+        </form>
+        <div id="result">
+            <div id="contacts" class="contacts">
+                <div class="zeroResults contacts" ng-show="contacts.length === 0">
+                    <h2>Daaamn you got no homies</h2>
+                </div>
+                <ion-list ng-show="contacts.length > 0">
+                    <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="contact in contacts | filter:ContactsSearch" type="item-text-wrap">
+                        <h2>{{search.username}}</h2>
+                        <p>{{search.firstname}}&nbsp;{{search.lastname}}</p>
+                    </ion-item>
+                </ion-list>
+            </div>
+        </div>
     </ion-content>
 
 </ion-view>

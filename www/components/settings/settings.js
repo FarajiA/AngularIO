@@ -6,7 +6,7 @@
             $scope.oldpasswordInvalid = false;
 
             $scope.updatePassword = function () {
-                $scope.data = {}
+                $scope.data = {};
                 $scope.form = {
                     passwordForm: {}
                 };          

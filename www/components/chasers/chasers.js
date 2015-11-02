@@ -21,7 +21,7 @@
             var pagingMax = Math.ceil(chasersNo / countSet, 1);
             if ($scope.index < pagingMax && $scope.index > 0) {
                 Chasers.chasers($scope.index, userID).then(function () {
-                    var merged = Chasers.data().Results.concat($scope.chasers);
+                    var merged = $scope.chasers.concat(Chasers.data().Results);
                     $scope.chasers = merged;
                     $scope.index++;
                 });

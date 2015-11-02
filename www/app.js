@@ -141,7 +141,6 @@ app.run(function ($ionicPlatform, $ionicSideMenuDelegate, $rootScope, UserObject
                         convertImgToBase64URL(imageURL + UserObject.data().GUID + ".png", function (base64Img) {
                             $rootScope.chaser.savedImage = base64Img;
                             localStorageService.set('chaserImage', $rootScope.chaser.savedImage);
-
                         }, 'image/png');
                     }
                     else if (savedImage) {
