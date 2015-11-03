@@ -14,15 +14,14 @@
         </form>
         <div id="result">
             <div id="contacts" class="contacts">
-                <div class="zeroResults contacts" ng-show="contacts.length === 0">
+                <div class="zeroResults contacts" ng-show="contacts.length === 0 && contactsFinished">
                     <h2>Daaamn you got no homies</h2>
                 </div>
-                <ion-list ng-show="contacts.length > 0">
-                    <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="contact in contacts | filter:ContactsSearch" type="item-text-wrap">
-                        <h2>{{search.username}}</h2>
-                        <p>{{search.firstname}}&nbsp;{{search.lastname}}</p>
-                    </ion-item>
-                </ion-list>
+                <ion-checkbox ng-model="contact.checked" ng-repeat="contact in contacts | filter:ContactsSearch" ng-checked="contact.indexOf(contact) > -1" ng-click="checkboxSelection(contact)">
+                     <h2>{{contact.displayName}}</h2>
+                     <p>{{contact.phonenumber}}</p>
+                </ion-checkbox>
+                        
             </div>
         </div>
     </ion-content>

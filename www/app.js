@@ -1,7 +1,7 @@
-var baseURL = "http://localhost:3536/";
-var imageURL = "http://localhost:3536/photos/";
-//var baseURL = "http://ch-mo.com/";
-//var imageURL = "http://ch-mo.com/photos/"
+//var baseURL = "http://localhost:3536/";
+//var imageURL = "http://localhost:3536/photos/";
+var baseURL = "http://ch-mo.com/";
+var imageURL = "http://ch-mo.com/photos/"
 
 var countSet = 10;
 var activityConst = {
@@ -43,6 +43,15 @@ var mapsPrompt = {
     title: 'Location services off',
     text: 'To see your position turn on location services',
     error: 'Location services off'
+}
+
+var dashPrompt = {
+    title:'Location services must be on'
+}
+
+var SMS = {
+    error: 'Problem sending SMS to 0',
+    success: 'Invites sent homie'
 }
 
 function convertImgToBase64URL(url, callback, outputFormat) {
@@ -141,6 +150,7 @@ app.run(function ($ionicPlatform, $ionicSideMenuDelegate, $rootScope, UserObject
                         convertImgToBase64URL(imageURL + UserObject.data().GUID + ".png", function (base64Img) {
                             $rootScope.chaser.savedImage = base64Img;
                             localStorageService.set('chaserImage', $rootScope.chaser.savedImage);
+
                         }, 'image/png');
                     }
                     else if (savedImage) {
@@ -172,8 +182,7 @@ function RouteMethods($stateProvider, $urlRouterProvider, $ionicConfigProvider) 
     $stateProvider.state('main', {
         url: '/main',
         templateUrl: 'components/layout/main.html',
-        abstract: true,
-        controller: "initController"
+        abstract: true
     })
     // Each tab has its own nav history stack:
     .state('main.dash', {
@@ -189,7 +198,7 @@ function RouteMethods($stateProvider, $urlRouterProvider, $ionicConfigProvider) 
                 return $ocLazyLoad.load({
                     name: 'dash',
                     files: [
-                        'components/dash/dash.js'
+                        'components/dash/dash.js',
                     ]
                 });
             }],
@@ -723,7 +732,6 @@ app.factory('GeoAlert', function () {
     var viewed = {
         seen: false
     };
-
     return {
         getGeoalert: function () {
             return viewed.seen;
@@ -736,21 +744,84 @@ app.factory('GeoAlert', function () {
 
 
 /************ init ****************/
-app.controller('initController', ['$scope', '$timeout', 'UserObject', '$cordovaCamera', '$cordovaFileTransfer', '$ionicModal', '$ionicPlatform', 'localStorageService', '$ionicLoading', '$rootScope', '$state', function ($scope, $timeout, UserObject, $cordovaCamera, $cordovaFileTransfer, $ionicModal, $ionicPlatform, localStorageService, $ionicLoading, $rootScope, $state) {
-    
-    /*
-    $scope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
-        $ionicLoading.show();
+app.controller('initController', ['$scope', '$timeout', '$interval', 'UserObject', '$cordovaCamera', '$cordovaFileTransfer', '$ionicModal', '$ionicPlatform', 'localStorageService', '$ionicLoading', '$rootScope', '$state', '$cordovaSplashscreen', 'Dash', '$cordovaGeolocation', 'GeoAlert', '$ionicPopup', function ($scope, $timeout, $interval, UserObject, $cordovaCamera, $cordovaFileTransfer, $ionicModal, $ionicPlatform, localStorageService, $ionicLoading, $rootScope, $state, $cordovaSplashscreen, Dash, $cordovaGeolocation, GeoAlert, $ionicPopup) {
+    var broadcastWatch;
+    var options = {
+        timeout: 7000,
+        enableHighAccuracy: true,
+        maximumAge: 500000
+    };
+
+    $scope.broadcastloading = false;
+    $scope.user = UserObject.data();
+
+    function updateCoordinatesAwake() {
+        $ionicPlatform.ready(function () {
+            broadcastWatch = $cordovaGeolocation.watchPosition(options);
+            broadcastWatch.then(null,
+              function (error) {
+                  $scope.broadcastloading = false;
+                  $ionicPopup.alert({
+                      title: dashPrompt.title
+                  }).then(function (res) {
+
+                  });
+              }, function (position) {
+                  $scope.user.Lat = position.coords.latitude;
+                  $scope.user.Long = position.coords.longitude;
+                  Dash.broadcast(position.coords.latitude, position.coords.longitude, false).then(function () {
+                      $ionicLoading.hide();
+                      $scope.broadcastloading = false;
+                      $scope.user.broadcast = (Dash.data() === 1);
+                      //UserObject.data().broadcast = (Dash.data() === 1);
+                      var userbroadcast = UserObject.data();
+                  });
+              });
+        });
+    };
+
+    function BackgroundServiceFunction() {
+        var backgroundServiceSuccess = function (location) {
+            if (broadcastWatch)
+                broadcastWatch.clearWatch();
+            console.log('[js] BackgroundGeoLocation callback:  ' + location.latitude + ',' + location.longitude);
+            Dash.broadcast(location.latitude, location.longitude, $scope.user.broadcast).then(function () {
+                //$ionicLoading.hide();
+                //$scope.broadcastloading = false;
+                $scope.user.broadcast = (Dash.data() === 1);
+            });
+            backgroundGeoLocation.finish();
+        };
+
+        var backgroundServiceFail = function (error) {
+            console.log('BackgroundGeoLocation error');
+        };
+
+        backgroundGeoLocation.configure(backgroundServiceSuccess, backgroundServiceFail, {
+            desiredAccuracy: 10,
+            stationaryRadius: 20,
+            distanceFilter: 30,
+            debug: true, // <-- enable this hear sounds for background-geolocation life-cycle. 
+            stopOnTerminate: false, // <-- enable this to clear background location settings when the app terminates 
+            notificationTitle: "Chaser",
+            notificationText: "doing stuff and stuff",
+            locationService: backgroundGeoLocation.service.ANDROID_DISTANCE_FILTER,
+        });
+
+        backgroundGeoLocation.start();
+    }
+
+    $ionicPlatform.ready(function () {
+        //$cordovaSplashscreen.hide();
     });
 
+    document.addEventListener("resume", resume, false);
 
-    $scope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {       
-        $timeout(function () {
-            $ionicLoading.hide();
-        }, 2000);
-    });
-    */
-    
+    function resume() {
+        console.log("resume app");
+        //backgroundGeoLocation.stop();
+        //updateCoordinatesAwake();
+    }
 
     $ionicModal.fromTemplateUrl('photo-modal.html', {
         scope: $scope,
@@ -758,20 +829,32 @@ app.controller('initController', ['$scope', '$timeout', 'UserObject', '$cordovaC
     }).then(function (modal) {
         $scope.modal = modal;
     });
-
-    $ionicModal.fromTemplateUrl('crop-modal.html', {
+        $ionicModal.fromTemplateUrl('crop-modal.html', {
         scope: $scope,
         animation: 'slide-in-up'
     }).then(function (modal) {
         $scope.cropmodal = modal;
     });
 
+    if ($scope.user.broadcast) {        
+        //updateCoordinatesAwake();
+        document.addEventListener('deviceready', function () {
+            BackgroundServiceFunction();
+        }, false);
+    }
+
     $scope.$on('update_location', function (event, args) {
-        if (args.action === "turn-on") {
-            console.log("Watch Coords here");
-        }
+   if (args.action === "turn-on") {      
+       //updateCoordinatesAwake();
+       document.addEventListener('deviceready', function () {
+           BackgroundServiceFunction();
+       }, false);
+
+    }
         else if (args.action === "turn-off") {
-            console.log("Turn off");
+            if (broadcastWatch)
+                broadcastWatch.clearWatch();
+            backgroundGeoLocation.stop();
         }
     });
     

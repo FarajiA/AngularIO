@@ -21,7 +21,7 @@
                     <h2>no results</h2>
                 </div>
                 <ion-list ng-show="searchresults.array.length > 0">
-                    <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="search in searchresults.array" type="item-text-wrap" href="#/main/search/{{search.GUID}}">
+                    <ion-item class="item-avatar item-icon-right" ng-repeat="search in searchresults.array" type="item-text-wrap" href="#/main/search/{{search.GUID}}">
                         <img ng-src="{{search.photo && imageURL + search.GUID + '.png' || 'img/default_avatar.png' }}">
                         <h2>{{search.username}}</h2>
                         <p>{{search.firstname}}&nbsp;{{search.lastname}}</p>
