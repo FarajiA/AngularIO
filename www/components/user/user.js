@@ -13,7 +13,7 @@
         maximumAge: 500000
     };
 
-    var watch;
+    //var watch;
     $scope.userMarker = {
         id: 1,
         options: { icon: 'img/map_dot.png' },
@@ -45,8 +45,8 @@
             };
             
             $ionicPlatform.ready(function () {
-                watch = $cordovaGeolocation.watchPosition(options);
-                watch.then(null,
+                $scope.$parent.geoWatch = $cordovaGeolocation.watchPosition(options);
+                $scope.$parent.geoWatch.then(null,
                   function (error) {
                       var seen = GeoAlert.getGeoalert();
                       if (seen)
@@ -89,7 +89,6 @@ $ionicModal.fromTemplateUrl('mapModal.html', {
            
            markerBounds.extend(chaser_Latlng);
            markerBounds.extend(user_Latlng);
-           //maps.fitBounds(markerBounds);
            $scope.map = { control:{}, center: { latitude: markerBounds.getCenter().lat(), longitude: markerBounds.getCenter().lng() }, zoom:12 };
          
            uiGmapIsReady.promise().then((function (maps) {
@@ -97,7 +96,7 @@ $ionicModal.fromTemplateUrl('mapModal.html', {
                //$scope.map.control.getGMap().setZoom($scope.map.control.getGMap().getZoom());
            }));
 
-
+        
        $scope.$watchCollection("chaserMarker.coords", function (newVal, oldVal) {
            if (_.isEqual(newVal, oldVal))
                return;
@@ -106,8 +105,11 @@ $ionicModal.fromTemplateUrl('mapModal.html', {
           
    },
 function (error) {
-      // Do something with the error if it fails
-       console.log("Error in Api call");
+    $scope.modal.hide();
+    $ionicPopup.alert({
+        title: mapsPrompt.Errortitle
+    }).then(function (res) {
+    });
 });      
 
 };
@@ -115,24 +117,17 @@ function (error) {
    $scope.closeModal = function () {
        $scope.modal.hide();
    };
+
+   $scope.$on('$ionicView.afterLeave', function () {
+       if ($scope.$parent.geoWatch)
+            $scope.$parent.geoWatch.clearWatch();
+   });
+
         //Cleanup the modal when we're done with it!
    $scope.$on('$destroy', function () {
        $scope.modal.remove();
-       if (watch)
-            watch.clearWatch();
+       if ($scope.$parent.watch)
+           $scope.$parent.watch.clearWatch();
    });
-/*
-        // Execute action on hide modal
-   $scope.$on('modal.hidden', function () {
-       // Execute action
-       console.log("modal hidden");
-   });
-        // Execute action on remove modal
-   $scope.$on('modal.removed', function () {
-       // Execute action
-       console.log("modal removed");
-   });
-   */
-
-   }]);
+  }]);
 })();

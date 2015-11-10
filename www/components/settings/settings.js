@@ -1,9 +1,13 @@
 ﻿; (function () {
         var app = angular.module('App');
-        app.controller('SettingsController', ['$scope', '$ionicPopup', '$timeout', 'UserObject', 'Settings', '$rootScope', function ($scope, $ionicPopup, $timeout, UserObject, Settings, $rootScope) {
+        app.controller('SettingsController', ['$scope', '$ionicPopup', '$timeout', 'UserObject', 'Settings', '$rootScope', '$state', function ($scope, $ionicPopup, $timeout, UserObject, Settings, $rootScope, $state) {
             $scope.form = {};
-            $scope.user = UserObject.data();  
+            $scope.user = $scope.$parent.user;
             $scope.oldpasswordInvalid = false;
+
+            $scope.back = function () {
+                $state.go('main.dash');
+            };
 
             $scope.updatePassword = function () {
                 $scope.data = {};

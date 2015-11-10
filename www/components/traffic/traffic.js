@@ -2,6 +2,7 @@
     var app = angular.module('App');
     app.controller('TrafficController', ['$scope', 'Traffic', '$ionicPopup', '$ionicLoading', function ($scope, Traffic, $ionicPopup, $ionicLoading) {
         $scope.showChasers = true;
+        $ionicLoading.show();
         $scope.imageURL = imageURL;
         $scope.$on('update_Chasers', function (event, args) {
             if (args.action === "chasers")
@@ -10,8 +11,7 @@
                 chasingInit();
         });
 
-        var chasersInit = function () {
-            $ionicLoading.show();
+        var chasersInit = function () {            
             $scope.chasersindex = 0;
             Traffic.chasers($scope.chasersindex).then(function (data) {
                 $ionicLoading.hide();
@@ -40,7 +40,6 @@
         };
 
         var chasingInit = function() {
-            $ionicLoading.show();
             $scope.chasingindex = 0;
             Traffic.chasing($scope.chasingindex).then(function(data) {
                 $ionicLoading.hide();

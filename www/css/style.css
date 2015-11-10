@@ -151,7 +151,33 @@ text-align: center;
     margin-left: 5px;
     position: absolute;
     left: 10px;
-}}
+}
+
+/********* Contacts  **********/
+.contact-float{
+  background: #6b46e5 !important;
+  color:white !important;
+  z-index: 12 !important;
+  position: absolute !important; 
+  bottom: 104px !important;
+  right: 10px !important;
+  border-radius: 25% !important;
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26) !important;
+  -webkit-transform: translate3d(0, 0, 0) !important;
+  transform: translate3d(0, 0, 0) !important;
+  -webkit-transition: 0.2s linear !important;
+  transition: 0.2s linear !important;
+  -webkit-transition-property: -webkit-transform, all !important;
+  transition-property: transform, all !important;
+   min-height: 100px;
+}
+
+.contact-float:hover{
+  -webkit-transform: translate3d(0, -1px, 0)  !important;
+  transform: translate3d(0, -1px, 0) !important;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4) !important;
+    background: darken(#6b46e5, 10%) !important;
+}
 
 /* Fix modal backdrop for smaller devices */
 @media (max-width: 679px) {

@@ -42,7 +42,8 @@ var mapsAPI = {
 var mapsPrompt = {
     title: 'Location services off',
     text: 'To see your position turn on location services',
-    error: 'Location services off'
+    error: 'Location services off',
+    Errortitle: 'Map failed, sorry dawg'
 }
 
 var dashPrompt = {
@@ -215,7 +216,7 @@ function RouteMethods($stateProvider, $urlRouterProvider, $ionicConfigProvider) 
                     controller: 'TrafficController'
                 }
             },
-            resolve: {
+            resolve: {/*
                 loadExternals: ['$ocLazyLoad', function ($ocLazyLoad) {
                     return $ocLazyLoad.load({
                         name: 'traffic',
@@ -224,9 +225,9 @@ function RouteMethods($stateProvider, $urlRouterProvider, $ionicConfigProvider) 
                             'components/traffic/traffic.js'
                         ]
                     });
-                }],
+                }],*/
                 data: ['$ionicSideMenuDelegate', function ($ionicSideMenuDelegate) {
-                    $ionicSideMenuDelegate.canDragContent(true);
+                    $ionicSideMenuDelegate.canDragContent(false);
                 }]
             }
         })
@@ -311,7 +312,7 @@ function RouteMethods($stateProvider, $urlRouterProvider, $ionicConfigProvider) 
                     controller: 'ActivityController'
                 }
             },
-            resolve: {
+            resolve: { /*
                 loadExternals: ['$ocLazyLoad', function ($ocLazyLoad) {
                     return $ocLazyLoad.load({
                         name: 'activity',
@@ -320,9 +321,9 @@ function RouteMethods($stateProvider, $urlRouterProvider, $ionicConfigProvider) 
                             'components/activity/activity.js'
                         ]
                     });
-                }],
+                }],*/
                 data: ['$ionicSideMenuDelegate', function ($ionicSideMenuDelegate) {
-                    $ionicSideMenuDelegate.canDragContent(true);
+                    $ionicSideMenuDelegate.canDragContent(false);
                 }]
             }
         })
@@ -656,6 +657,7 @@ app.factory('UserObject', ['$http', '$q', 'localStorageService', '$rootScope', f
         $http.get(baseURL + "api/user/" + guid)
         .success(function (d) {
             data = d;
+            $rootScope.user = d;
             deffered.resolve();
         })
         .error(function (data, status) {
@@ -753,8 +755,11 @@ app.controller('initController', ['$scope', '$timeout', '$interval', 'UserObject
     };
 
     $scope.broadcastloading = false;
-    $scope.user = UserObject.data();
+    $scope.user = $rootScope.user;
+    $scope.geoWatch = {};
 
+
+    /*
     function updateCoordinatesAwake() {
         $ionicPlatform.ready(function () {
             broadcastWatch = $cordovaGeolocation.watchPosition(options);
@@ -779,6 +784,7 @@ app.controller('initController', ['$scope', '$timeout', '$interval', 'UserObject
               });
         });
     };
+    */
 
     function BackgroundServiceFunction() {
         var backgroundServiceSuccess = function (location) {
@@ -836,13 +842,14 @@ app.controller('initController', ['$scope', '$timeout', '$interval', 'UserObject
         $scope.cropmodal = modal;
     });
 
+    /*
     if ($scope.user.broadcast) {        
         //updateCoordinatesAwake();
         document.addEventListener('deviceready', function () {
             BackgroundServiceFunction();
         }, false);
     }
-
+    */
     $scope.$on('update_location', function (event, args) {
    if (args.action === "turn-on") {      
        //updateCoordinatesAwake();
@@ -852,8 +859,8 @@ app.controller('initController', ['$scope', '$timeout', '$interval', 'UserObject
 
     }
         else if (args.action === "turn-off") {
-            if (broadcastWatch)
-                broadcastWatch.clearWatch();
+            if ($scope.geoWatch)
+                $scope.geoWatch.clearWatch();
             backgroundGeoLocation.stop();
         }
     });
@@ -978,7 +985,9 @@ app.controller('initController', ['$scope', '$timeout', '$interval', 'UserObject
         });
     };
    
-        
+    //$scope.$emit('emit_Chasers', { action: "chasers" });
+    //$scope.$emit('emit_Chasers', { action: "chasing" });
+
 }]);
 
 

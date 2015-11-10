@@ -18,12 +18,14 @@
                     <h2>Daaamn you got no homies</h2>
                 </div>
                 <ion-checkbox ng-model="contact.checked" ng-repeat="contact in contacts | filter:ContactsSearch" ng-checked="contact.indexOf(contact) > -1" ng-click="checkboxSelection(contact)">
-                     <h2>{{contact.displayName}}</h2>
+                     <h2>{{contact.name}}</h2>
                      <p>{{contact.phonenumber}}</p>
                 </ion-checkbox>
                         
             </div>
         </div>
     </ion-content>
-
+    <button class="button contact-float button-royal" ng-click="sendInvites">
+        <i class="icon ion-paper-airplane"></i> Send Invite 
+    </button>
 </ion-view>
