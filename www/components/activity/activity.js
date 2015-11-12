@@ -22,8 +22,8 @@
         $scope.loadMoreBroadcasters = function () {
             var pagingMax = Math.ceil($rootScope.broadcastingNo / countSet, 1);
             if ($scope.broadcastingIndex < pagingMax && $scope.broadcastingIndex > 0) {
-                Activity.broadcasting($scope.broadcastingIndex).then(function (data) {
-                    var merged = $scope.broadcasting.concat(data.Results);
+                Activity.broadcasting($scope.broadcastingIndex).then(function () {
+                    var merged = $scope.broadcasting.concat(Activity.broadcastData().Results);
                     $scope.broadcasting = merged;
                     $scope.broadcastingIndex++;
                 });
@@ -51,8 +51,8 @@
         $scope.loadMoreRequests = function () {
             var pagingMax = Math.ceil($rootScope.requestsNo / countSet, 1);
             if ($scope.requestIndex < pagingMax && $scope.requestIndex > 0) {
-                Activity.request($scope.requestIndex).then(function (data) {
-                    var merged = $scope.requests.concat(data.Results);
+                Activity.request($scope.requestIndex).then(function () {
+                    var merged = $scope.requests.concat(Activity.requestData().Results);
                     $scope.requests = merged;
                     $scope.requestIndex++;
                 });

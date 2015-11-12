@@ -22,8 +22,8 @@
                 Dash.broadcast('0', '0', $scope.user.broadcast).then(function () {
                     $scope.broadcastloading = false;
                     $ionicLoading.hide();
-                    $scope.user.broadcast = !(Dash.data() === 0);
-                    UserObject.data().broadcast = !(Dash.data() === 0);
+                    $scope.user.broadcast = (Dash.data() === 1);
+                    UserObject.data().broadcast = (Dash.data() === 1);
                     $scope.$emit('emit_Broadcasting', { action: "turn-off" });
                 });
             }

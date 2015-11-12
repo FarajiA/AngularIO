@@ -1,11 +1,12 @@
 ﻿; (function () {
     var app = angular.module('App');
     app.requires.push('uiGmapgoogle-maps');
-    app.controller('UserController', ['$scope', 'UserObject', '$stateParams', 'Decision', '$location', '$ionicModal', '$interval', 'uiGmapGoogleMapApi', 'uiGmapIsReady', '$cordovaGeolocation','$ionicPopup', '$ionicPlatform', 'GeoAlert',
-        function ($scope, UserObject, $stateParams, Decision, $location, $ionicModal, $interval, GoogleMapApi, uiGmapIsReady, $cordovaGeolocation, $ionicPopup, $ionicPlatform, GeoAlert) {
+    app.controller('UserController', ['$scope', '$timeout', 'UserObject', '$stateParams', 'Decision', '$location', '$ionicModal', '$interval', 'uiGmapGoogleMapApi', 'uiGmapIsReady', '$cordovaGeolocation','$ionicPopup', '$ionicPlatform', 'GeoAlert',
+        function ($scope, $timeout, UserObject, $stateParams, Decision, $location, $ionicModal, $interval, GoogleMapApi, uiGmapIsReady, $cordovaGeolocation, $ionicPopup, $ionicPlatform, GeoAlert) {
 
     var userID = $stateParams.userId;
     $scope.imageURL = imageURL;
+    var geoTimer;
 
     var options = {
         timeout: 7000,
@@ -18,6 +19,36 @@
         id: 1,
         options: { icon: 'img/map_dot.png' },
     };
+
+    var GeoWatchTimer = function() {
+        $ionicPlatform.ready(function () {
+            if ($scope.geoWatch)
+                $scope.geoWatch.clearWatch();
+
+            $scope.geoWatch = $cordovaGeolocation.watchPosition(options);
+            $scope.geoWatch.then(null,
+              function (error) {
+                  var seen = GeoAlert.getGeoalert();
+                  if (seen)
+                      return
+                  $ionicPopup.alert({
+                      title: mapsPrompt.title,
+                      template: mapsPrompt.text
+                  }).then(function (res) {
+                      GeoAlert.setGeoalert(true);
+                  });
+              }, function (position) {
+                  $scope.userMarker.coords = {
+                      latitude: position.coords.latitude,
+                      longitude: position.coords.longitude
+                  };
+                  $scope.geoWatch.clearWatch();
+                  var geoTimer = $timeout(GeoWatchTimer, 30000);
+              });
+        });
+    };
+
+
 
    UserObject.getUser(userID).then(function () {
         $scope.title = UserObject.details().username;
@@ -44,26 +75,16 @@
                 options: { icon: 'img/checkered_chaser.png' },
             };
             
-            $ionicPlatform.ready(function () {
-                $scope.$parent.geoWatch = $cordovaGeolocation.watchPosition(options);
-                $scope.$parent.geoWatch.then(null,
-                  function (error) {
-                      var seen = GeoAlert.getGeoalert();
-                      if (seen)
-                          return
-                      $ionicPopup.alert({
-                          title: mapsPrompt.title,
-                          template: mapsPrompt.text
-                      }).then(function (res) {
-                          GeoAlert.setGeoalert(true);
-                      });
-                  }, function (position) {
-                    $scope.userMarker.coords = {
-                        latitude: position.coords.latitude,
-                        longitude: position.coords.longitude
-                    };
-                });
-            });
+            if ($scope.user.broadcast) {
+                $scope.userMarker.coords = {
+                    latitude: $scope.user.latitude,
+                    longitude: $scope.user.longitude
+                };
+            }
+            else
+            {
+                GeoWatchTimer();
+            }
         } 
 });
 
@@ -119,15 +140,19 @@ function (error) {
    };
 
    $scope.$on('$ionicView.afterLeave', function () {
-       if ($scope.$parent.geoWatch)
-            $scope.$parent.geoWatch.clearWatch();
+       if ($scope.$geoWatch)
+           $scope.geoWatch.clearWatch();
+       if (geoTimer)
+            $timeout.cancel(geoTimer);
    });
 
         //Cleanup the modal when we're done with it!
    $scope.$on('$destroy', function () {
        $scope.modal.remove();
-       if ($scope.$parent.watch)
-           $scope.$parent.watch.clearWatch();
+       if ($scope.geoWatch)
+           $scope.geoWatch.clearWatch();
+       if (geoTimer)
+           $timeout.cancel(geoTimer);
    });
   }]);
 })();

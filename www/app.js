@@ -52,7 +52,8 @@ var dashPrompt = {
 
 var SMS = {
     error: 'Problem sending SMS to 0',
-    success: 'Invites sent homie'
+    success: 'Invites sent homie',
+    inviteContent: 'Add me on Chaser! Username: 0 http://chasermobile.com/invite'
 }
 
 function convertImgToBase64URL(url, callback, outputFormat) {
@@ -81,8 +82,7 @@ var app = angular.module('App', [
 ]);
 
 app.run(function ($ionicPlatform, $ionicSideMenuDelegate, $rootScope, UserObject, $state, $q, localStorageService) {
-
-
+       
     $ionicPlatform.ready(function () {
             if(window.cordova && window.cordova.plugins.Keyboard) {
                 cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
@@ -101,7 +101,7 @@ app.run(function ($ionicPlatform, $ionicSideMenuDelegate, $rootScope, UserObject
     });
 
     UserObject.fillAuthData();
-
+    
     $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
             var authdata = UserObject.authentication();
             var auth = authdata.isAuth;
@@ -118,7 +118,7 @@ app.run(function ($ionicPlatform, $ionicSideMenuDelegate, $rootScope, UserObject
             if (auth && userGuid) {
                 $rootScope.stateChangeBypass = true;
                 $state.go(toState, toParams);
-                
+              
                 var hasphoto = UserObject.data().photo;
                 var savedImage = localStorageService.get('chaserImage');
 
@@ -140,8 +140,10 @@ app.run(function ($ionicPlatform, $ionicSideMenuDelegate, $rootScope, UserObject
                 else {
                     $rootScope.chaser.savedImage = "img/default_avatar.png"
                 }
+                
             }
-            else if (auth && !userGuid) {
+            else if (auth && !userGuid) {   
+                
                 $rootScope.chaser = {};
                 UserObject.setUser(guid).then(function () {
                     var hasphoto = UserObject.data().photo;
@@ -164,11 +166,17 @@ app.run(function ($ionicPlatform, $ionicSideMenuDelegate, $rootScope, UserObject
                     $rootScope.stateChangeBypass = true;
                     $state.go(toState.name);                    
                 });
+                
             }
             else {
                 $state.go('login')
             }
-      });
+    });
+
+    
+
+
+    //return deferred.promise;
 });
 
 app.config(RouteMethods, ocLazyLoadProvider);
@@ -183,7 +191,8 @@ function RouteMethods($stateProvider, $urlRouterProvider, $ionicConfigProvider) 
     $stateProvider.state('main', {
         url: '/main',
         templateUrl: 'components/layout/main.html',
-        abstract: true
+        abstract: true,
+        controller: 'initController'
     })
     // Each tab has its own nav history stack:
     .state('main.dash', {
@@ -746,7 +755,10 @@ app.factory('GeoAlert', function () {
 
 
 /************ init ****************/
-app.controller('initController', ['$scope', '$timeout', '$interval', 'UserObject', '$cordovaCamera', '$cordovaFileTransfer', '$ionicModal', '$ionicPlatform', 'localStorageService', '$ionicLoading', '$rootScope', '$state', '$cordovaSplashscreen', 'Dash', '$cordovaGeolocation', 'GeoAlert', '$ionicPopup', function ($scope, $timeout, $interval, UserObject, $cordovaCamera, $cordovaFileTransfer, $ionicModal, $ionicPlatform, localStorageService, $ionicLoading, $rootScope, $state, $cordovaSplashscreen, Dash, $cordovaGeolocation, GeoAlert, $ionicPopup) {
+app.controller('initController', ['$scope', '$timeout', '$interval', 'UserObject', '$cordovaCamera', '$cordovaFileTransfer', '$ionicModal', '$ionicPlatform', 'localStorageService', '$ionicLoading', '$rootScope', '$state', '$cordovaSplashscreen', 'Dash', '$cordovaGeolocation', 'GeoAlert', '$ionicPopup','$cordovaContacts', function ($scope, $timeout, $interval, UserObject, $cordovaCamera, $cordovaFileTransfer, $ionicModal, $ionicPlatform, localStorageService, $ionicLoading, $rootScope, $state, $cordovaSplashscreen, Dash, $cordovaGeolocation, GeoAlert, $ionicPopup,$cordovaContacts) {
+      
+    $scope.user = UserObject.data();
+
     var broadcastWatch;
     var options = {
         timeout: 7000,
@@ -755,43 +767,17 @@ app.controller('initController', ['$scope', '$timeout', '$interval', 'UserObject
     };
 
     $scope.broadcastloading = false;
-    $scope.user = $rootScope.user;
     $scope.geoWatch = {};
-
-
-    /*
-    function updateCoordinatesAwake() {
-        $ionicPlatform.ready(function () {
-            broadcastWatch = $cordovaGeolocation.watchPosition(options);
-            broadcastWatch.then(null,
-              function (error) {
-                  $scope.broadcastloading = false;
-                  $ionicPopup.alert({
-                      title: dashPrompt.title
-                  }).then(function (res) {
-
-                  });
-              }, function (position) {
-                  $scope.user.Lat = position.coords.latitude;
-                  $scope.user.Long = position.coords.longitude;
-                  Dash.broadcast(position.coords.latitude, position.coords.longitude, false).then(function () {
-                      $ionicLoading.hide();
-                      $scope.broadcastloading = false;
-                      $scope.user.broadcast = (Dash.data() === 1);
-                      //UserObject.data().broadcast = (Dash.data() === 1);
-                      var userbroadcast = UserObject.data();
-                  });
-              });
-        });
-    };
-    */
-
+    
     function BackgroundServiceFunction() {
         var backgroundServiceSuccess = function (location) {
             if (broadcastWatch)
                 broadcastWatch.clearWatch();
+
+            $scope.user.latitude = location.latitude;
+            $scope.user.longitude = location.longitude;
             console.log('[js] BackgroundGeoLocation callback:  ' + location.latitude + ',' + location.longitude);
-            Dash.broadcast(location.latitude, location.longitude, $scope.user.broadcast).then(function () {
+            Dash.broadcast(location.latitude, location.longitude, false).then(function () {
                 //$ionicLoading.hide();
                 //$scope.broadcastloading = false;
                 $scope.user.broadcast = (Dash.data() === 1);
@@ -803,16 +789,28 @@ app.controller('initController', ['$scope', '$timeout', '$interval', 'UserObject
             console.log('BackgroundGeoLocation error');
         };
 
-        backgroundGeoLocation.configure(backgroundServiceSuccess, backgroundServiceFail, {
-            desiredAccuracy: 10,
-            stationaryRadius: 20,
-            distanceFilter: 30,
-            debug: true, // <-- enable this hear sounds for background-geolocation life-cycle. 
-            stopOnTerminate: false, // <-- enable this to clear background location settings when the app terminates 
-            notificationTitle: "Chaser",
-            notificationText: "doing stuff and stuff",
-            locationService: backgroundGeoLocation.service.ANDROID_DISTANCE_FILTER,
-        });
+        if (ionic.Platform.isAndroid()) {
+            backgroundGeoLocation.configure(backgroundServiceSuccess, backgroundServiceFail, {
+                desiredAccuracy: 10,
+                stationaryRadius: 20,
+                distanceFilter: 30,
+                debug: true, // <-- enable this hear sounds for background-geolocation life-cycle. 
+                stopOnTerminate: false, // <-- enable this to clear background location settings when the app terminates 
+                notificationTitle: "Chaser",
+                notificationText: "doing stuff and stuff",
+                locationService: backgroundGeoLocation.service.ANDROID_DISTANCE_FILTER,
+            });
+        }
+        else {
+            backgroundGeoLocation.configure(backgroundServiceSuccess, backgroundServiceFail, {
+                desiredAccuracy: 10,
+                stationaryRadius: 20,
+                distanceFilter: 30,
+                activityType: 'AutomotiveNavigation',
+                debug: true, // <-- enable this hear sounds for background-geolocation life-cycle.
+                stopOnTerminate: false // <-- enable this to clear background location settings when the app terminates
+            });
+        }
 
         backgroundGeoLocation.start();
     }
@@ -827,50 +825,100 @@ app.controller('initController', ['$scope', '$timeout', '$interval', 'UserObject
         console.log("resume app");
         //backgroundGeoLocation.stop();
         //updateCoordinatesAwake();
-    }
-
-    $ionicModal.fromTemplateUrl('photo-modal.html', {
-        scope: $scope,
-        animation: 'slide-in-up'
-    }).then(function (modal) {
-        $scope.modal = modal;
-    });
-        $ionicModal.fromTemplateUrl('crop-modal.html', {
-        scope: $scope,
-        animation: 'slide-in-up'
-    }).then(function (modal) {
-        $scope.cropmodal = modal;
-    });
-
-    /*
+    }    
     if ($scope.user.broadcast) {        
         //updateCoordinatesAwake();
         document.addEventListener('deviceready', function () {
             BackgroundServiceFunction();
         }, false);
     }
-    */
+    
     $scope.$on('update_location', function (event, args) {
    if (args.action === "turn-on") {      
        //updateCoordinatesAwake();
        document.addEventListener('deviceready', function () {
            BackgroundServiceFunction();
        }, false);
-
     }
         else if (args.action === "turn-off") {
-            if ($scope.geoWatch)
-                $scope.geoWatch.clearWatch();
+            //if ($scope.geoWatch)
+            //    $scope.geoWatch.clearWatch();
             backgroundGeoLocation.stop();
         }
     });
     
-    $scope.openModal = function () {
-        $scope.modal.show();
+    //$scope.$emit('emit_Chasers', { action: "chasers" });
+    //$scope.$emit('emit_Chasers', { action: "chasing" });
+    var firstentry = 0;
+    $scope.contactsLoadPage = function () {
+        if (firstentry === 0) {
+            $ionicLoading.show();
+            firstentry++;
+        }
+    };
+        
+    var opts = {
+        fields: ['displayName', 'name', 'phoneNumbers']
+    };
+
+    if (ionic.Platform.isAndroid()) {
+        opts.hasPhoneNumber = true;
+    };
+
+    $scope.contacts = [];
+    $scope.contactsFinished = false;
+    var cSort = function (a, b) {
+        aName = a.name;
+        bName = b.name;
+        return aName < bName ? -1 : (aName == bName ? 0 : 1);
+    };
+    
+    $cordovaContacts.find(opts).then(function (allContacts) {
+        for (var i = 0; i < allContacts.length; i++) {
+            if (allContacts[i].phoneNumbers != null && allContacts[i].phoneNumbers[0].type === 'mobile') {
+                var contactphone = allContacts[i].phoneNumbers;
+                var phonenumber = contactphone[0].value;
+                var name = allContacts[i].displayName;
+                var contact = {
+                    name: '',
+                    phonenumber: ''
+                };
+                contact.name = name;
+                contact.phonenumber = phonenumber;
+                var idx = $scope.contacts.indexOf(contact);
+
+                if (idx === -1)
+                    $scope.contacts.push(contact);
+            }
+        }
+        $scope.contactsFinished = true;
+        $scope.contacts.sort(cSort);
+    });
+}]);
+
+/*********************   SideMenu Controller **************************/
+app.controller('sideMenuController', ['$scope', '$window', '$timeout', '$state', '$cordovaCamera', '$cordovaFileTransfer', '$ionicModal', '$ionicPlatform', '$ionicLoading', 'UserObject', function ($scope, $window, $timeout, $state, $cordovaCamera, $cordovaFileTransfer, $ionicModal, $ionicPlatform, $ionicLoading, UserObject) {
+
+    $ionicModal.fromTemplateUrl('photo-modal.html', {
+        scope: $scope,
+        animation: 'slide-in-up'
+    }).then(function (modal) {
+        $scope.photomodal = modal;
+    });
+
+    $ionicModal.fromTemplateUrl('crop-modal.html', {
+        scope: $scope,
+        animation: 'slide-in-up'
+    }).then(function (modal) {
+        $scope.cropmodal = modal;
+    });
+
+    $scope.openPhotoModal = function () {
+        $scope.photomodal.show();
     };
 
     $scope.closeModal = function () {
-        $scope.modal.hide();
+        $scope.openPhotoModal.hide();
     };
 
     $scope.closecropModal = function () {
@@ -883,8 +931,10 @@ app.controller('initController', ['$scope', '$timeout', '$interval', 'UserObject
 
     $scope.logout = function () {
         var out = UserObject.logout();
-        if (!out.isAuth)
+        if (!out.isAuth) {
             $state.go('login');
+            $window.location.reload();
+        }
     };
 
     $scope.type = 'circle';
@@ -905,7 +955,7 @@ app.controller('initController', ['$scope', '$timeout', '$interval', 'UserObject
     $scope.takePicture = function () {
         var fitwidth = (window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth) + 15;
         var fitheight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
-        
+
         var options = {
             quality: 50,
             //targetWidth: fitwidth,
@@ -919,7 +969,7 @@ app.controller('initController', ['$scope', '$timeout', '$interval', 'UserObject
             $cordovaCamera.getPicture(options).then(function (imageData) {
                 $scope.imgURI = "data:image/jpeg;base64," + imageData;
                 $scope.cropmodal.show();
-                $scope.modal.hide();
+                $scope.openPhotoModal.hide();
             }, function (err) {
                 console.log('Failed because: ');
                 console.log(err);
@@ -943,7 +993,7 @@ app.controller('initController', ['$scope', '$timeout', '$interval', 'UserObject
             $cordovaCamera.getPicture(options).then(
               function (imageData) {
                   $scope.cropmodal.show();
-                  $scope.modal.hide();
+                  $scope.openPhotoModal.hide();
                   $scope.imgURI = "data:image/jpeg;base64," + imageData;
               },
               function (err) {
@@ -984,10 +1034,6 @@ app.controller('initController', ['$scope', '$timeout', '$interval', 'UserObject
             });
         });
     };
-   
-    //$scope.$emit('emit_Chasers', { action: "chasers" });
-    //$scope.$emit('emit_Chasers', { action: "chasing" });
-
 }]);
 
 

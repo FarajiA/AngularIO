@@ -45,52 +45,55 @@
           <ion-nav-view></ion-nav-view>
           </ion-side-menu-content>
           <ion-side-menu side="left">
-              <ion-content has-header="false" ng-controller="initController">
-                  <div class="sidemenu-header">
-                      <a class="profile" ng-click="openModal()" href="#">
-                          <img ng-src="{{chaser.savedImage}}" />
-                      </a>
-                      <h1 class="title">{{username}}</h1>
+              <ion-content has-header="false">
+                  <div ng-controller="sideMenuController">
+                      <div class="sidemenu-header">
+                          <a class="profile" ng-click="openPhotoModal()" href="#">
+                              <img ng-src="{{chaser.savedImage}}" />
+                          </a>
+                          <h1 class="title">{{username}}</h1>
+                      </div>
+                      <ion-list>
+                          <ion-item href="#/contacts" ng-click="contactsLoadPage()" class="item-icon-left" menu-close><i class="icon ion-plus-circled"></i> Invite</ion-item>
+                          <ion-item href="#" class="item-icon-left" ng-click="logout()"><i class="icon ion-log-out"></i> Logout</ion-item>
+
+                          <script id="photo-modal.html" type="text/ng-template">
+                              <ion-modal-view class="photo-modal">
+                                  <ion-content>
+                                      <div class="choice-buttons">
+                                          <a class="button button-outline icon-left ion-camera button-assertive" ng-click="takePicture()">Take Photo</a>
+                                          <a class="button button-outline icon-left ion-images button-assertive" ng-click="selectPicture()">Upload Photo</a>
+                                      </div>
+                                  </ion-content>
+                              </ion-modal-view>
+                          </script>
+                          <script id="crop-modal.html" type="text/ng-template">
+                              <ion-modal-view class="crop-modal">
+                                  <ion-header-bar style="padding:0">
+                                      <div class="button-bar">
+                                          <button ng-click="closecropModal()" class="button button-outline button-assertive icon-left ion-close">Cancel</button>
+                                          <button ng-click="uploadPicture()" class="button button-outline button-balanced icon-left ion-checkmark">Crop</button>
+                                      </div>
+                                  </ion-header-bar>
+                                  <ion-content>
+                                      <div id="photoCanvas" set-dimensions>
+                                          <img-crop image="imgURI"
+                                                    result-image="$parent.resImageDataURI"
+                                                    change-on-fly="changeOnFly"
+                                                    area-type="{{type}}"
+                                                    area-min-size="selMinSize"
+                                                    result-image-format="{{resImgFormat}}"
+                                                    result-image-quality="resImgQuality"
+                                                    result-image-size="resImgSize"
+                                                    on-change="onChange($dataURI)"
+                                                    on-load-error="onLoadError()">
+                                          </img-crop>
+                                      </div>
+                                  </ion-content>
+                              </ion-modal-view>
+                          </script>
+                      </ion-list>
                   </div>
-                  <ion-list>
-                      <ion-item href="#/contacts" class="item-icon-left" menu-close><i class="icon ion-plus-circled"></i> Invite</ion-item>
-                      <ion-item href="#" class="item-icon-left" ng-click="logout()" menu-close><i class="icon ion-log-out"></i> Logout</ion-item>
-                  </ion-list>
-                  <script id="photo-modal.html" type="text/ng-template">
-                      <ion-modal-view class="photo-modal">                          
-                          <ion-content>
-                              <div class="choice-buttons">
-                                  <a class="button button-outline icon-left ion-camera button-assertive" ng-click="takePicture()">Take Photo</a>
-                                  <a class="button button-outline icon-left ion-images button-assertive" ng-click="selectPicture()">Upload Photo</a>
-                              </div>
-                          </ion-content>
-                      </ion-modal-view>
-                  </script>
-                  <script id="crop-modal.html" type="text/ng-template">
-                      <ion-modal-view class="crop-modal">
-                          <ion-header-bar style="padding:0">
-                              <div class="button-bar">
-                                  <button ng-click="closecropModal()" class="button button-outline button-assertive icon-left ion-close">Cancel</button>
-                                  <button ng-click="uploadPicture()" class="button button-outline button-balanced icon-left ion-checkmark">Crop</button>
-                              </div>
-                          </ion-header-bar>
-                          <ion-content>
-                              <div id="photoCanvas" set-dimensions>                                  
-                                  <img-crop image="imgURI"
-                                            result-image="$parent.resImageDataURI"
-                                            change-on-fly="changeOnFly"
-                                            area-type="{{type}}"
-                                            area-min-size="selMinSize"
-                                            result-image-format="{{resImgFormat}}"
-                                            result-image-quality="resImgQuality"
-                                            result-image-size="resImgSize"
-                                            on-change="onChange($dataURI)"
-                                            on-load-error="onLoadError()">
-                                  </img-crop>
-                              </div>
-                          </ion-content>
-                      </ion-modal-view>
-                  </script>
               </ion-content>
           </ion-side-menu>
       </ion-side-menus>

@@ -14,6 +14,9 @@
         </form>
         <div id="result">
             <div id="contacts" class="contacts">
+                <div id="contactLoading" ng-show="!contactsFinished">
+                    <ion-spinner icon="lines" ng-show="loadingFollow"></ion-spinner>
+                </div>
                 <div class="zeroResults contacts" ng-show="contacts.length === 0 && contactsFinished">
                     <h2>Daaamn you got no homies</h2>
                 </div>
@@ -25,7 +28,7 @@
             </div>
         </div>
     </ion-content>
-    <button class="button contact-float button-royal" ng-click="sendInvites">
-        <i class="icon ion-paper-airplane"></i> Send Invite 
+    <button class="button contact-float button-royal" ng-click="sendInvites()">
+        <i class="icon ion-paper-airplane"></i> Invite 
     </button>
 </ion-view>
