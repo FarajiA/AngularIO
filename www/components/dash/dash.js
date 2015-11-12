@@ -1,11 +1,13 @@
 ﻿; (function () {
     var app = angular.module('App');
-    app.controller('DashController', ['$scope', 'UserObject', 'Dash', '$cordovaGeolocation', '$ionicPopup','$ionicLoading',
-        function ($scope, UserObject, Dash, $cordovaGeolocation, $ionicPopup, $ionicLoading) {
+    app.controller('DashController', ['$scope', '$cordovaGeolocation', '$ionicPopup','$ionicLoading', 'UserObject', 'Dash',
+        function ($scope, $cordovaGeolocation, $ionicPopup, $ionicLoading, UserObject, Dash) {
 
-        $ionicLoading.hide()
+        $ionicLoading.hide();
         $scope.broadcastloading = false;
-        $scope.user = UserObject.data();
+        var userStuff = $scope.$parent.user;
+        var userParentLogged = $scope.$parent.userLogged;
+        var userLogged = $scope.userLogged;
         var posOptions = { timeout: 10000, enableHighAccuracy: false };
 
         $scope.broadcast = function () {
@@ -23,7 +25,6 @@
                     $scope.broadcastloading = false;
                     $ionicLoading.hide();
                     $scope.user.broadcast = (Dash.data() === 1);
-                    UserObject.data().broadcast = (Dash.data() === 1);
                     $scope.$emit('emit_Broadcasting', { action: "turn-off" });
                 });
             }
@@ -37,7 +38,6 @@
                         $ionicLoading.hide();
                         $scope.broadcastloading = false;
                         $scope.user.broadcast = (Dash.data() === 1);
-                        UserObject.data().broadcast = (Dash.data() === 1);
                         $scope.$emit('emit_Broadcasting', { action: "turn-on" });
                     });
                 }, function (err) {

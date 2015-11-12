@@ -8,20 +8,20 @@ var activityConst = {
     following: 'Chasing',
     follow: 'Chase',
     requested: 'Requested'
-}
+};
 var updatedUserConst = {
     successfulPassword: 'Password Updated!',
     unsuccessfulPassword: 'Oops Password not updated!',
     successfulUpdate: 'Account Updated!',
     emailInUse: 'Email is already registered.',
     unsuccessfulUpdate: 'Something went wrong. Try again!'
-}
+};
 
 var deleteUserConst = {
     removeUserTitle: 'remove chaser?',
     successfullyDeleted: '0 is no longer chasing you.',
     notsuccessfullyDeleted: 'Oops something fubbed!'
-}
+};
 var requestConst = {
     acceptRequest: 'Accept',
     declineRequest: 'Decline',
@@ -29,32 +29,32 @@ var requestConst = {
     declineRequestMsg: "Reject 0's request?",
     acceptRequestSuccess: '0 accepted',
     declineRequestSuccess: '0 declined'
-}
+};
 var userDetails = {
     broadcasting: 'Broadcasting',
     viewlocation: 'View location',
     notBroadcasting: 'Not broadcasting'
-}
+};
 var mapsAPI = {
     url: '//maps.googleapis.com/maps/api/js?v=3&sensor=true'
-}
+};
 
 var mapsPrompt = {
     title: 'Location services off',
     text: 'To see your position turn on location services',
     error: 'Location services off',
     Errortitle: 'Map failed, sorry dawg'
-}
+};
 
 var dashPrompt = {
-    title:'Location services must be on'
-}
+    title: 'Location services must be on'
+};
 
 var SMS = {
     error: 'Problem sending SMS to 0',
     success: 'Invites sent homie',
     inviteContent: 'Add me on Chaser! Username: 0 http://chasermobile.com/invite'
-}
+};
 
 function convertImgToBase64URL(url, callback, outputFormat) {
     var img = new Image();
@@ -82,7 +82,10 @@ var app = angular.module('App', [
 ]);
 
 app.run(function ($ionicPlatform, $ionicSideMenuDelegate, $rootScope, UserObject, $state, $q, localStorageService) {
-       
+    
+    var apprunFinished = $q.defer();
+    $rootScope.appRun = apprunFinished.promise;
+
     $ionicPlatform.ready(function () {
             if(window.cordova && window.cordova.plugins.Keyboard) {
                 cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
@@ -101,6 +104,22 @@ app.run(function ($ionicPlatform, $ionicSideMenuDelegate, $rootScope, UserObject
     });
 
     UserObject.fillAuthData();
+
+    var authdata = UserObject.authentication();
+    var auth = authdata.isAuth;
+    var guid = authdata.guid;
+    var userGuid = UserObject.data().GUID;
+
+    if (auth && !userGuid) {
+        UserObject.setUser(guid).then(function() {
+            apprunFinished.resolve();
+        });
+    }
+
+
+
+
+
     
     $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
             var authdata = UserObject.authentication();
@@ -115,10 +134,11 @@ app.run(function ($ionicPlatform, $ionicSideMenuDelegate, $rootScope, UserObject
             
             event.preventDefault();
 
-            if (auth && userGuid) {
+            if (auth && userGuid || auth && !userGuid) {
                 $rootScope.stateChangeBypass = true;
                 $state.go(toState, toParams);
               
+                /*
                 var hasphoto = UserObject.data().photo;
                 var savedImage = localStorageService.get('chaserImage');
 
@@ -138,38 +158,12 @@ app.run(function ($ionicPlatform, $ionicSideMenuDelegate, $rootScope, UserObject
                     $rootScope.chaser.savedImage = savedImage;
                 }
                 else {
-                    $rootScope.chaser.savedImage = "img/default_avatar.png"
+                    $rootScope.chaser.savedImage = "img/default_avatar.png";
                 }
-                
-            }
-            else if (auth && !userGuid) {   
-                
-                $rootScope.chaser = {};
-                UserObject.setUser(guid).then(function () {
-                    var hasphoto = UserObject.data().photo;
-                    var savedImage = localStorageService.get('chaserImage');
-                    
-                    if (hasphoto && !savedImage) {
-                        convertImgToBase64URL(imageURL + UserObject.data().GUID + ".png", function (base64Img) {
-                            $rootScope.chaser.savedImage = base64Img;
-                            localStorageService.set('chaserImage', $rootScope.chaser.savedImage);
-
-                        }, 'image/png');
-                    }
-                    else if (savedImage) {
-                        $rootScope.chaser.savedImage = savedImage;
-                    }
-                    else {
-                        $rootScope.chaser.savedImage = "img/default_avatar.png"
-                    }
-
-                    $rootScope.stateChangeBypass = true;
-                    $state.go(toState.name);                    
-                });
-                
+                */
             }
             else {
-                $state.go('login')
+                $state.go('login');
             }
     });
 
@@ -191,8 +185,7 @@ function RouteMethods($stateProvider, $urlRouterProvider, $ionicConfigProvider) 
     $stateProvider.state('main', {
         url: '/main',
         templateUrl: 'components/layout/main.html',
-        abstract: true,
-        controller: 'initController'
+        abstract: true
     })
     // Each tab has its own nav history stack:
     .state('main.dash', {
@@ -225,7 +218,7 @@ function RouteMethods($stateProvider, $urlRouterProvider, $ionicConfigProvider) 
                     controller: 'TrafficController'
                 }
             },
-            resolve: {/*
+            resolve: {
                 loadExternals: ['$ocLazyLoad', function ($ocLazyLoad) {
                     return $ocLazyLoad.load({
                         name: 'traffic',
@@ -234,7 +227,7 @@ function RouteMethods($stateProvider, $urlRouterProvider, $ionicConfigProvider) 
                             'components/traffic/traffic.js'
                         ]
                     });
-                }],*/
+                }],
                 data: ['$ionicSideMenuDelegate', function ($ionicSideMenuDelegate) {
                     $ionicSideMenuDelegate.canDragContent(false);
                 }]
@@ -321,7 +314,7 @@ function RouteMethods($stateProvider, $urlRouterProvider, $ionicConfigProvider) 
                     controller: 'ActivityController'
                 }
             },
-            resolve: { /*
+            resolve: { 
                 loadExternals: ['$ocLazyLoad', function ($ocLazyLoad) {
                     return $ocLazyLoad.load({
                         name: 'activity',
@@ -330,7 +323,7 @@ function RouteMethods($stateProvider, $urlRouterProvider, $ionicConfigProvider) 
                             'components/activity/activity.js'
                         ]
                     });
-                }],*/
+                }],
                 data: ['$ionicSideMenuDelegate', function ($ionicSideMenuDelegate) {
                     $ionicSideMenuDelegate.canDragContent(false);
                 }]
@@ -744,20 +737,53 @@ app.factory('GeoAlert', function () {
         seen: false
     };
     return {
-        getGeoalert: function () {
+        getGeoalert: function() {
             return viewed.seen;
         },
-        setGeoalert: function (seen) {
+        setGeoalert: function(seen) {
             viewed.seen = seen;
         }
-    }
+    };
 });
 
 
 /************ init ****************/
 app.controller('initController', ['$scope', '$timeout', '$interval', 'UserObject', '$cordovaCamera', '$cordovaFileTransfer', '$ionicModal', '$ionicPlatform', 'localStorageService', '$ionicLoading', '$rootScope', '$state', '$cordovaSplashscreen', 'Dash', '$cordovaGeolocation', 'GeoAlert', '$ionicPopup','$cordovaContacts', function ($scope, $timeout, $interval, UserObject, $cordovaCamera, $cordovaFileTransfer, $ionicModal, $ionicPlatform, localStorageService, $ionicLoading, $rootScope, $state, $cordovaSplashscreen, Dash, $cordovaGeolocation, GeoAlert, $ionicPopup,$cordovaContacts) {
-      
-    $scope.user = UserObject.data();
+
+    $scope.userLogged = false;
+    $scope.user = {};
+
+
+    $rootScope.appRun.then(function () {
+        $scope.user = UserObject.data();
+        $scope.userLogged = true;
+        if ($scope.user.broadcast) {
+            //updateCoordinatesAwake();
+            document.addEventListener('deviceready', function () {
+                BackgroundServiceFunction();
+            }, false);
+        }
+
+        var hasphoto = $scope.user.photo;
+        var savedImage = localStorageService.get('chaserImage');
+        
+        $rootScope.chaser = {};
+
+        if (hasphoto && !savedImage) {
+            convertImgToBase64URL(imageURL + UserObject.data().GUID + ".png", function (base64Img) {
+                $rootScope.chaser.savedImage = base64Img;
+                localStorageService.set('chaserImage', $rootScope.chaser.savedImage);
+            }, 'image/png');
+        }
+        else if (savedImage) {
+            $rootScope.chaser.savedImage = savedImage;
+        }
+        else {
+            $rootScope.chaser.savedImage = "img/default_avatar.png";
+        }
+
+        delete $rootScope.appRun;
+    });
 
     var broadcastWatch;
     var options = {
@@ -825,13 +851,7 @@ app.controller('initController', ['$scope', '$timeout', '$interval', 'UserObject
         console.log("resume app");
         //backgroundGeoLocation.stop();
         //updateCoordinatesAwake();
-    }    
-    if ($scope.user.broadcast) {        
-        //updateCoordinatesAwake();
-        document.addEventListener('deviceready', function () {
-            BackgroundServiceFunction();
-        }, false);
-    }
+    }  
     
     $scope.$on('update_location', function (event, args) {
    if (args.action === "turn-on") {      
@@ -843,7 +863,7 @@ app.controller('initController', ['$scope', '$timeout', '$interval', 'UserObject
         else if (args.action === "turn-off") {
             //if ($scope.geoWatch)
             //    $scope.geoWatch.clearWatch();
-            backgroundGeoLocation.stop();
+            //backgroundGeoLocation.stop();
         }
     });
     
@@ -865,14 +885,17 @@ app.controller('initController', ['$scope', '$timeout', '$interval', 'UserObject
         opts.hasPhoneNumber = true;
     };
 
-    $scope.contacts = [];
+    $scope.contacts = [{ "name": "Jonathan", "phonenumber": "55654478" }, { "name": "Jimmy", "phonenumber": "55654478" },
+        { "name": "Janet", "phonenumber": "11155478" }];
     $scope.contactsFinished = false;
     var cSort = function (a, b) {
         aName = a.name;
         bName = b.name;
         return aName < bName ? -1 : (aName == bName ? 0 : 1);
     };
-    
+
+
+    /*
     $cordovaContacts.find(opts).then(function (allContacts) {
         for (var i = 0; i < allContacts.length; i++) {
             if (allContacts[i].phoneNumbers != null && allContacts[i].phoneNumbers[0].type === 'mobile') {
@@ -894,6 +917,7 @@ app.controller('initController', ['$scope', '$timeout', '$interval', 'UserObject
         $scope.contactsFinished = true;
         $scope.contacts.sort(cSort);
     });
+    */
 }]);
 
 /*********************   SideMenu Controller **************************/
@@ -952,7 +976,7 @@ app.controller('sideMenuController', ['$scope', '$window', '$timeout', '$state',
         console.log('onLoadError fired');
     };
 
-    $scope.takePicture = function () {
+    $scope.takePicture = function() {
         var fitwidth = (window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth) + 15;
         var fitheight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 
@@ -965,17 +989,17 @@ app.controller('sideMenuController', ['$scope', '$window', '$timeout', '$state',
             sourceType: Camera.PictureSourceType.CAMERA
         };
 
-        $ionicPlatform.ready(function () {
-            $cordovaCamera.getPicture(options).then(function (imageData) {
+        $ionicPlatform.ready(function() {
+            $cordovaCamera.getPicture(options).then(function(imageData) {
                 $scope.imgURI = "data:image/jpeg;base64," + imageData;
                 $scope.cropmodal.show();
                 $scope.openPhotoModal.hide();
-            }, function (err) {
+            }, function(err) {
                 console.log('Failed because: ');
                 console.log(err);
             });
         });
-    }
+    };
 
     $scope.selectPicture = function () {
         var fitwidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
