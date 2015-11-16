@@ -4,6 +4,10 @@
 
         $scope.showBroadcasters = true;
         $scope.imageURL = imageURL;
+        $scope.doRefresh = function () {
+            activityInit();
+            requestInit();
+        };
 
         var activityInit = function () {
             $ionicLoading.show();
@@ -14,6 +18,7 @@
                 $rootScope.broadcastingNo = Activity.broadcastData().Total;
                 $scope.noMoBroadcasters = ($rootScope.broadcastingNo <= countSet);
                 $scope.broadcastingIndex++;
+                $scope.$broadcast('scroll.refreshComplete');
             });
         };
 
@@ -43,6 +48,7 @@
                 $rootScope.requestsNo = Activity.requestData().Total;
                 $scope.noMoRequests = ($rootScope.requestsNo <= countSet);
                 $scope.requestIndex++;
+                $scope.$broadcast('scroll.refreshComplete');
             });
         };
 

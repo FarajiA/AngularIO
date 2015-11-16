@@ -17,7 +17,6 @@ var updatedUserConst = {
     emailInUse: 'Email is already registered.',
     unsuccessfulUpdate: 'Something went wrong. Try again!'
 };
-
 var deleteUserConst = {
     removeUserTitle: 'remove chaser?',
     successfullyDeleted: '0 is no longer chasing you.',
@@ -39,24 +38,20 @@ var userDetails = {
 var mapsAPI = {
     url: '//maps.googleapis.com/maps/api/js?v=3&sensor=true'
 };
-
 var mapsPrompt = {
     title: 'Location services off',
     text: 'To see your position turn on location services',
     error: 'Location services off',
     Errortitle: 'Map failed, sorry dawg'
 };
-
 var dashPrompt = {
     title: 'Location services must be on'
 };
-
 var SMS = {
     error: 'Problem sending SMS to 0',
     success: 'Invites sent homie',
     inviteContent: 'Add me on Chaser! Username: 0 http://chasermobile.com/invite'
 };
-
 function _isEmpty(object) {
     for (var key in object) {
         if (object.hasOwnProperty(key)) {
@@ -706,8 +701,8 @@ app.factory('UserObject', ['$http', '$q', 'localStorageService', '$rootScope', f
         });
         return deffered.promise;
     };
-    
-    UserObject.details = function () { return detailedUser; }
+
+    UserObject.details = function() { return detailedUser; };
     UserObject.data = function () { return data; };
     UserObject.authentication = _authentication;
     UserObject.fillAuthData = _fillAuthData;
@@ -734,7 +729,7 @@ app.factory('Dash', ['$http', '$q', 'UserObject', function ($http, $q, UserObjec
         return deffered.promise;
     };
 
-    User.data = function () { return data };
+    User.data = function () { return data; };
     return User;
 }]);
 
@@ -1070,6 +1065,5 @@ app.controller('sideMenuController', ['$scope', '$rootScope', '$window', '$timeo
         });
     };
 }]);
-
 
 })();

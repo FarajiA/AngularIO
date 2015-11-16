@@ -57733,7 +57733,7 @@ IonicModule
       '<div class="ionic-refresher-content" ' +
       'ng-class="{\'ionic-refresher-with-text\': pullingText || refreshingText}">' +
         '<div class="icon-pulling" ng-class="{\'pulling-rotation-disabled\':disablePullingRotation}">' +
-          '<i class="icon {{pullingIcon}}"></i>' +
+          '<ion-spinner icon="{{spinner}}"></ion-spinner>' +
         '</div>' +
         '<div class="text-pulling" ng-bind-html="pullingText"></div>' +
         '<div class="icon-refreshing">' +

@@ -4,6 +4,12 @@
         $scope.showChasers = true;
         $ionicLoading.show();
         $scope.imageURL = imageURL;
+
+        $scope.doRefresh = function() {
+            chasersInit();
+            chasingInit();
+        };
+
         $scope.$on('update_Chasers', function (event, args) {
             if (args.action === "chasers")
                 chasersInit();
@@ -19,6 +25,7 @@
                 $scope.chasersNo = data.Total;
                 $scope.noMoChasers = ($scope.chasersNo <= countSet);
                 $scope.chasersindex++;
+                $scope.$broadcast('scroll.refreshComplete');
             });
         };
 
@@ -47,6 +54,7 @@
                 $scope.chasingNo = data.Total;
                 $scope.noMoChasing = ($scope.chasingNo <= countSet);
                 $scope.chasingindex++;
+                $scope.$broadcast('scroll.refreshComplete');
             });
         };
 

@@ -8,6 +8,8 @@
     </ion-nav-buttons>
 
     <ion-content has-header="true" padding="false" has-bouncing="true">
+        <ion-refresher spinner="lines" on-refresh="doRefresh()" disable-pulling-rotation="true">
+        </ion-refresher>
         <div class="button-bar">
             <a class="button" ng-class="{'active' : showChasers }" ng-click="showChasers = true">Chasers <i class="icon ion-ios7-telephone-outline"><span class="badge badge-stable icon-badge">{{chasersNo}}</span></i></a>
             <a class="button" ng-class="{'active' : !showChasers }" ng-click="showChasers = false">Chasing <i class="icon ion-ios7-telephone-outline"><span class="badge badge-stable icon-badge">{{chasingNo}}</span></i></a>
@@ -18,7 +20,7 @@
                     <h2>no chasers homie</h2>
                 </div>
                 <ion-list ng-show="chasers.length > 0">
-                    <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="chaser in chasers" type="item-text-wrap" href="#/main/traffic/{{chaser.GUID}}">
+                    <ion-item class="item-avatar item-icon-right" ng-repeat="chaser in chasers" type="item-text-wrap" href="#/main/traffic/{{chaser.GUID}}">
                         <img ng-src="{{chaser.photo && imageURL + chaser.GUID + '.png' || 'img/default_avatar.png' }}">
                         <h2>{{chaser.username}}</h2>
                         <p>{{chaser.firstname}}&nbsp;{{chaser.lastname}}</p>
@@ -36,7 +38,7 @@
                     <h2>not chasing anyone</h2>
                 </div>
                 <ion-list ng-show="chasing.length > 0" lr-infinite-scroll="loadMoreChasing" scroll-threshold="600">
-                    <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="chaser in chasing" type="item-text-wrap" href="#/main/traffic/{{chaser.GUID}}">
+                    <ion-item class="item-avatar item-icon-right" ng-repeat="chaser in chasing" type="item-text-wrap" href="#/main/traffic/{{chaser.GUID}}">
                         <img ng-src="{{chaser.photo && imageURL + chaser.GUID + '.png' || 'img/default_avatar.png' }}">
                         <h2>{{chaser.username}}</h2>
                         <p>{{chaser.firstname}}&nbsp;{{chaser.lastname}}</p>
@@ -45,7 +47,7 @@
                 <ion-infinite-scroll ng-if="!noMoChasing" on-infinite="loadMoreChasing()" distance="30%"></ion-infinite-scroll>
             </div>
         </div>
-</ion-content>  
+    </ion-content>  
 
 
 </ion-view>

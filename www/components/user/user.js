@@ -13,10 +13,13 @@
         maximumAge: 500000
     };
 
-    //var watch;
     $scope.userMarker = {
         id: 1,
         options: { icon: 'img/map_dot.png' },
+    };
+
+    $scope.doRefresh = function () {
+        getUserRequest();
     };
     
     var geoIndex = 0;
@@ -45,44 +48,49 @@
         });
     };
 
-    var clearGeoWatch = function () {
-        if (!_isEmpty($scope.geoWatch))
-                $scope.geoWatch.clearWatch();
-    }
+   var clearGeoWatch = function() {
+      if (!_isEmpty($scope.geoWatch))
+         $scope.geoWatch.clearWatch();
+   };
 
-   UserObject.getUser(userID).then(function () {
-        $scope.title = UserObject.details().username;
-        $scope.GUID = UserObject.details().GUID;
-        $scope.username = UserObject.details().username;
-        $scope.firstname = UserObject.details().firstname;
-        $scope.lastname = UserObject.details().lastname;
-        $scope.noChasers = UserObject.details().noChasers;
-        $scope.noChasing = UserObject.details().noChasing;
-        $scope.isChasing = $scope.symbol = UserObject.details().isChasing;
-        $scope.private = UserObject.details().isprivate;
-        $scope.broadcasting = UserObject.details().broadcast;        
-        $scope.longitude = Number(UserObject.details().longitude);
-        $scope.latitude = Number(UserObject.details().latitude);
-        $scope.photo = UserObject.details().photo;
+   var getUserRequest = function() {
+      UserObject.getUser(userID).then(function() {
+      $scope.title = UserObject.details().username;
+      $scope.GUID = UserObject.details().GUID;
+      $scope.username = UserObject.details().username;
+      $scope.firstname = UserObject.details().firstname;
+      $scope.lastname = UserObject.details().lastname;
+      $scope.noChasers = UserObject.details().noChasers;
+      $scope.noChasing = UserObject.details().noChasing;
+      $scope.isChasing = $scope.symbol = UserObject.details().isChasing;
+      $scope.private = UserObject.details().isprivate;
+      $scope.broadcasting = UserObject.details().broadcast;
+      $scope.longitude = Number(UserObject.details().longitude);
+      $scope.latitude = Number(UserObject.details().latitude);
+      $scope.photo = UserObject.details().photo;
 
-        if ($scope.broadcasting) {
-            $scope.chaserMarker = {
+      if ($scope.broadcasting) {
+          $scope.chaserMarker = {
                 id: 0,
                 coords: {
-                    latitude: $scope.latitude,
-                    longitude: $scope.longitude
-                },
-                options: { icon: 'img/checkered_chaser.png' },
+                latitude: $scope.latitude,
+                longitude: $scope.longitude
+           },
+          options: { icon: 'img/checkered_chaser.png' },
+          };
+
+          if ($scope.user.broadcast) {
+              $scope.userMarker.coords = {
+              latitude: $scope.user.latitude,
+              longitude: $scope.user.longitude
             };
-            
-            if ($scope.user.broadcast) {
-                $scope.userMarker.coords = {
-                    latitude: $scope.user.latitude,
-                    longitude: $scope.user.longitude
-                };
-            }
-        } 
-});
+          }
+      }
+      $scope.$broadcast('scroll.refreshComplete');
+    });
+   };
+
+   getUserRequest();
 
 var path = $location.path().split("/") || "Unknown";
 $scope.segment = path[2];
@@ -136,7 +144,6 @@ function (error) {
                GeoWatchTimer();
        });
    });
-
 
    $scope.$on('$ionicView.afterLeave', function () {
        clearGeoWatch();
