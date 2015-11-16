@@ -7,7 +7,7 @@
         <button class="button button-icon icon ion-gear-a" ui-sref="settings"></button>
     </ion-nav-buttons>
 
-    <ion-content has-header="true" padding="false">
+    <ion-content has-header="true" padding="false" has-bouncing="true">
         <div class="button-bar">
             <a class="button" ng-class="{'active' : showBroadcasters }" ng-click="showBroadcasters = true">Broadcasting <i class="icon ion-ios7-telephone-outline"><span class="badge badge-stable icon-badge">{{broadcastingNo}}</span></i></a>
             <a class="button" ng-class="{'active' : !showBroadcasters }" ng-click="showBroadcasters = false">Requests <i class="icon ion-ios7-telephone-outline"><span class="badge badge-stable icon-badge">{{requestsNo}}</span></i></a>

@@ -1,3 +1,4 @@
+/***** App globals *****/
 //var baseURL = "http://localhost:3536/";
 //var imageURL = "http://localhost:3536/photos/";
 var baseURL = "http://ch-mo.com/";
@@ -32,7 +33,7 @@ var requestConst = {
 };
 var userDetails = {
     broadcasting: 'Broadcasting',
-    viewlocation: 'View location',
+    viewlocation: 'Broadcasting',
     notBroadcasting: 'Not broadcasting'
 };
 var mapsAPI = {
@@ -56,6 +57,15 @@ var SMS = {
     inviteContent: 'Add me on Chaser! Username: 0 http://chasermobile.com/invite'
 };
 
+function _isEmpty(object) {
+    for (var key in object) {
+        if (object.hasOwnProperty(key)) {
+            return false;
+        }
+    }
+    return true;
+}
+
 function convertImgToBase64URL(url, callback, outputFormat) {
     var img = new Image();
     img.crossOrigin = 'Anonymous';
@@ -71,6 +81,7 @@ function convertImgToBase64URL(url, callback, outputFormat) {
     };
     img.src = url;
 }
+/***** end globals **********/
 
 ; (function () {
 var app = angular.module('App', [
@@ -116,11 +127,6 @@ app.run(function ($ionicPlatform, $ionicSideMenuDelegate, $rootScope, UserObject
         });
     }
 
-
-
-
-
-    
     $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState, fromParams) {
             var authdata = UserObject.authentication();
             var auth = authdata.isAuth;
@@ -845,13 +851,13 @@ app.controller('initController', ['$scope', '$timeout', '$interval', 'UserObject
         //$cordovaSplashscreen.hide();
     });
 
-    document.addEventListener("resume", resume, false);
-
-    function resume() {
+    document.addEventListener("resume", function () {
         console.log("resume app");
         //backgroundGeoLocation.stop();
         //updateCoordinatesAwake();
-    }  
+    }, false);   
+
+
     
     $scope.$on('update_location', function (event, args) {
    if (args.action === "turn-on") {      
@@ -885,8 +891,7 @@ app.controller('initController', ['$scope', '$timeout', '$interval', 'UserObject
         opts.hasPhoneNumber = true;
     };
 
-    $scope.contacts = [{ "name": "Jonathan", "phonenumber": "55654478" }, { "name": "Jimmy", "phonenumber": "55654478" },
-        { "name": "Janet", "phonenumber": "11155478" }];
+    $scope.contacts = [];
     $scope.contactsFinished = false;
     var cSort = function (a, b) {
         aName = a.name;
@@ -894,34 +899,35 @@ app.controller('initController', ['$scope', '$timeout', '$interval', 'UserObject
         return aName < bName ? -1 : (aName == bName ? 0 : 1);
     };
 
+    $ionicPlatform.ready(function () {
+        
+                $cordovaContacts.find(opts).then(function (allContacts) {
+                    for (var i = 0; i < allContacts.length; i++) {
+                        if (allContacts[i].phoneNumbers != null && allContacts[i].phoneNumbers[0].type === 'mobile') {
+                            var contactphone = allContacts[i].phoneNumbers;
+                            var phonenumber = contactphone[0].value;
+                            var name = allContacts[i].displayName;
+                            var contact = {
+                                name: '',
+                                phonenumber: ''
+                            };
+                            contact.name = name;
+                            contact.phonenumber = phonenumber;
+                            var idx = $scope.contacts.indexOf(contact);
 
-    /*
-    $cordovaContacts.find(opts).then(function (allContacts) {
-        for (var i = 0; i < allContacts.length; i++) {
-            if (allContacts[i].phoneNumbers != null && allContacts[i].phoneNumbers[0].type === 'mobile') {
-                var contactphone = allContacts[i].phoneNumbers;
-                var phonenumber = contactphone[0].value;
-                var name = allContacts[i].displayName;
-                var contact = {
-                    name: '',
-                    phonenumber: ''
-                };
-                contact.name = name;
-                contact.phonenumber = phonenumber;
-                var idx = $scope.contacts.indexOf(contact);
-
-                if (idx === -1)
-                    $scope.contacts.push(contact);
-            }
-        }
-        $scope.contactsFinished = true;
-        $scope.contacts.sort(cSort);
+                            if (idx === -1)
+                                $scope.contacts.push(contact);
+                        }
+                    }
+                    $scope.contactsFinished = true;
+                    $scope.contacts.sort(cSort);
+                });
     });
-    */
+
 }]);
 
 /*********************   SideMenu Controller **************************/
-app.controller('sideMenuController', ['$scope', '$window', '$timeout', '$state', '$cordovaCamera', '$cordovaFileTransfer', '$ionicModal', '$ionicPlatform', '$ionicLoading', 'UserObject', function ($scope, $window, $timeout, $state, $cordovaCamera, $cordovaFileTransfer, $ionicModal, $ionicPlatform, $ionicLoading, UserObject) {
+app.controller('sideMenuController', ['$scope', '$rootScope', '$window', '$timeout', '$state', '$cordovaCamera', '$cordovaFileTransfer', '$ionicModal', '$ionicPlatform', '$ionicLoading', 'localStorageService', 'UserObject', function ($scope, $rootScope, $window, $timeout, $state, $cordovaCamera, $cordovaFileTransfer, $ionicModal, $ionicPlatform, $ionicLoading, localStorageService, UserObject) {
 
     $ionicModal.fromTemplateUrl('photo-modal.html', {
         scope: $scope,
@@ -947,6 +953,7 @@ app.controller('sideMenuController', ['$scope', '$window', '$timeout', '$state',
 
     $scope.closecropModal = function () {
         $scope.cropmodal.hide();
+        $scope.photomodal.hide();
     };
 
     $scope.$on('cropmodal.hidden', function () {
@@ -981,19 +988,23 @@ app.controller('sideMenuController', ['$scope', '$window', '$timeout', '$state',
         var fitheight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 
         var options = {
-            quality: 50,
-            //targetWidth: fitwidth,
-            //targetHeight: fitheight,
-            //encodingType: Camera.EncodingType.JPEG,
+            quality: 75,
             destinationType: Camera.DestinationType.DATA_URL,
-            sourceType: Camera.PictureSourceType.CAMERA
+            sourceType: Camera.PictureSourceType.CAMERA,
+            allowEdit: true,
+            encodingType: Camera.EncodingType.JPEG,
+            targetWidth: fitwidth,
+            targetHeight: fitheight,
+            popoverOptions: CameraPopoverOptions,
+            saveToPhotoAlbum: false,
+            correctOrientation: true
         };
 
         $ionicPlatform.ready(function() {
             $cordovaCamera.getPicture(options).then(function(imageData) {
                 $scope.imgURI = "data:image/jpeg;base64," + imageData;
                 $scope.cropmodal.show();
-                $scope.openPhotoModal.hide();
+                //$scope.openPhotoModal.hide();
             }, function(err) {
                 console.log('Failed because: ');
                 console.log(err);
@@ -1017,7 +1028,7 @@ app.controller('sideMenuController', ['$scope', '$window', '$timeout', '$state',
             $cordovaCamera.getPicture(options).then(
               function (imageData) {
                   $scope.cropmodal.show();
-                  $scope.openPhotoModal.hide();
+                  //$scope.photoModal.hide();
                   $scope.imgURI = "data:image/jpeg;base64," + imageData;
               },
               function (err) {
