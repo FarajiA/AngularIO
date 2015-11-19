@@ -1,5 +1,5 @@
 ﻿; (function () {
-    angular.module('App').directive('userChoice', ['UserObject', 'Decision', '$rootScope', function (UserObject, Decision, $rootScope) {
+    angular.module('App').directive('userChoice', ['UserObject', 'Decision', function (UserObject, Decision) {
         return {
             restrict: 'A',
             require:'?ngModel',
@@ -104,25 +104,22 @@
                             .addClass("ion-locked");
                         }
 
-                        promise = function () {
-                            chaserBroadcast.coords(UserObject.details().GUID).then(function () {
-                                if (chaserBroadcast.data().broadcast)
-                                {
+                        promise = function() {
+                            chaserBroadcast.coords(UserObject.details().GUID).then(function() {
+                                if (chaserBroadcast.data().broadcast) {
                                     elem.attr("data-lat", chaserBroadcast.data().latitude)
-                                       .attr("data-long", chaserBroadcast.data().longitude);
+                                        .attr("data-long", chaserBroadcast.data().longitude);
                                     scope.chaserMarker.coords = {
                                         latitude: Number(chaserBroadcast.data().latitude),
                                         longitude: Number(chaserBroadcast.data().longitude)
                                     };
-                                }
-                                else
-                                {
-                                   scope.$apply(function () {
-                                       scope.broadcasting = false;
+                                } else {
+                                    scope.$apply(function() {
+                                        scope.broadcasting = false;
                                     });
                                 }
                             });
-                        }
+                        };
 
                         interval = $interval(function () { promise(); }, 30000);
 
@@ -133,9 +130,11 @@
                     }
                 });
 
-                scope.stopCoords = function () {
-                    $interval.cancel(interval);
-                };
+                scope.$apply(function () {
+                    scope.stopCoords = function () {
+                        $interval.cancel(interval);
+                    };
+                });
 
                 scope.$on('$destroy', function (event) {
                     scope.stopCoords();

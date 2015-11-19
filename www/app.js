@@ -2,7 +2,7 @@
 //var baseURL = "http://localhost:3536/";
 //var imageURL = "http://localhost:3536/photos/";
 var baseURL = "http://ch-mo.com/";
-var imageURL = "http://ch-mo.com/photos/"
+var imageURL = "http://ch-mo.com/photos/";
 
 var countSet = 10;
 var activityConst = {
@@ -108,6 +108,7 @@ app.run(function ($ionicPlatform, $ionicSideMenuDelegate, $rootScope, UserObject
     $rootScope.$on('emit_Broadcasting', function (event, args) {
         $rootScope.$broadcast('update_location', args);
     });
+
 
     UserObject.fillAuthData();
 
@@ -602,7 +603,7 @@ app.factory('UserObject', ['$http', '$q', 'localStorageService', '$rootScope', f
 
     var _authentication = function() {
         var authData = localStorageService.get('authorizationData');
-        var authObject = {}
+        var authObject = {};
         if (authData) {
             authObject.isAuth = true;
             authObject.guid = authData.chaserID;
@@ -646,14 +647,14 @@ app.factory('UserObject', ['$http', '$q', 'localStorageService', '$rootScope', f
         return deffered.promise;
     };
 
-    UserObject.logout = function () {
+    UserObject.logout = function() {
         localStorageService.remove('authorizationData');
         localStorageService.remove('chaserImage');
         _authentication.isAuth = false;
         _authentication.userName = "";
         _authentication.useRefreshTokens = false;
         return _authentication;
-    }
+    };
 
     UserObject.setUser = function (guid) {
         var deffered = $q.defer();
@@ -749,12 +750,28 @@ app.factory('GeoAlert', function () {
 
 
 /************ init ****************/
-app.controller('initController', ['$scope', '$timeout', '$interval', 'UserObject', '$cordovaCamera', '$cordovaFileTransfer', '$ionicModal', '$ionicPlatform', 'localStorageService', '$ionicLoading', '$rootScope', '$state', '$cordovaSplashscreen', 'Dash', '$cordovaGeolocation', 'GeoAlert', '$ionicPopup','$cordovaContacts', function ($scope, $timeout, $interval, UserObject, $cordovaCamera, $cordovaFileTransfer, $ionicModal, $ionicPlatform, localStorageService, $ionicLoading, $rootScope, $state, $cordovaSplashscreen, Dash, $cordovaGeolocation, GeoAlert, $ionicPopup,$cordovaContacts) {
+    app.controller('initController', ['$scope', '$timeout', '$interval', '$window', 'UserObject', '$cordovaCamera', '$cordovaFileTransfer', '$ionicModal', '$ionicPlatform', 'localStorageService', '$ionicLoading', '$rootScope', '$state', '$cordovaSplashscreen', 'Dash', '$cordovaGeolocation', 'GeoAlert', '$ionicPopup','$cordovaContacts', function ($scope, $timeout, $interval, $window, UserObject, $cordovaCamera, $cordovaFileTransfer, $ionicModal, $ionicPlatform, localStorageService, $ionicLoading, $rootScope, $state, $cordovaSplashscreen, Dash, $cordovaGeolocation, GeoAlert, $ionicPopup,$cordovaContacts) {
 
     $scope.userLogged = false;
     $scope.user = {};
+    $scope.photoUpdate = function() {
+        var hasphoto = $scope.user.photo;
+        var savedImage = localStorageService.get('chaserImage');
 
+        $scope.chaser = {};
 
+        if (hasphoto && !savedImage) {
+            convertImgToBase64URL(imageURL + UserObject.data().GUID + ".png", function(base64Img) {
+                $scope.chaser.savedImage = base64Img;
+                localStorageService.set('chaserImage', $scope.chaser.savedImage);
+            }, 'image/png');
+        } else if (savedImage) {
+            $scope.chaser.savedImage = savedImage;
+        } else {
+            $scope.chaser.savedImage = "img/default_avatar.png";
+        }
+    };
+    
     $rootScope.appRun.then(function () {
         $scope.user = UserObject.data();
         $scope.userLogged = true;
@@ -765,23 +782,7 @@ app.controller('initController', ['$scope', '$timeout', '$interval', 'UserObject
             }, false);
         }
 
-        var hasphoto = $scope.user.photo;
-        var savedImage = localStorageService.get('chaserImage');
-        
-        $rootScope.chaser = {};
-
-        if (hasphoto && !savedImage) {
-            convertImgToBase64URL(imageURL + UserObject.data().GUID + ".png", function (base64Img) {
-                $rootScope.chaser.savedImage = base64Img;
-                localStorageService.set('chaserImage', $rootScope.chaser.savedImage);
-            }, 'image/png');
-        }
-        else if (savedImage) {
-            $rootScope.chaser.savedImage = savedImage;
-        }
-        else {
-            $rootScope.chaser.savedImage = "img/default_avatar.png";
-        }
+        $scope.photoUpdate();
 
         delete $rootScope.appRun;
     });
@@ -868,16 +869,6 @@ app.controller('initController', ['$scope', '$timeout', '$interval', 'UserObject
         }
     });
     
-    //$scope.$emit('emit_Chasers', { action: "chasers" });
-    //$scope.$emit('emit_Chasers', { action: "chasing" });
-    var firstentry = 0;
-    $scope.contactsLoadPage = function () {
-        if (firstentry === 0) {
-            $ionicLoading.show();
-            firstentry++;
-        }
-    };
-        
     var opts = {
         fields: ['displayName', 'name', 'phoneNumbers']
     };
@@ -895,34 +886,31 @@ app.controller('initController', ['$scope', '$timeout', '$interval', 'UserObject
     };
 
     $ionicPlatform.ready(function () {
-        
-                $cordovaContacts.find(opts).then(function (allContacts) {
-                    for (var i = 0; i < allContacts.length; i++) {
-                        if (allContacts[i].phoneNumbers != null && allContacts[i].phoneNumbers[0].type === 'mobile') {
-                            var contactphone = allContacts[i].phoneNumbers;
-                            var phonenumber = contactphone[0].value;
-                            var name = allContacts[i].displayName;
-                            var contact = {
-                                name: '',
-                                phonenumber: ''
-                            };
-                            contact.name = name;
-                            contact.phonenumber = phonenumber;
-                            var idx = $scope.contacts.indexOf(contact);
+        /*
+        $cordovaContacts.find(opts).then(function (allContacts) {
+            for (var i = 0; i < allContacts.length; i++) {
+                if (allContacts[i].phoneNumbers != null && allContacts[i].phoneNumbers[0].type === 'mobile') {
+                      var contactphone = allContacts[i].phoneNumbers;
+                      var phonenumber = contactphone[0].value;
+                      var name = allContacts[i].displayName;
+                      var contact = {
+                               name: '',
+                               phonenumber: ''
+                      };
+                      contact.name = name;
+                      contact.phonenumber = phonenumber;
+                      var idx = $scope.contacts.indexOf(contact);
 
-                            if (idx === -1)
-                                $scope.contacts.push(contact);
-                        }
+                      if (idx === -1)
+                        $scope.contacts.push(contact);
+                       }
                     }
-                    $scope.contactsFinished = true;
-                    $scope.contacts.sort(cSort);
-                });
+            $scope.contactsFinished = true;
+            $scope.contacts.sort(cSort);
+        });
+        */
     });
 
-}]);
-
-/*********************   SideMenu Controller **************************/
-app.controller('sideMenuController', ['$scope', '$rootScope', '$window', '$timeout', '$state', '$cordovaCamera', '$cordovaFileTransfer', '$ionicModal', '$ionicPlatform', '$ionicLoading', 'localStorageService', 'UserObject', function ($scope, $rootScope, $window, $timeout, $state, $cordovaCamera, $cordovaFileTransfer, $ionicModal, $ionicPlatform, $ionicLoading, localStorageService, UserObject) {
 
     $ionicModal.fromTemplateUrl('photo-modal.html', {
         scope: $scope,
@@ -955,8 +943,13 @@ app.controller('sideMenuController', ['$scope', '$rootScope', '$window', '$timeo
         $scope.resImageDataURI = {};
     });
 
+    $scope.contactsLoadPage = function() {
+        $ionicLoading.show();
+    };
+
     $scope.logout = function () {
         var out = UserObject.logout();
+        $ionicLoading.show();
         if (!out.isAuth) {
             $state.go('login');
             $window.location.reload();
@@ -978,7 +971,7 @@ app.controller('sideMenuController', ['$scope', '$rootScope', '$window', '$timeo
         console.log('onLoadError fired');
     };
 
-    $scope.takePicture = function() {
+    $scope.takePicture = function () {
         var fitwidth = (window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth) + 15;
         var fitheight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 
@@ -995,12 +988,12 @@ app.controller('sideMenuController', ['$scope', '$rootScope', '$window', '$timeo
             correctOrientation: true
         };
 
-        $ionicPlatform.ready(function() {
-            $cordovaCamera.getPicture(options).then(function(imageData) {
+        $ionicPlatform.ready(function () {
+            $cordovaCamera.getPicture(options).then(function (imageData) {
                 $scope.imgURI = "data:image/jpeg;base64," + imageData;
                 $scope.cropmodal.show();
                 //$scope.openPhotoModal.hide();
-            }, function(err) {
+            }, function (err) {
                 console.log('Failed because: ');
                 console.log(err);
             });
@@ -1064,6 +1057,12 @@ app.controller('sideMenuController', ['$scope', '$rootScope', '$window', '$timeo
             });
         });
     };
+
 }]);
 
+/*********************   SideMenu Controller ******************
+app.controller('sideMenuController', ['$scope', '$rootScope', '$window', '$timeout', '$state', '$cordovaCamera', '$cordovaFileTransfer', '$ionicModal', '$ionicPlatform', '$ionicLoading', 'localStorageService', 'UserObject', function ($scope, $rootScope, $window, $timeout, $state, $cordovaCamera, $cordovaFileTransfer, $ionicModal, $ionicPlatform, $ionicLoading, localStorageService, UserObject) {
+
+}]);
+********/
 })();

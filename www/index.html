@@ -32,8 +32,8 @@
       Templates are in the /templates folder (but you could also
       have templates inline in this html file if you'd like).
     -->
-      <ion-side-menus>
-          <ion-side-menu-content ng-controller="initController">
+      <ion-side-menus ng-controller="initController">
+          <ion-side-menu-content>
               <ion-nav-bar class="bar-assertive nav-title-slide-ios7">
                   <ion-nav-back-button class="button button-icon icon ion-chevron-left">
                   </ion-nav-back-button>
@@ -42,7 +42,6 @@
           </ion-side-menu-content>
           <ion-side-menu side="left">
               <ion-content has-header="false">
-                  <div ng-controller="sideMenuController">
                       <div class="sidemenu-header">
                           <a class="profile" ng-click="openPhotoModal()" href="#">
                               <img ng-src="{{chaser.savedImage}}" />
@@ -89,7 +88,6 @@
                               </ion-modal-view>
                           </script>
                       </ion-list>
-                  </div>
               </ion-content>
           </ion-side-menu>
       </ion-side-menus>

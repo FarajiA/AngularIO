@@ -6,6 +6,7 @@
 
     var userID = $stateParams.userId;
     $scope.imageURL = imageURL;
+    $scope.stopCoords = {};
 
     var options = {
         timeout: 7000,
@@ -31,7 +32,7 @@
               function (error) {
                   var seen = GeoAlert.getGeoalert();
                   if (seen)
-                      return
+                      return;
                   $ionicPopup.alert({
                       title: mapsPrompt.title,
                       template: mapsPrompt.text
@@ -50,7 +51,9 @@
 
    var clearGeoWatch = function() {
       if (!_isEmpty($scope.geoWatch))
-         $scope.geoWatch.clearWatch();
+          $scope.geoWatch.clearWatch();
+       if (!_isEmpty($scope.stopCoords))
+           $scope.stopCoords();
    };
 
    var getUserRequest = function() {

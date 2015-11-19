@@ -1,10 +1,11 @@
 ﻿; (function () {
     var app = angular.module('App');
     app.controller('ContactsController', ['$scope', '$location','$cordovaContacts', '$cordovaSms', '$ionicPlatform', '$ionicPopup', '$ionicLoading', '$state', function ($scope, $location, $cordovaContacts, $cordovaSms, $ionicPlatform, $ionicPopup, $ionicLoading, $state) {
-        var thecontacts = $scope.contacts;
-        var thecontactswithParent = $scope.$parent.contacts;
-
-        $ionicLoading.hide();        
+        
+        $scope.$on('$ionicView.enter', function () {
+            $ionicLoading.hide();
+        });
+      
         $scope.back = function () {
             $state.go('main.dash');
         };
