@@ -865,7 +865,7 @@ app.factory('GeoAlert', function () {
         else if (args.action === "turn-off") {
             //if ($scope.geoWatch)
             //    $scope.geoWatch.clearWatch();
-            //backgroundGeoLocation.stop();
+        backgroundGeoLocation.stop();
         }
     });
     
@@ -1050,7 +1050,7 @@ app.factory('GeoAlert', function () {
                 $scope.cropmodal.hide();
                 $ionicLoading.hide();
             }, function (progress) {
-                console.log("Progress: " + (progress.loaded / progress.total) * 100)
+                console.log("Progress: " + (progress.loaded / progress.total) * 100);
                 $timeout(function () {
                     $scope.downloadProgress = (progress.loaded / progress.total) * 100;
                 });

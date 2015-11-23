@@ -34,13 +34,12 @@
                         var valid = regex.test(value);
                         ctrl.$setValidity('charactersvalid', valid);
                         if (valid) {
-                            Registration.usernameCheck(value).then(function () {
+                            Registration.usernameCheck(value).then(function() {
                                 var isValid = !Registration.data();
                                 ctrl.$setValidity('usernamevalid', isValid);
                             });
-                        }
-                        else
-                            ctrl.$setValidity('usernamevalid', true)
+                        } else
+                            ctrl.$setValidity('usernamevalid', true);
                     }
                     else {
                         ctrl.$setValidity('usernamevalid', true);
@@ -50,6 +49,9 @@
             }
     }        
     }]).directive('pwValidate', [function () {
+        /*  Attributes to add for validation to include alphabet & numeral
+        pw-validate="^(?=.{6,})(?=.*[a-zA-Z])(?=.*[0-9]).*$" regex-validate-flags="g" 
+        */
         return {
             restrict: 'A',
             require: 'ngModel',

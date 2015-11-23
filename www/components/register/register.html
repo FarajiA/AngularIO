@@ -35,7 +35,7 @@
                     <p ng-message="charactersvalid" ng-show="form.registerform.username.$error.charactersvalid">Periods, underscores, and dashes only</p>
                 </div>
                 <label class="item item-input">
-                    <input type="password" maxlength="15" pw-validate="^(?=.{6,})(?=.*[a-zA-Z])(?=.*[0-9]).*$" regex-validate-flags="g" ng-minlength="6" ng-model="user.password" name="password" placeholder="Password" required>
+                    <input type="password" maxlength="15" ng-minlength="6" ng-model="user.password" name="password" placeholder="Password" required>
                     <i class="icon ion-alert-circled error" ng-show="form.registerform.password.$invalid && form.registerform.password.$touched"></i>
                 </label>
                 <div class="error-messages" ng-messages="form.registerform.password.$error" ng-if="form.registerform.password.$touched">
@@ -55,6 +55,5 @@
                 Done
             </button>
         </form>
-
     </ion-content>
 </ion-view>
