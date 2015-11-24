@@ -87,7 +87,7 @@
             restrict: 'A',
             require: '?ngModel',
             link: function (scope, elem, attrs, ctrl) {
-                var interval;
+                scope.interval;
                 var promise;
                 scope.$watch(attrs.ngModel, function (newValue, oldValue) {
                     if (newValue) {
@@ -103,7 +103,7 @@
                             .text(userDetails.broadcasting)
                             .addClass("ion-locked");
                         }
-
+                        /*
                         promise = function() {
                             chaserBroadcast.coords(UserObject.details().GUID).then(function() {
                                 if (chaserBroadcast.data().broadcast) {
@@ -121,8 +121,13 @@
                             });
                         };
 
-                        interval = $interval(function () { promise(); }, 30000);
+                        scope.interval = $interval(function () { promise(); }, 30000);
 
+                        scope.stopCoords = function () {
+                            if (!_isEmpty(scope.interval) && scope.interval)
+                                $interval.cancel(scope.interval);
+                        };
+                        */
                     }
                     else {
                         elem.attr("disabled", "disabled")
@@ -130,15 +135,21 @@
                     }
                 });
 
-                scope.$apply(function () {
-                    scope.stopCoords = function () {
-                        $interval.cancel(interval);
-                    };
+
+                /*
+                scope.$on('$ionicView.leave', function () {
+                    scope.stopCoords();
                 });
+
+                document.addEventListener("pause", function () {
+                    scope.stopCoords();
+                }, false);
+
 
                 scope.$on('$destroy', function (event) {
                     scope.stopCoords();
                 });
+                */
             }
         }
     }]);

@@ -1886,7 +1886,7 @@
                 var fitwidth = (window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth) + 15;
                 var fitheight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
                 
-                elem.css({"width":fitwidth, "height": fitheight + 'px' });
+                elem.css({"width":fitwidth + 'px', "height": fitheight + 'px' });
             }
         }
     });

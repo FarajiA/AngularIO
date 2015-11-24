@@ -847,12 +847,13 @@ app.factory('GeoAlert', function () {
         //$cordovaSplashscreen.hide();
     });
 
+    /*
     document.addEventListener("resume", function () {
         console.log("resume app");
         //backgroundGeoLocation.stop();
         //updateCoordinatesAwake();
     }, false);   
-
+    */
 
     
     $scope.$on('update_location', function (event, args) {
@@ -865,7 +866,7 @@ app.factory('GeoAlert', function () {
         else if (args.action === "turn-off") {
             //if ($scope.geoWatch)
             //    $scope.geoWatch.clearWatch();
-        backgroundGeoLocation.stop();
+            //backgroundGeoLocation.stop();
         }
     });
     
@@ -886,7 +887,6 @@ app.factory('GeoAlert', function () {
     };
 
     $ionicPlatform.ready(function () {
-        /*
         $cordovaContacts.find(opts).then(function (allContacts) {
             for (var i = 0; i < allContacts.length; i++) {
                 if (allContacts[i].phoneNumbers != null && allContacts[i].phoneNumbers[0].type === 'mobile') {
@@ -908,9 +908,7 @@ app.factory('GeoAlert', function () {
             $scope.contactsFinished = true;
             $scope.contacts.sort(cSort);
         });
-        */
     });
-
 
     $ionicModal.fromTemplateUrl('photo-modal.html', {
         scope: $scope,
@@ -1010,7 +1008,8 @@ app.factory('GeoAlert', function () {
             targetHeight: fitheight,
             encodingType: Camera.EncodingType.JPEG,
             destinationType: Camera.DestinationType.DATA_URL,
-            sourceType: Camera.PictureSourceType.PHOTOLIBRARY
+            sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
+            correctOrientation: true
         };
         $ionicPlatform.ready(function () {
             $cordovaCamera.getPicture(options).then(
@@ -1050,7 +1049,7 @@ app.factory('GeoAlert', function () {
                 $scope.cropmodal.hide();
                 $ionicLoading.hide();
             }, function (progress) {
-                console.log("Progress: " + (progress.loaded / progress.total) * 100);
+                console.log("Progress: " + (progress.loaded / progress.total) * 100)
                 $timeout(function () {
                     $scope.downloadProgress = (progress.loaded / progress.total) * 100;
                 });
