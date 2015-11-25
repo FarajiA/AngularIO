@@ -8,7 +8,7 @@
             if ($scope.form.loginform.$valid) {
                 $ionicLoading.show();
                 UserObject.login(user).then(function () {
-                    if ($scope.user.GUID) {
+                    if (UserObject.data().GUID) {
                         UserObject.setUser($scope.user.GUID).then(function () {
                             $scope.$parent.user = UserObject.data();
                             $scope.$parent.photoUpdate();
