@@ -1,8 +1,8 @@
 /***** App globals *****/
-//var baseURL = "http://localhost:3536/";
-//var imageURL = "http://localhost:3536/photos/";
-var baseURL = "http://ch-mo.com/";
-var imageURL = "http://ch-mo.com/photos/";
+var baseURL = "http://localhost:3536/";
+var imageURL = "http://localhost:3536/photos/";
+//var baseURL = "http://ch-mo.com/";
+//var imageURL = "http://ch-mo.com/photos/";
 
 var countSet = 10;
 var activityConst = {
@@ -676,7 +676,7 @@ app.factory('UserObject', ['$http', '$q', 'localStorageService', '$rootScope', f
         $http.post(baseURL + "api/register", msg)
         .success(function (d) {
             data = d;
-            if (data.passwd !== "0" && data.username !== "0") {
+            if (data.passwd !== "0" && data.username !== "0" && (data.passwd && data.username)) {
                 localStorageService.set('authorizationData', { chaserID: data.GUID, chaseruser: user.username, chasrpsswd: user.password });
                 _authentication.isAuth = true;
                 _authentication.userName = data.username;
@@ -887,6 +887,7 @@ app.factory('GeoAlert', function () {
     };
 
     $ionicPlatform.ready(function () {
+        /*
         $cordovaContacts.find(opts).then(function (allContacts) {
             for (var i = 0; i < allContacts.length; i++) {
                 if (allContacts[i].phoneNumbers != null && allContacts[i].phoneNumbers[0].type === 'mobile') {
@@ -908,6 +909,7 @@ app.factory('GeoAlert', function () {
             $scope.contactsFinished = true;
             $scope.contacts.sort(cSort);
         });
+        */
     });
 
     $ionicModal.fromTemplateUrl('photo-modal.html', {

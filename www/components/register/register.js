@@ -15,8 +15,8 @@
                         $state.go('main.dash');
                     }
                     else {
-                        $scope.user = "";
-                        alert("Something went wrong. Try again!")
+                        $ionicLoading.hide();
+                        alert("Something went wrong. Try again!");
                     }
                 });
             }
