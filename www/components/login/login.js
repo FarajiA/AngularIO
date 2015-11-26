@@ -9,7 +9,7 @@
                 $ionicLoading.show();
                 UserObject.login(user).then(function () {
                     if (UserObject.data().GUID) {
-                        UserObject.setUser($scope.user.GUID).then(function () {
+                        UserObject.setUser(UserObject.data().GUID).then(function () {
                             $scope.$parent.user = UserObject.data();
                             $scope.$parent.photoUpdate();
                             $state.go('main.dash');

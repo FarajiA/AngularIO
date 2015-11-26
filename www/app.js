@@ -676,7 +676,7 @@ app.factory('UserObject', ['$http', '$q', 'localStorageService', '$rootScope', f
         $http.post(baseURL + "api/register", msg)
         .success(function (d) {
             data = d;
-            if (data.passwd !== "0" && data.username !== "0") {
+            if (data.passwd !== "0" && data.username !== "0" && (data.passwd && data.username)) {
                 localStorageService.set('authorizationData', { chaserID: data.GUID, chaseruser: user.username, chasrpsswd: user.password });
                 _authentication.isAuth = true;
                 _authentication.userName = data.username;
