@@ -11,7 +11,8 @@
                $ionicLoading.show();
                UserObject.register(user).then(function () {
                     $scope.$parent.user = UserObject.data();
-                    if ($scope.user.GUID) {
+                    if ($scope.$parent.user.GUID) {
+                        $scope.$parent.photoUpdate();
                         $state.go('main.dash');
                     }
                     else {

@@ -751,9 +751,7 @@ app.controller('initController', ['$scope', '$timeout', '$interval', '$window', 
     $scope.photoUpdate = function() {
         var hasphoto = $scope.user.photo;
         var savedImage = localStorageService.get('chaserImage');
-
         $scope.chaser = {};
-
         if (hasphoto && !savedImage) {
             convertImgToBase64URL(imageURL + UserObject.data().GUID + ".png", function(base64Img) {
                 $scope.chaser.savedImage = base64Img;

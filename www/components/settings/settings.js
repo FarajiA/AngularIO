@@ -6,10 +6,6 @@
             var OGuser;
 
             $scope.back = function () {
-
-               var userParent = $scope.$parent.user;
-               var user = UserObject.data();
-               var userOg = OGuser;
                $state.go('main.dash');
             };
 
@@ -74,8 +70,15 @@
 
             $scope.$on('$ionicView.enter', function () {
                 $scope.userSettings = angular.copy($scope.$parent.user);
-                var OGuser = angular.copy($scope.$parent.user);
-               
+
+                if ($scope.userSettings.hasOwnProperty('firstName'))
+                    $scope.userSettings.firstname = $scope.userSettings.firstName;
+                if ($scope.userSettings.hasOwnProperty('lastName'))
+                    $scope.userSettings.lastname = $scope.userSettings.lastName;
+                if ($scope.userSettings.hasOwnProperty('emailAddress'))
+                    $scope.userSettings.email = $scope.userSettings.emailAddress;
+                if ($scope.userSettings.hasOwnProperty('private'))
+                    $scope.userSettings.isprivate = $scope.userSettings.private;
             });
         }]);
 })();

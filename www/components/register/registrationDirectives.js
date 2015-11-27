@@ -7,14 +7,16 @@
                 var me = attrs.ngModel;
                 elem.bind('blur', function () {
                     var value = elem.val();
-                    if (value) {
+                    var pattern = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+                    if (pattern.test(value)) {
                         Registration.emailCheck(value).then(function () {
                             var isValid = Registration.data();
                             ctrl.$setValidity('emailvalid', isValid);
                         });
                     }
-                    else
-                        ctrl.$setValidity('emailvalid', true);
+
+                    //else
+                    //    ctrl.$setValidity('emailvalid', true);
                 });
             }
         }

@@ -110,7 +110,6 @@
                         });
                     }
                 });
-
                 elem.bind('focusin', function () {
                     ctrl.$setValidity('emailupdatevalid', true);
                 });
