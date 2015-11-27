@@ -10,6 +10,8 @@
     var locationFinished = $q.defer();
     $scope.locationCoordsPromise = locationFinished.promise;
 
+    var yeaUser = UserObject.data();
+
     var options = {
         timeout: 7000,
         enableHighAccuracy: true,
@@ -96,8 +98,8 @@
       $scope.title = UserObject.details().username;
       $scope.GUID = UserObject.details().GUID;
       $scope.username = UserObject.details().username;
-      $scope.firstname = UserObject.details().firstname;
-      $scope.lastname = UserObject.details().lastname;
+      $scope.firstname = UserObject.details().firstName;
+      $scope.lastname = UserObject.details().lastName;
       $scope.noChasers = UserObject.details().noChasers;
       $scope.noChasing = UserObject.details().noChasing;
       $scope.isChasing = $scope.symbol = UserObject.details().isChasing;

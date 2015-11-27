@@ -10,7 +10,7 @@
             if ($scope.form.registerform.$valid) {
                $ionicLoading.show();
                UserObject.register(user).then(function () {
-                    $scope.user = UserObject.data();
+                    $scope.$parent.user = UserObject.data();
                     if ($scope.user.GUID) {
                         $state.go('main.dash');
                     }

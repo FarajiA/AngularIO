@@ -2,11 +2,15 @@
         var app = angular.module('App');
         app.controller('SettingsController', ['$scope', '$ionicPopup', '$timeout', 'UserObject', 'Settings', '$rootScope', '$state', function ($scope, $ionicPopup, $timeout, UserObject, Settings, $rootScope, $state) {
             $scope.form = {};
-            $scope.user = $scope.$parent.user;
             $scope.oldpasswordInvalid = false;
+            var OGuser;
 
             $scope.back = function () {
-                $state.go('main.dash');
+
+               var userParent = $scope.$parent.user;
+               var user = UserObject.data();
+               var userOg = OGuser;
+               $state.go('main.dash');
             };
 
             $scope.updatePassword = function () {
@@ -52,18 +56,26 @@
                 */
             };
 
-            $scope.settingsSubmit = function (user) {               
+            $scope.settingsSubmit = function (userSettings) {
                 // check to make sure the form is completely valid
                 if ($scope.form.settingsForm.$valid) {
-                   Settings.updateUser(user).then(function () {
+                    Settings.updateUser(userSettings).then(function () {
+                        $scope.$parent.user = Settings.data();
+
                        var alertPopup = $ionicPopup.alert({
                            title: 'Done homie!'
                        });
                        alertPopup.then(function (res) {
-                           console.log('Done');
+                           $state.go('main.dash');
                        });
                     });
                 }
             };
+
+            $scope.$on('$ionicView.enter', function () {
+                $scope.userSettings = angular.copy($scope.$parent.user);
+                var OGuser = angular.copy($scope.$parent.user);
+               
+            });
         }]);
 })();
