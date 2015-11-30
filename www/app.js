@@ -1055,9 +1055,4 @@ document.addEventListener("resume", function () {
 
 }]);
 
-/*********************   SideMenu Controller ******************
-app.controller('sideMenuController', ['$scope', '$rootScope', '$window', '$timeout', '$state', '$cordovaCamera', '$cordovaFileTransfer', '$ionicModal', '$ionicPlatform', '$ionicLoading', 'localStorageService', 'UserObject', function ($scope, $rootScope, $window, $timeout, $state, $cordovaCamera, $cordovaFileTransfer, $ionicModal, $ionicPlatform, $ionicLoading, localStorageService, UserObject) {
-
-}]);
-********/
 })();
