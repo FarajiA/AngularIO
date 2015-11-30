@@ -1,8 +1,8 @@
 /***** App globals *****/
-var baseURL = "http://localhost:3536/";
-var imageURL = "http://localhost:3536/photos/";
-//var baseURL = "http://ch-mo.com/";
-//var imageURL = "http://ch-mo.com/photos/";
+//var baseURL = "http://localhost:3536/";
+//var imageURL = "http://localhost:3536/photos/";
+var baseURL = "http://ch-mo.com/";
+var imageURL = "http://ch-mo.com/photos/";
 
 var countSet = 10;
 var activityConst = {
@@ -108,7 +108,10 @@ app.run(function ($ionicPlatform, $ionicSideMenuDelegate, $rootScope, UserObject
     $rootScope.$on('emit_Broadcasting', function (event, args) {
         $rootScope.$broadcast('update_location', args);
     });
-
+   
+    $rootScope.$on('emit_UserView', function (event, args) {
+        $rootScope.$broadcast('turnOn_locationWatch', args);
+    });   
 
     UserObject.fillAuthData();
 
@@ -136,43 +139,19 @@ app.run(function ($ionicPlatform, $ionicSideMenuDelegate, $rootScope, UserObject
             
             event.preventDefault();
 
-            if (auth && userGuid || auth && !userGuid) {
+          //if (auth && userGuid || auth && !userGuid) {
+            if (auth) {
                 $rootScope.stateChangeBypass = true;
                 $state.go(toState, toParams);
-              
-                /*
-                var hasphoto = UserObject.data().photo;
-                var savedImage = localStorageService.get('chaserImage');
-
-                if (hasphoto && savedImage)
-                    return;
-
-                $rootScope.chaser = {};
-
-                if (hasphoto && !savedImage) {
-                    convertImgToBase64URL(imageURL + UserObject.data().GUID + ".png", function (base64Img) {
-                        $rootScope.chaser.savedImage = base64Img;
-                        localStorageService.set('chaserImage', $rootScope.chaser.savedImage);
-                    }, 'image/png');
-                }
-                else if (savedImage) {
-                    UserObject.data().photo = true;
-                    $rootScope.chaser.savedImage = savedImage;
-                }
-                else {
-                    $rootScope.chaser.savedImage = "img/default_avatar.png";
-                }
-                */
             }
             else {
                 $state.go('login');
             }
     });
+});
 
-    
-
-
-    //return deferred.promise;
+app.constant('$ionicLoadingConfig', {
+    template: '<ion-spinner icon="lines"></ion-spinner>'
 });
 
 app.config(RouteMethods, ocLazyLoadProvider);
@@ -748,9 +727,24 @@ app.factory('GeoAlert', function () {
     };
 });
 
+app.factory('UserView', function () {
+    var view = {
+        current: false
+    };
+    return {
+        UserPageCurrent: function () {
+            return view.current;
+        },
+        SetUserPageCurrent: function (current) {
+            view.current = current;
+        }
+    };
+});
+
 
 /************ init ****************/
-    app.controller('initController', ['$scope', '$timeout', '$interval', '$window', 'UserObject', '$cordovaCamera', '$cordovaFileTransfer', '$ionicModal', '$ionicPlatform', 'localStorageService', '$ionicLoading', '$rootScope', '$state', '$cordovaSplashscreen', 'Dash', '$cordovaGeolocation', 'GeoAlert', '$ionicPopup','$cordovaContacts', function ($scope, $timeout, $interval, $window, UserObject, $cordovaCamera, $cordovaFileTransfer, $ionicModal, $ionicPlatform, localStorageService, $ionicLoading, $rootScope, $state, $cordovaSplashscreen, Dash, $cordovaGeolocation, GeoAlert, $ionicPopup,$cordovaContacts) {
+app.controller('initController', ['$scope', '$timeout', '$interval', '$window', 'UserObject', '$cordovaCamera', '$cordovaFileTransfer', '$ionicModal', '$ionicPlatform', 'localStorageService', '$ionicLoading', '$rootScope', '$state', '$cordovaSplashscreen', 'Dash', '$cordovaGeolocation', 'GeoAlert', '$ionicPopup', '$cordovaContacts', 'UserView',
+                        function ($scope, $timeout, $interval, $window, UserObject, $cordovaCamera, $cordovaFileTransfer, $ionicModal, $ionicPlatform, localStorageService, $ionicLoading, $rootScope, $state, $cordovaSplashscreen, Dash, $cordovaGeolocation, GeoAlert, $ionicPopup, $cordovaContacts, UserView) {
 
     $scope.userLogged = false;
     $scope.user = {};
@@ -847,15 +841,6 @@ app.factory('GeoAlert', function () {
         //$cordovaSplashscreen.hide();
     });
 
-    /*
-    document.addEventListener("resume", function () {
-        console.log("resume app");
-        //backgroundGeoLocation.stop();
-        //updateCoordinatesAwake();
-    }, false);   
-    */
-
-    
     $scope.$on('update_location', function (event, args) {
    if (args.action === "turn-on") {      
        //updateCoordinatesAwake();
@@ -866,7 +851,7 @@ app.factory('GeoAlert', function () {
         else if (args.action === "turn-off") {
             //if ($scope.geoWatch)
             //    $scope.geoWatch.clearWatch();
-            //backgroundGeoLocation.stop();
+            backgroundGeoLocation.stop();
         }
     });
     
@@ -886,8 +871,7 @@ app.factory('GeoAlert', function () {
         return aName < bName ? -1 : (aName == bName ? 0 : 1);
     };
 
-    $ionicPlatform.ready(function () {
-        /*
+    $ionicPlatform.ready(function () {        
         $cordovaContacts.find(opts).then(function (allContacts) {
             for (var i = 0; i < allContacts.length; i++) {
                 if (allContacts[i].phoneNumbers != null && allContacts[i].phoneNumbers[0].type === 'mobile') {
@@ -909,9 +893,21 @@ app.factory('GeoAlert', function () {
             $scope.contactsFinished = true;
             $scope.contacts.sort(cSort);
         });
-        */
     });
 
+/********** Appwide Pause + Resume logic ************/
+document.addEventListener("pause", function () {
+    //var userviewcurrent = UserView.UserPageCurrent();
+    //if (userviewcurrent)
+    $scope.$emit('emit_UserView', { action: "turn-off" });
+ }, false); 
+
+document.addEventListener("resume", function () {
+    var userviewcurrent = UserView.UserPageCurrent();
+    if (userviewcurrent)
+        $scope.$emit('emit_UserView', { action: "turn-on" });
+}, false);
+/***********************      *****************************/
     $ionicModal.fromTemplateUrl('photo-modal.html', {
         scope: $scope,
         animation: 'slide-in-up'
@@ -948,8 +944,8 @@ app.factory('GeoAlert', function () {
     };
 
     $scope.logout = function () {
-        var out = UserObject.logout();
         $ionicLoading.show();
+        var out = UserObject.logout();
         if (!out.isAuth) {
             $state.go('login');
             $window.location.reload();
@@ -1028,7 +1024,7 @@ app.factory('GeoAlert', function () {
     };
 
     $scope.uploadPicture = function () {
-        $ionicLoading.show({ template: 'Processing...' });
+        $ionicLoading.show();
         var options = {
             chunkedMode: false,
             mimeType: "image/png"
@@ -1050,12 +1046,12 @@ app.factory('GeoAlert', function () {
                 console.log("Whoops! Upload failed");
                 $scope.cropmodal.hide();
                 $ionicLoading.hide();
-            }, function (progress) {
+            }/*, function (progress) {
                 console.log("Progress: " + (progress.loaded / progress.total) * 100)
                 $timeout(function () {
                     $scope.downloadProgress = (progress.loaded / progress.total) * 100;
                 });
-            });
+            }*/);
         });
     };
 

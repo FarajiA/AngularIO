@@ -1,16 +1,14 @@
 ﻿; (function () {
     var app = angular.module('App');
     app.requires.push('uiGmapgoogle-maps');
-    app.controller('UserController', ['$scope', '$q', '$timeout', 'UserObject', '$stateParams', 'Decision', '$location', '$ionicModal', '$interval', 'uiGmapGoogleMapApi', 'uiGmapIsReady', '$cordovaGeolocation','$ionicPopup', '$ionicPlatform', 'GeoAlert', 'chaserBroadcast',
-        function ($scope, $q, $timeout, UserObject, $stateParams, Decision, $location, $ionicModal, $interval, GoogleMapApi, uiGmapIsReady, $cordovaGeolocation, $ionicPopup, $ionicPlatform, GeoAlert, chaserBroadcast) {
+    app.controller('UserController', ['$scope', '$q', '$timeout', 'UserObject', '$stateParams', 'Decision', '$location', '$ionicModal', '$interval', 'uiGmapGoogleMapApi', 'uiGmapIsReady', '$cordovaGeolocation','$ionicPopup', '$ionicPlatform', 'GeoAlert', 'chaserBroadcast', 'UserView',
+    function ($scope, $q, $timeout, UserObject, $stateParams, Decision, $location, $ionicModal, $interval, GoogleMapApi, uiGmapIsReady, $cordovaGeolocation, $ionicPopup, $ionicPlatform, GeoAlert, chaserBroadcast,UserView) {
 
     var userID = $stateParams.userId;
     $scope.imageURL = imageURL;
     var chaserPromise;
     var locationFinished = $q.defer();
     $scope.locationCoordsPromise = locationFinished.promise;
-
-    var yeaUser = UserObject.data();
 
     var options = {
         timeout: 7000,
@@ -61,8 +59,7 @@
    var clearGeoWatch = function() {
       if (!_isEmpty($scope.geoWatch))
           $scope.geoWatch.clearWatch();
-       if (!_isEmpty($scope.stopCoords))
-           $scope.stopCoords();
+      $scope.stopCoords();
    };
 
    var GoogleMapLoad = function () {
@@ -184,11 +181,14 @@ $scope.openModal = function () {
                    GeoWatchTimer();
            }
        });
+
+       var shouldGeolocate = !$scope.user.broadcast && ($scope.isChasing === 1 || !$scope.private);
+       UserView.SetUserPageCurrent(shouldGeolocate);
    });
 
    $scope.$on('$ionicView.afterLeave', function () {
        clearGeoWatch();
-       $scope.stopCoords();
+       UserView.SetUserPageCurrent(false);
    });
 
         //Cleanup the modal when we're done with it!
@@ -196,25 +196,22 @@ $scope.openModal = function () {
        $scope.modal.remove();
    });
 
-   document.addEventListener("pause", function () {
-       if (!_isEmpty($scope.geoWatch))
-           $scope.geoWatch.clearWatch();
-       $scope.stopCoords();
-   }, false);
+   $scope.$on('turnOn_locationWatch', function (event, args) {
+       if (args.action === "turn-on") {
+           getUserRequest();
+           $scope.interval = $interval(function () { chaserPromise(); }, 30000);
 
-   document.addEventListener("resume", function () {     
-       getUserRequest();
-       $scope.interval = $interval(function () { chaserPromise(); }, 30000);
-
-       $scope.$watch("broadcasting", function (newValue, oldValue) {
-           if (newValue) {
-               if (!$scope.user.broadcast && ($scope.isChasing === 1 || !$scope.private))
-                   GeoWatchTimer();
-           }
-       });
-
-
-   }, false);
+           $scope.$watch("broadcasting", function (newValue, oldValue) {
+               if (newValue) {
+                   if (!$scope.user.broadcast && ($scope.isChasing === 1 || !$scope.private))
+                       GeoWatchTimer();
+               }
+           });
+       }
+       if (args.action === "turn-off") {
+           clearGeoWatch();
+       }
+   });  
 
   }]);
 })();
