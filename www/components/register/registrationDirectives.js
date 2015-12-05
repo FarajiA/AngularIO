@@ -14,9 +14,9 @@
                             ctrl.$setValidity('emailvalid', isValid);
                         });
                     }
-
-                    //else
-                    //    ctrl.$setValidity('emailvalid', true);
+                });
+                elem.bind('focusin', function () {
+                    ctrl.$setValidity('emailvalid', true);
                 });
             }
         }
