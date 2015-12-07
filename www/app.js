@@ -161,6 +161,7 @@ ocLazyLoadProvider.$inject = ["$ocLazyLoadProvider"];
 function RouteMethods($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
     
     $ionicConfigProvider.backButton.text('');
+    $ionicConfigProvider.tabs.position('bottom');
 
     // setup an abstract state for the tabs directive
     $stateProvider.state('main', {
@@ -895,8 +896,6 @@ app.controller('initController', ['$scope', '$timeout', '$interval', '$window', 
 
 /********** Appwide Pause + Resume logic ************/
 document.addEventListener("pause", function () {
-    //var userviewcurrent = UserView.UserPageCurrent();
-    //if (userviewcurrent)
     $scope.$emit('emit_UserView', { action: "turn-off" });
  }, false); 
 
@@ -1037,7 +1036,7 @@ document.addEventListener("resume", function () {
             .then(function (result) {
                 var response = result;
                 $scope.cropmodal.hide();
-                $rootScope.chaser.savedImage = $scope.resImageDataURI;
+                $scope.chaser.savedImage = $scope.resImageDataURI;
                 localStorageService.set('chaserImage', $scope.resImageDataURI);
                 $ionicLoading.hide();
             }, function (err) {
@@ -1051,6 +1050,10 @@ document.addEventListener("resume", function () {
                 });
             }*/);
         });
+    };
+
+    $scope.transferPage = function () {
+        $ionicLoading.show();
     };
 
 }]);

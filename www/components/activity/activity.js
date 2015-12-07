@@ -3,6 +3,7 @@
     app.controller('ActivityController', ['$scope', 'Activity', '$ionicPopup', '$rootScope', '$ionicLoading', function ($scope, Activity, $ionicPopup, $rootScope, $ionicLoading) {
 
         $scope.showBroadcasters = true;
+        $ionicLoading.show();
         $scope.imageURL = imageURL;
         $scope.doRefresh = function () {
             activityInit();
@@ -10,7 +11,6 @@
         };
 
         var activityInit = function () {
-            $ionicLoading.show();
             $scope.broadcastingIndex = 0;
             Activity.broadcasting($scope.broadcastingIndex).then(function () {
                 $ionicLoading.hide();
@@ -40,7 +40,6 @@
         };
 
         var requestInit = function () {
-            $ionicLoading.show();
             $scope.requestIndex = 0;
             Activity.request($scope.requestIndex).then(function () {
                 $ionicLoading.hide();

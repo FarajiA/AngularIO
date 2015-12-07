@@ -20,7 +20,7 @@
                     <h2>no one broadcasting</h2>
                 </div>
                 <ion-list ng-show="broadcasting.length > 0">
-                    <ion-item class="item-avatar item-icon-right" ng-repeat="broadcast in broadcasting" type="item-text-wrap" href="#/main/activity/{{broadcast.GUID}}">
+                    <ion-item class="item-avatar item-icon-right" ng-repeat="broadcast in broadcasting" type="item-text-wrap" ng-click="$parent.transferPage()" href="#/main/activity/{{broadcast.GUID}}">
                         <img ng-src="{{broadcast.photo && imageURL + broadcast.GUID + '.png' || 'img/default_avatar.png' }}">
                         <h2>{{broadcast.username}}</h2>
                         <p>{{broadcast.firstname}}&nbsp;{{broadcast.lastname}}</p>
@@ -33,7 +33,7 @@
                     <h2>no requests</h2>
                 </div>
                 <ion-list ng-show="requests.length > 0">
-                    <ion-item class="item-avatar item-icon-right" ng-repeat="request in requests" type="item-text-wrap" href="#/main/activity/{{request.GUID}}">
+                    <ion-item class="item-avatar item-icon-right" ng-repeat="request in requests" type="item-text-wrap" ng-click="$parent.transferPage()" href="#/main/activity/{{request.GUID}}">
                         <img ng-src="{{request.photo && request.GUID + '.png' || 'img/default_avatar.png' }}">
                         <h2>{{request.username}}</h2>
                         <p>{{request.firstname}}&nbsp;{{request.lastname}}</p>                       

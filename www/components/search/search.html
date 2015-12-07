@@ -6,9 +6,9 @@
     <ion-nav-buttons side="right">
         <button class="button button-icon icon ion-gear-a" ui-sref="settings"></button>
     </ion-nav-buttons>
-    <ion-content has-header="true" padding="false" has-bouncing="false">
+    <ion-content has-header="true" padding="false" has-bouncing="false" id="search">
         <form name="searchForm">
-            <div class="list list-inset">
+            <div class="list list-inset search">
                 <label class="item item-input">
                     <i class="icon ion-search placeholder-icon"></i>
                     <input type="text" min="2" name="search" auto-search ng-model="Searchquery" placeholder="Search users"/>
@@ -21,7 +21,7 @@
                     <h2>no results</h2>
                 </div>
                 <ion-list ng-show="searchresults.array.length > 0">
-                    <ion-item class="item-avatar item-icon-right" ng-repeat="search in searchresults.array" type="item-text-wrap" href="#/main/search/{{search.GUID}}">
+                    <ion-item class="item-avatar item-icon-right" ng-repeat="search in searchresults.array" type="item-text-wrap" ng-click="$parent.transferPage()" href="#/main/search/{{search.GUID}}">
                         <img ng-src="{{search.photo && imageURL + search.GUID + '.png' || 'img/default_avatar.png' }}">
                         <h2>{{search.username}}</h2>
                         <p>{{search.firstname}}&nbsp;{{search.lastname}}</p>
@@ -30,8 +30,5 @@
                 <ion-infinite-scroll ng-if="!noMoSearch" on-infinite="loadMoreSearch(Searchquery)" distance="30%"></ion-infinite-scroll>
             </div>
         </div>
-
-
     </ion-content>
-
 </ion-view>

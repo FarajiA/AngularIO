@@ -1,8 +1,8 @@
 ﻿; (function () {
     var app = angular.module('App');
     app.requires.push('uiGmapgoogle-maps');
-    app.controller('UserController', ['$scope', '$q', '$timeout', 'UserObject', '$stateParams', 'Decision', '$location', '$ionicModal', '$interval', 'uiGmapGoogleMapApi', 'uiGmapIsReady', '$cordovaGeolocation','$ionicPopup', '$ionicPlatform', 'GeoAlert', 'chaserBroadcast', 'UserView',
-    function ($scope, $q, $timeout, UserObject, $stateParams, Decision, $location, $ionicModal, $interval, GoogleMapApi, uiGmapIsReady, $cordovaGeolocation, $ionicPopup, $ionicPlatform, GeoAlert, chaserBroadcast,UserView) {
+    app.controller('UserController', ['$scope', '$q', '$timeout', 'UserObject', '$stateParams', 'Decision', '$location', '$ionicModal', '$interval', 'uiGmapGoogleMapApi', 'uiGmapIsReady', '$cordovaGeolocation','$ionicPopup', '$ionicPlatform', '$ionicLoading', 'GeoAlert', 'chaserBroadcast', 'UserView',
+    function ($scope, $q, $timeout, UserObject, $stateParams, Decision, $location, $ionicModal, $interval, GoogleMapApi, uiGmapIsReady, $cordovaGeolocation, $ionicPopup, $ionicPlatform, $ionicLoading, GeoAlert, chaserBroadcast,UserView) {
 
     var userID = $stateParams.userId;
     $scope.imageURL = imageURL;
@@ -50,9 +50,10 @@
                       longitude: position.coords.longitude
                   };
                   geoIndex++;
+                  if (geoIndex === 1)
+                      $cordovaGeolocation.clearWatch(geoWatch);
               });
         });
-
         return d.promise;
     };
 
@@ -71,7 +72,6 @@
 
            markerBounds.extend(chaser_Latlng);
 
-
            markerBounds.extend(user_Latlng);
            $scope.map = { control: {}, center: { latitude: markerBounds.getCenter().lat(), longitude: markerBounds.getCenter().lng() }, zoom: 12 };
 
@@ -80,13 +80,13 @@
                //$scope.map.control.getGMap().setZoom($scope.map.control.getGMap().getZoom());
            }));
        },
-            function (error) {
-                $scope.modal.hide();
-                $ionicPopup.alert({
-                    title: mapsPrompt.Errortitle
-                }).then(function (res) {
-                });
-            });
+       function (error) {
+           $scope.modal.hide();
+           $ionicPopup.alert({
+           title: mapsPrompt.Errortitle
+        }).then(function (res) {
+        });
+       });
    };
     
 
@@ -95,8 +95,8 @@
       $scope.title = UserObject.details().username;
       $scope.GUID = UserObject.details().GUID;
       $scope.username = UserObject.details().username;
-      $scope.firstname = UserObject.details().firstName;
-      $scope.lastname = UserObject.details().lastName;
+      $scope.firstname = UserObject.details().firstname;
+      $scope.lastname = UserObject.details().lastname;
       $scope.noChasers = UserObject.details().noChasers;
       $scope.noChasing = UserObject.details().noChasing;
       $scope.isChasing = $scope.symbol = UserObject.details().isChasing;
@@ -116,13 +116,13 @@
           options: { icon: 'img/checkered_chaser.png' },
           };
 
-          if ($scope.user.broadcast) {
-              $scope.userMarker.coords = {
+         $scope.userMarker.coords = {
               latitude: $scope.user.latitude,
               longitude: $scope.user.longitude
             };
-          }
+          
       }
+      $ionicLoading.hide();
       $scope.$broadcast('scroll.refreshComplete');
     });
    };
@@ -142,24 +142,24 @@ $ionicModal.fromTemplateUrl('mapModal.html', {
 $scope.openModal = function () {
     $scope.modal.show();
     $scope.mapControl = {};
-    if ($scope.userMarker.coords)
-        GoogleMapLoad();
-    else {
+    if (!$scope.user.broadcast) {
         GeoWatchTimer().then(function () {
             GoogleMapLoad();
         });
-    }    
+    }
+    else
+        GoogleMapLoad();
 };
    
-   $scope.closeModal = function () {
+   $scope.closeModal = function (){
        $scope.modal.hide();
+       if (!$scope.user.broadcast)
+            $scope.geoWatch.clearWatch();
    };
 
    var chaserPromise = function () {
        chaserBroadcast.coords(UserObject.details().GUID).then(function () {
            if (chaserBroadcast.data().broadcast) {
-               // elem.attr("data-lat", chaserBroadcast.data().latitude)
-               //     .attr("data-long", chaserBroadcast.data().longitude);
                $scope.chaserMarker.coords = {
                    latitude: Number(chaserBroadcast.data().latitude),
                    longitude: Number(chaserBroadcast.data().longitude)
@@ -182,12 +182,13 @@ $scope.openModal = function () {
            }
        });
 
-       var shouldGeolocate = !$scope.user.broadcast && ($scope.isChasing === 1 || !$scope.private);
+       var shouldGeolocate = ($scope.isChasing === 1 || !$scope.private);
        UserView.SetUserPageCurrent(shouldGeolocate);
    });
 
    $scope.$on('$ionicView.afterLeave', function () {
        clearGeoWatch();
+       geoIndex = 0;
        UserView.SetUserPageCurrent(false);
    });
 
@@ -209,6 +210,7 @@ $scope.openModal = function () {
            });
        }
        if (args.action === "turn-off") {
+           geoIndex = 0;
            clearGeoWatch();
        }
    });  

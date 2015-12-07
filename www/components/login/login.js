@@ -3,6 +3,7 @@
     angular.module('App').controller('LoginController', ['$scope', '$state', 'UserObject','$ionicLoading', function ($scope, $state, UserObject, $ionicLoading) {
         
         $scope.form = {};
+        $scope.showLoginForm = false;
         //function to submit the form after all validation has occurred
         $scope.submitLogin = function (user) {
             if ($scope.form.loginform.$valid) {

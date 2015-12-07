@@ -1,6 +1,12 @@
 ﻿<ion-view hide-nav-bar="true" >
-<ion-content has-header="true" padding="true">
-    <div class="LoginWrapper">
+<ion-content has-header="true" padding="true" id="login" style="    background-image: url(img/space.jpg);
+    background-position: 0px 0px;
+    background-repeat: repeat-x;
+    background-size: initial;
+    animation: animatedBackground 40s linear infinite;">
+    
+    <div class="logo"><img id="logo" ng-src="img/logo.png" /></div>
+    <div class="LoginWrapper" ng-show="showLoginForm">
         <div class="logo"><img id="logo" ng-src="img/logo.png" /></div>
         <form name="form.loginform" ng-submit="submitLogin(user)" novalidate>
             <div class="list list-inset">
@@ -18,5 +24,12 @@
         </form>
         <p class="register">Wanna Signup? <a href="#/register">Register Here</a></p>
     </div>
+
 </ion-content>
+    <div class="bar bar-footer login">
+        <div class="button-bar">
+            <button class="button button-clear" ng-click="showLoginForm = true">Login</button>
+            <button class="button button-clear" style="background-color: #ef473a;" ng-click="showLoginForm = false">Sign Up</button>
+        </div>
+    </div>
 </ion-view>
