@@ -14,7 +14,7 @@ button.button-outline.button-full {border-right-width: thin; border-left-width: 
 .button-bar .button.active {background-color: #E1D6D2;}
 .button-bar .button.actived {background-color: #E1D6D2;}
 /* Side menu */
-.sidemenu-header {text-align:center;border-color: #111; background-color: #444444;color: #fff;height: 215px;}
+.sidemenu-header {text-align:center;border-color: #111; background-color: #444444;color: #fff;height: 215px;background-image: url('../img/profile-background.png');}
 .sidemenu-header h1 {text-overflow: ellipsis;
   white-space: nowrap;
   font-size: 17px;
@@ -83,7 +83,7 @@ label.item-input { height: 60px;}
 }
 .error-messages.ng-active:after {
   position: absolute;
-  top: -18px;
+  top: -17px;
   content: "";
   left: 15px;
   border-style: solid;
@@ -95,15 +95,43 @@ label.item-input { height: 60px;}
     margin-bottom: 0;
 }
 /*  Login Page  */
-.LoginWrapper{margin-top:33%}
+.LoginWrapper{color: #fff;position: relative;top: 40%;    transform: translateY(-50%);}
 .LoginWrapper .logo {text-align: center;}
-.LoginWrapper p.register {text-align: center;font-size: 15px;}
+.LoginWrapper p.register {text-align: center;
+    font-size: 20px;
+    margin-top: 30px;
+    line-height: 48px;
+}
 .login.bar-footer {padding:0}
-/*.login.bar-footer .button-bar .button {background-color: #fff;
-opacity: 0.5;
-filter: alpha(opacity=60);}
 
-*/
+#login {
+    background-image: url(../img/spacey.png);
+    background-position: initial;
+    background-repeat: repeat-y;
+    background-size: cover;
+    animation: animatedBackground 50s linear infinite;
+    height: 100%;
+    margin-top: 0;
+}
+
+#login .scroll {height:100%}
+    
+@keyframes animatedBackground {
+0% {
+    background-position: 0 0;
+}
+100% {
+    background-position: 0 500px;
+}
+}
+.LoginWrapper form .list {
+    background-color: inherit;
+}
+#login form .list .item {background-color: inherit}
+#login form .list input {
+    font-size: 18px;
+    color: #fff;
+}
 
 /*  Register Page */
 .registerForm label.has-error {border-left: 5px solid rgb(204, 37, 17);}
@@ -140,7 +168,7 @@ form .private .item {border-left:0;border-right:0;border-bottom:0;font-weight:bo
 /**** Search Page ****/
 .search label {height:45px;}
 .search.list-inset {margin-top:5px} 
-#search .item-content {padding: 10px 49px 10px 16px;}
+#search .item-content {/*padding: 10px 49px 10px 16px;*/}
 #search #result { margin: 0px 11px; }
 
 /*Map modal*/

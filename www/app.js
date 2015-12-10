@@ -529,7 +529,10 @@ function RouteMethods($stateProvider, $urlRouterProvider, $ionicConfigProvider) 
               return $ocLazyLoad.load({
                   name: 'login',
                   files: [
-                      'components/login/login.js'
+                      'lib/angular-messages.js',
+                      'components/register/registrationServices.js',
+                      'components/login/login.js',
+                      'components/register/registrationDirectives.js'
                   ]
               });
           }],
@@ -750,7 +753,7 @@ app.controller('initController', ['$scope', '$timeout', '$interval', '$window', 
     $scope.userLogged = false;
     $scope.user = {};
     $scope.photoUpdate = function() {
-        var hasphoto = $scope.user.photo;
+        var hasphoto = $scope.$parent.user.photo;
         var savedImage = localStorageService.get('chaserImage');
         $scope.chaser = {};
         if (hasphoto && !savedImage) {
