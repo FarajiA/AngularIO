@@ -228,7 +228,6 @@ function RouteMethods($stateProvider, $urlRouterProvider, $ionicConfigProvider) 
                     return $ocLazyLoad.load({
                         name: 'trafficDetails',
                         files: [
-                            'lib/lodash.underscore.js',
                             'lib/angular-simple-logger.js',
                             'lib/angular-google-maps.js',
                             'components/user/userServices.js',
@@ -324,7 +323,6 @@ function RouteMethods($stateProvider, $urlRouterProvider, $ionicConfigProvider) 
                     return $ocLazyLoad.load({
                         name: 'activityDetails',
                         files: [
-                            'lib/lodash.underscore.js',
                             'lib/angular-simple-logger.js',
                             'lib/angular-google-maps.js',
                             'components/user/userServices.js',
@@ -421,7 +419,6 @@ function RouteMethods($stateProvider, $urlRouterProvider, $ionicConfigProvider) 
                     return $ocLazyLoad.load({
                         name: 'searchDetails',
                         files: [
-                            'lib/lodash.underscore.js',
                             'lib/angular-simple-logger.js',
                             'lib/angular-google-maps.js',
                             'components/user/userServices.js',
