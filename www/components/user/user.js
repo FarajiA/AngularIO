@@ -51,7 +51,7 @@
                   };
                   geoIndex++;
                   if (geoIndex === 1)
-                      $cordovaGeolocation.clearWatch(geoWatch);
+                      $cordovaGeolocation.clearWatch($scope.geoWatch);
               });
         });
         return d.promise;
