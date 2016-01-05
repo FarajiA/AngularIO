@@ -228,7 +228,6 @@ function RouteMethods($stateProvider, $urlRouterProvider, $ionicConfigProvider) 
                     return $ocLazyLoad.load({
                         name: 'trafficDetails',
                         files: [
-                            'lib/lodash.underscore.js',
                             'lib/angular-simple-logger.js',
                             'lib/angular-google-maps.js',
                             'components/user/userServices.js',
@@ -324,7 +323,6 @@ function RouteMethods($stateProvider, $urlRouterProvider, $ionicConfigProvider) 
                     return $ocLazyLoad.load({
                         name: 'activityDetails',
                         files: [
-                            'lib/lodash.underscore.js',
                             'lib/angular-simple-logger.js',
                             'lib/angular-google-maps.js',
                             'components/user/userServices.js',
@@ -421,7 +419,6 @@ function RouteMethods($stateProvider, $urlRouterProvider, $ionicConfigProvider) 
                     return $ocLazyLoad.load({
                         name: 'searchDetails',
                         files: [
-                            'lib/lodash.underscore.js',
                             'lib/angular-simple-logger.js',
                             'lib/angular-google-maps.js',
                             'components/user/userServices.js',
@@ -818,10 +815,10 @@ app.controller('initController', ['$scope', '$timeout', '$interval', '$window', 
                 desiredAccuracy: 10,
                 stationaryRadius: 20,
                 distanceFilter: 30,
-                debug: true, // <-- enable this hear sounds for background-geolocation life-cycle. 
+                //debug: true, // <-- enable this hear sounds for background-geolocation life-cycle. 
                 stopOnTerminate: false, // <-- enable this to clear background location settings when the app terminates 
                 notificationTitle: "Chaser",
-                notificationText: "doing stuff and stuff",
+                notificationText: "Broadcasting location...",
                 locationService: backgroundGeoLocation.service.ANDROID_DISTANCE_FILTER,
             });
         }
@@ -831,7 +828,7 @@ app.controller('initController', ['$scope', '$timeout', '$interval', '$window', 
                 stationaryRadius: 20,
                 distanceFilter: 30,
                 activityType: 'AutomotiveNavigation',
-                debug: true, // <-- enable this hear sounds for background-geolocation life-cycle.
+                //debug: true, // <-- enable this hear sounds for background-geolocation life-cycle.
                 stopOnTerminate: false // <-- enable this to clear background location settings when the app terminates
             });
         }
