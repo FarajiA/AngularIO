@@ -875,7 +875,7 @@ app.controller('initController', ['$scope', '$timeout', '$interval', '$window', 
             for (var i = 0; i < allContacts.length; i++) {
                 if (allContacts[i].phoneNumbers != null && allContacts[i].phoneNumbers[0].type === 'mobile') {
                     var contactphone = allContacts[i].phoneNumbers;
-                    var phonenumber = _.pluck(_.takeWhile(contactphone[0], 'type', 'mobile'), 'value');
+                    var phonenumber = _.pluck(_.where(contactphone, {'type': 'mobile'}), 'value');
                     //var phonenumber = contactphone[0].value;
                     //var contactphone = allContacts[i].phoneNumbers;
                     //var phonenumber = contactphone[0].value;
