@@ -37,7 +37,7 @@
                 $ionicPopup.alert({
                     title: SMS.error
                 }).then(function (res) {
-
+                    $ionicLoading.hide();
                 });
             });
 
