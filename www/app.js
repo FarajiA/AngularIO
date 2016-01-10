@@ -848,8 +848,6 @@ app.controller('initController', ['$scope', '$timeout', '$interval', '$window', 
        }, false);
     }
         else if (args.action === "turn-off") {
-            //if ($scope.geoWatch)
-            //    $scope.geoWatch.clearWatch();
             backgroundGeoLocation.stop();
         }
     });
@@ -876,9 +874,6 @@ app.controller('initController', ['$scope', '$timeout', '$interval', '$window', 
                 if (allContacts[i].phoneNumbers != null && allContacts[i].phoneNumbers[0].type === 'mobile') {
                     var contactphone = allContacts[i].phoneNumbers;
                     var phonenumber = _.pluck(_.where(contactphone, {'type': 'mobile'}), 'value');
-                    //var phonenumber = contactphone[0].value;
-                    //var contactphone = allContacts[i].phoneNumbers;
-                    //var phonenumber = contactphone[0].value;
                     var name = allContacts[i].displayName;
 
                     var name = allContacts[i].name.formatted;
@@ -1025,6 +1020,24 @@ document.addEventListener("resume", function () {
         });
     };
 
+    function win(r) {
+        var response = r;
+        console.log("Code = " + r.responseCode);
+        console.log("Response = " + r.response);
+        console.log("Sent = " + r.bytesSent);
+        $scope.cropmodal.hide();
+        $scope.chaser.savedImage = $scope.resImageDataURI;
+        localStorageService.set('chaserImage', $scope.resImageDataURI);
+        $ionicLoading.hide();
+    }
+
+    function shitfail(error) {
+        alert("An error has occurred: Code = " + error.code);
+        console.log("upload error source " + error.source);
+        console.log("upload error target " + error.target);
+    }
+
+
     $scope.uploadPicture = function () {
         $ionicLoading.show();
         var options = {
@@ -1037,7 +1050,7 @@ document.addEventListener("resume", function () {
         options.params = params;
 
         $ionicPlatform.ready(function () {
-            $cordovaFileTransfer.upload(baseURL + "api/fileupload", $scope.resImageDataURI, options)
+            $cordovaFileTransfer.upload(baseURL + "api/fileupload", $scope.resImageDataURI, options, true)
             .then(function (result) {
                 var response = result;
                 $scope.cropmodal.hide();
@@ -1046,6 +1059,21 @@ document.addEventListener("resume", function () {
                 $ionicLoading.hide();
             }, function (err) {
                 console.log("Whoops! Upload failed");
+
+                var options = new FileUploadOptions();
+
+                options.headers = {
+                    Accept: "application/json",
+                    ChaserGuid: UserObject.data().GUID, 
+                    Connection: "close"
+                }
+                options.fileKey="file";
+                options.fileName=$scope.picData.substr($scope.picData.lastIndexOf('/')+1);
+                options.mimeType="image/png";
+                options.chunkedMode = false;
+                var ft = new FileTransfer();
+                ft.upload($scope.resImageDataURI, encodeURI(baseURL + "api/fileupload"), win, shitfail, options);
+
                 $scope.cropmodal.hide();
                 $ionicLoading.hide();
             }/*, function (progress) {
