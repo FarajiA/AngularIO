@@ -1002,7 +1002,7 @@ document.addEventListener("resume", function () {
             targetWidth: fitwidth,
             targetHeight: fitheight,
             encodingType: Camera.EncodingType.JPEG,
-            destinationType: Camera.DestinationType.DATA_URL,
+            destinationType: Camera.DestinationType.FILE_URI,
             sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
             correctOrientation: true
         };
@@ -1059,7 +1059,7 @@ document.addEventListener("resume", function () {
                 $ionicLoading.hide();
             }, function (err) {
                 console.log("Whoops! Upload failed");
-
+                /*
                 var options = new FileUploadOptions();
 
                 options.headers = {
@@ -1073,7 +1073,7 @@ document.addEventListener("resume", function () {
                 options.chunkedMode = false;
                 var ft = new FileTransfer();
                 ft.upload($scope.resImageDataURI, encodeURI(baseURL + "api/fileupload"), win, shitfail, options);
-
+                */
                 $scope.cropmodal.hide();
                 $ionicLoading.hide();
             }/*, function (progress) {
