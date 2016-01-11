@@ -952,7 +952,7 @@ document.addEventListener("resume", function () {
     $scope.type = 'circle';
     $scope.imageURI = '';
     $scope.resImageDataURI = '';
-    $scope.resImgFormat = 'image/png';
+    $scope.resImgFormat = 'image/jpeg';
     $scope.resImgQuality = 1;
     $scope.selMinSize = 200;
     $scope.resImgSize = 200;
