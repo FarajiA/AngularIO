@@ -1002,7 +1002,7 @@ document.addEventListener("resume", function () {
             targetWidth: fitwidth,
             targetHeight: fitheight,
             encodingType: Camera.EncodingType.JPEG,
-            destinationType: Camera.DestinationType.FILE_URI,
+            destinationType: Camera.DestinationType.DATA_URL,
             sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
             correctOrientation: true
         };
@@ -1042,7 +1042,7 @@ document.addEventListener("resume", function () {
         $ionicLoading.show();
         var options = {
             chunkedMode: false,
-            mimeType: "image/png"
+            mimeType: "image/jpeg"
         };
 
         var params = new Object();
@@ -1057,8 +1057,12 @@ document.addEventListener("resume", function () {
                 $scope.chaser.savedImage = $scope.resImageDataURI;
                 localStorageService.set('chaserImage', $scope.resImageDataURI);
                 $ionicLoading.hide();
-            }, function (err) {
+            }, function (error) {
                 console.log("Whoops! Upload failed");
+
+                console.log("An error has occurred: Code = " + error.code);
+                console.log("upload error source " + error.source);
+                console.log("upload error target " + error.target);
                 /*
                 var options = new FileUploadOptions();
 
