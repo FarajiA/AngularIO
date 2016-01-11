@@ -952,11 +952,11 @@ document.addEventListener("resume", function () {
     $scope.type = 'circle';
     $scope.imageURI = '';
     $scope.resImageDataURI = '';
-    $scope.resImgFormat = 'image/jpeg';
+    $scope.resImgFormat = 'image/png';
     $scope.resImgQuality = 1;
     $scope.selMinSize = 200;
     $scope.resImgSize = 200;
-    //$scope.aspectRatio=1.2;
+                            //$scope.aspectRatio=1.2;
     $scope.onChange = function ($dataURI) {
         $scope.resImageDataURI = $dataURI;
     };
@@ -1020,29 +1020,11 @@ document.addEventListener("resume", function () {
         });
     };
 
-    function win(r) {
-        var response = r;
-        console.log("Code = " + r.responseCode);
-        console.log("Response = " + r.response);
-        console.log("Sent = " + r.bytesSent);
-        $scope.cropmodal.hide();
-        $scope.chaser.savedImage = $scope.resImageDataURI;
-        localStorageService.set('chaserImage', $scope.resImageDataURI);
-        $ionicLoading.hide();
-    }
-
-    function shitfail(error) {
-        alert("An error has occurred: Code = " + error.code);
-        console.log("upload error source " + error.source);
-        console.log("upload error target " + error.target);
-    }
-
-
     $scope.uploadPicture = function () {
         $ionicLoading.show();
         var options = {
             chunkedMode: false,
-            mimeType: "image/jpeg"
+            mimeType: "image/png"
         };
 
         var params = new Object();
@@ -1050,34 +1032,15 @@ document.addEventListener("resume", function () {
         options.params = params;
 
         $ionicPlatform.ready(function () {
-            $cordovaFileTransfer.upload(baseURL + "api/fileupload", $scope.resImageDataURI, options, true)
+            $cordovaFileTransfer.upload(baseURL + "api/fileupload", $scope.resImageDataURI, options)
             .then(function (result) {
                 var response = result;
                 $scope.cropmodal.hide();
                 $scope.chaser.savedImage = $scope.resImageDataURI;
                 localStorageService.set('chaserImage', $scope.resImageDataURI);
                 $ionicLoading.hide();
-            }, function (error) {
+            }, function (err) {
                 console.log("Whoops! Upload failed");
-
-                console.log("An error has occurred: Code = " + error.code);
-                console.log("upload error source " + error.source);
-                console.log("upload error target " + error.target);
-                /*
-                var options = new FileUploadOptions();
-
-                options.headers = {
-                    Accept: "application/json",
-                    ChaserGuid: UserObject.data().GUID, 
-                    Connection: "close"
-                }
-                options.fileKey="file";
-                options.fileName=$scope.picData.substr($scope.picData.lastIndexOf('/')+1);
-                options.mimeType="image/png";
-                options.chunkedMode = false;
-                var ft = new FileTransfer();
-                ft.upload($scope.resImageDataURI, encodeURI(baseURL + "api/fileupload"), win, shitfail, options);
-                */
                 $scope.cropmodal.hide();
                 $ionicLoading.hide();
             }/*, function (progress) {
