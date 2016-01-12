@@ -1039,6 +1039,7 @@ document.addEventListener("resume", function () {
             .then(function (result) {
                 var response = result;
                 $scope.cropmodal.hide();
+                $scope.photomodal.hide();
                 $scope.chaser.savedImage = $scope.resImageDataURI;
                 localStorageService.set('chaserImage', $scope.resImageDataURI);
                 $ionicLoading.hide();
