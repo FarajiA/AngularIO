@@ -1026,10 +1026,12 @@ document.addEventListener("resume", function () {
             chunkedMode: false,
             mimeType: "image/png"
         };
-
+        /*
         var params = new Object();
         params.headers = { ChaserGuid: UserObject.data().GUID };
         options.params = params;
+        */
+        options.headers = { ChaserGuid: UserObject.data().GUID };
 
         $ionicPlatform.ready(function () {
             $cordovaFileTransfer.upload(baseURL + "api/fileupload", $scope.resImageDataURI, options)
