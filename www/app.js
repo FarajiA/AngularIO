@@ -1013,7 +1013,7 @@ document.addEventListener("resume", function () {
             $cordovaCamera.getPicture(options).then(
               function (imageData) {
                   $scope.cropmodal.show();
-                  //$scope.photoModal.hide();
+                  $scope.photoModal.hide();
                   $scope.imgURI = "data:image/jpeg;base64," + imageData;
               },
               function (err) {
@@ -1046,6 +1046,7 @@ document.addEventListener("resume", function () {
             }, function (err) {
                 console.log("Whoops! Upload failed");
                 $scope.cropmodal.hide();
+                $scope.photomodal.hide();
                 $ionicLoading.hide();
             }/*, function (progress) {
                 console.log("Progress: " + (progress.loaded / progress.total) * 100)
