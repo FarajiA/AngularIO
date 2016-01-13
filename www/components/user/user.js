@@ -59,7 +59,7 @@
 
    var clearGeoWatch = function() {
       if (!_isEmpty($scope.geoWatch))
-          $scope.geoWatch.clearWatch();
+          $cordovaGeolocation.clearWatch($scope.geoWatch);
       $scope.stopCoords();
    };
 
