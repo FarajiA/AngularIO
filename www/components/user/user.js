@@ -33,10 +33,12 @@
             $scope.geoWatch = $cordovaGeolocation.watchPosition(options);
             $scope.geoWatch.then(null,
               function (error) {
-                  var seen = GeoAlert.getGeoalert();
-                  d.resolve();
-                  if (seen)
+                  d.resolve()
+                  if (error.code === 3)
                       return;
+                  var seen = GeoAlert.getGeoalert();
+                  if (seen)
+                      return;                  
                   $ionicPopup.alert({
                       title: mapsPrompt.title,
                       template: mapsPrompt.text
@@ -51,15 +53,15 @@
                   };
                   geoIndex++;
                   if (geoIndex === 1)
-                      $cordovaGeolocation.clearWatch($scope.geoWatch);
+                    $scope.geoWatch.clearWatch();
               });
         });
         return d.promise;
     };
 
    var clearGeoWatch = function() {
-      if (!_isEmpty($scope.geoWatch))
-          $cordovaGeolocation.clearWatch($scope.geoWatch);
+       if (!_isEmpty($scope.geoWatch))
+           $scope.geoWatch.clearWatch();
       $scope.stopCoords();
    };
 
@@ -106,22 +108,6 @@
       $scope.latitude = Number(UserObject.details().latitude);
       $scope.photo = UserObject.details().photo;
 
-      if ($scope.broadcasting) {
-          $scope.chaserMarker = {
-                id: 0,
-                coords: {
-                latitude: $scope.latitude,
-                longitude: $scope.longitude
-           },
-          options: { icon: 'img/checkered_chaser.png' },
-          };
-
-         $scope.userMarker.coords = {
-              latitude: $scope.user.latitude,
-              longitude: $scope.user.longitude
-            };
-          
-      }
       $ionicLoading.hide();
       $scope.$broadcast('scroll.refreshComplete');
     });
@@ -180,13 +166,26 @@ $scope.openModal = function () {
                if (!$scope.user.broadcast && ($scope.isChasing === 1 || !$scope.private))
                    GeoWatchTimer();
            }
+           $scope.chaserMarker = {
+               id: 0,
+               coords: {
+                   latitude: $scope.latitude,
+                   longitude: $scope.longitude
+               },
+               options: { icon: 'img/checkered_chaser.png' },
+           };
+
+           $scope.userMarker.coords = {
+               latitude: $scope.user.latitude,
+               longitude: $scope.user.longitude
+           };
        });
 
        var shouldGeolocate = ($scope.isChasing === 1 || !$scope.private);
        UserView.SetUserPageCurrent(shouldGeolocate);
    });
 
-   $scope.$on('$ionicView.afterLeave', function () {
+   $scope.$on('$ionicView.leave', function () {
        clearGeoWatch();
        geoIndex = 0;
        UserView.SetUserPageCurrent(false);
