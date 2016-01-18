@@ -74,14 +74,13 @@
                 var user_Latlng = new maps.LatLng($scope.userMarker.coords.latitude, $scope.userMarker.coords.longitude);
 
                 markerBounds.extend(chaser_Latlng);
-
                 markerBounds.extend(user_Latlng);
                 $scope.map = { control: {}, center: { latitude: markerBounds.getCenter().lat(), longitude: markerBounds.getCenter().lng() }, zoom: 12 };
 
-                uiGmapIsReady.promise().then((function (maps) {
+                uiGmapIsReady.promise().then(function (maps) {
                     $scope.map.control.getGMap().fitBounds(markerBounds);
                     //$scope.map.control.getGMap().setZoom($scope.map.control.getGMap().getZoom());
-                }));
+                });
             },
             function (error) {
                 $scope.modal.hide();
@@ -147,28 +146,44 @@
         var chaserPromise = function () {
             chaserBroadcast.coords(UserObject.details().GUID).then(function () {
                 if (chaserBroadcast.data().broadcast) {
+                    $scope.broadcasting = true;
                     $scope.chaserMarker.coords = {
                         latitude: Number(chaserBroadcast.data().latitude),
                         longitude: Number(chaserBroadcast.data().longitude)
                     };
-                } else
+                } else {
                     $scope.broadcasting = false;
+                    if ($scope.modal.isShown()) {                        
+                        $ionicPopup.alert({
+                            template: mapsPrompt.NolongerBroadcasting
+                        }).then(function (res) {
+                            $scope.modal.hide();
+                        });
+                    }
+                }
             });
         };
 
         $scope.$on('$ionicView.enter', function () {
             if (!(userID === UserObject.data().GUID)) {
                 $scope.chaserLink = '#/main/' + $scope.segment + '/chasers/' + $scope.GUID;
-                $scope.chasingLink = '#/main/' + $scope.segment + '/chasing/' + $scope.GUID;;
-                $scope.interval = $interval(function () { chaserPromise(); }, 30000);
+                $scope.chasingLink = '#/main/' + $scope.segment + '/chasing/' + $scope.GUID;                
                 $scope.stopCoords = function () {
                     $interval.cancel($scope.interval);
                 };
 
                 $scope.$watch("broadcasting", function (newValue, oldValue) {
                     if (newValue) {
-                        if (!$scope.user.broadcast && ($scope.isChasing === 1 || !$scope.private))
-                            GeoWatchTimer();
+                        if (!$scope.user.broadcast && ($scope.isChasing === 1 || !$scope.private)) {
+                            geoIndex = 0;
+                            GeoWatchTimer();                            
+                        }
+                        $scope.stopCoords();
+                        $scope.interval = $interval(function () { chaserPromise(); }, 15000);
+                    }
+                    else {
+                        $scope.stopCoords();
+                        $scope.interval = $interval(function () { chaserPromise(); }, 30000);
                     }
                     $scope.chaserMarker = {
                         id: 0,
@@ -211,12 +226,15 @@
         $scope.$on('turnOn_locationWatch', function (event, args) {
             if (args.action === "turn-on") {
                 getUserRequest();
-                $scope.interval = $interval(function () { chaserPromise(); }, 30000);
 
                 $scope.$watch("broadcasting", function (newValue, oldValue) {
                     if (newValue) {
-                        if (!$scope.user.broadcast && ($scope.isChasing === 1 || !$scope.private))
+                        if (!$scope.user.broadcast && ($scope.isChasing === 1 || !$scope.private)) {
+                            geoIndex = 0;
                             GeoWatchTimer();
+                        }
+                        $scope.stopCoords();
+                        $scope.interval = $interval(function () { chaserPromise(); }, 15000);
                     }
                 });
             }
