@@ -1,4 +1,4 @@
-﻿<ion-view cache-view="false">
+﻿<ion-view>
 <ion-nav-title>{{title}}</ion-nav-title>
     <ion-content has-header="true" padding="true" has-bouncing="true">
         <ion-refresher spinner="lines" on-refresh="doRefresh()" disable-pulling-rotation="true">
@@ -9,10 +9,10 @@
             </div>
             <div class="col">
                 <div class="button-bar">
-                    <a class="button" href="#/main/{{segment}}/chasers/{{GUID}}"><span>{{noChasers}}</span>Chasers</a>
-                    <a class="button" href="#/main/{{segment}}/chasing/{{GUID}}"><span>{{noChasing}}</span>Chasing</a>
+                    <a class="button" href='{{chaserLink}}'><span>{{noChasers}}</span>Chasers</a>
+                    <a class="button" href='{{chasingLink}}'><span>{{noChasing}}</span>Chasing</a>
                 </div>
-                <button user-choice ng-model="symbol" class="button button-block icon" ng-class="{'ion-star':symbol == 0 || symbol == 1 ,'ion-paper-airplane':symbol == 2 }">
+                <button user-choice ng-model="symbol" ng-disabled="selfIdentity" class="button button-block icon" ng-class="{'ion-star':symbol == 0 || symbol == 1 ,'ion-paper-airplane':symbol == 2 }">
                     <ion-spinner icon="lines" ng-show="loadingFollow"></ion-spinner>
                     {{isFollowing}}
                 </button>
@@ -35,7 +35,7 @@
     <span class="mapTitle">{{username}}</span>
     </div>
     <ui-gmap-google-map center='map.center' control='map.control' zoom='map.zoom' draggable="true" options="options">
-    <ui-gmap-marker coords="chaserMarker.coords" options="chaserMarker.options" idkey="chaserMarker.id">
+    <ui-gmap-marker ng-if="!selfIdentity" coords="chaserMarker.coords" options="chaserMarker.options" idkey="chaserMarker.id">
     </ui-gmap-marker>
     <ui-gmap-marker coords="userMarker.coords" options="userMarker.options" idkey="userMarker.id">
     </ui-gmap-marker>

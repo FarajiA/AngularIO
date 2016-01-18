@@ -42,8 +42,12 @@ var mapsPrompt = {
     title: 'Location services off',
     text: 'To see your position turn on location services',
     error: 'Location services off',
-    Errortitle: 'Map failed, sorry dawg'
+    Errortitle: 'Map failed, sorry dawg',
+    NolongerBroadcasting : 'Chaser is no longer broadcasting'
 };
+
+
+
 var dashPrompt = {
     title: 'Location services must be on'
 };
@@ -638,7 +642,9 @@ app.factory('UserObject', ['$http', '$q', 'localStorageService', '$rootScope', f
 
     UserObject.setUser = function (guid) {
         var deffered = $q.defer();
-        $http.get(baseURL + "api/user/" + guid)
+        $http.get(baseURL + "api/user/" + guid, {
+            cache : false
+        })
         .success(function (d) {
             data = d;
             $rootScope.user = d;
@@ -672,7 +678,9 @@ app.factory('UserObject', ['$http', '$q', 'localStorageService', '$rootScope', f
 
     UserObject.getUser = function (guid) {
         var deffered = $q.defer();
-        $http.get(baseURL + "api/user/" + guid + "/" + this.data().GUID)
+        $http.get(baseURL + "api/user/" + guid + "/" + this.data().GUID, {
+            cache : false
+        })
         .success(function (d) {
             detailedUser = d;
             deffered.resolve();
@@ -798,6 +806,7 @@ app.controller('initController', ['$scope', '$timeout', '$interval', '$window', 
             $scope.user.latitude = location.latitude;
             $scope.user.longitude = location.longitude;
             console.log('[js] BackgroundGeoLocation callback:  ' + location.latitude + ',' + location.longitude);
+
             Dash.broadcast(location.latitude, location.longitude, false).then(function () {
                 //$ionicLoading.hide();
                 //$scope.broadcastloading = false;
@@ -814,8 +823,15 @@ app.controller('initController', ['$scope', '$timeout', '$interval', '$window', 
             backgroundGeoLocation.configure(backgroundServiceSuccess, backgroundServiceFail, {
                 desiredAccuracy: 10,
                 stationaryRadius: 20,
+<<<<<<< HEAD
                 distanceFilter: 30,
                 //debug: true, // <-- enable this hear sounds for background-geolocation life-cycle. 
+=======
+                distanceFilter: 5,
+                useActivityDetection: true,
+                interval: 10000,
+                // debug: true, <-- enable this hear sounds for background-geolocation life-cycle. 
+>>>>>>> refs/remotes/origin/master
                 stopOnTerminate: false, // <-- enable this to clear background location settings when the app terminates 
                 notificationTitle: "Chaser",
                 notificationText: "Broadcasting location...",
@@ -826,13 +842,14 @@ app.controller('initController', ['$scope', '$timeout', '$interval', '$window', 
             backgroundGeoLocation.configure(backgroundServiceSuccess, backgroundServiceFail, {
                 desiredAccuracy: 10,
                 stationaryRadius: 20,
-                distanceFilter: 30,
+                distanceFilter: 5,
+                useActivityDetection: true,
+                interval: 10000,
                 activityType: 'AutomotiveNavigation',
                 //debug: true, // <-- enable this hear sounds for background-geolocation life-cycle.
                 stopOnTerminate: false // <-- enable this to clear background location settings when the app terminates
             });
         }
-
         backgroundGeoLocation.start();
     }
 
@@ -942,6 +959,7 @@ document.addEventListener("resume", function () {
 
     $scope.logout = function () {
         $ionicLoading.show();
+        backgroundGeoLocation.stop();
         var out = UserObject.logout();
         if (!out.isAuth) {
             $state.go('login');
@@ -1010,7 +1028,7 @@ document.addEventListener("resume", function () {
             $cordovaCamera.getPicture(options).then(
               function (imageData) {
                   $scope.cropmodal.show();
-                  //$scope.photoModal.hide();
+                  $scope.photoModal.hide();
                   $scope.imgURI = "data:image/jpeg;base64," + imageData;
               },
               function (err) {
@@ -1038,12 +1056,14 @@ document.addEventListener("resume", function () {
             .then(function (result) {
                 var response = result;
                 $scope.cropmodal.hide();
+                $scope.photomodal.hide();
                 $scope.chaser.savedImage = $scope.resImageDataURI;
                 localStorageService.set('chaserImage', $scope.resImageDataURI);
                 $ionicLoading.hide();
             }, function (err) {
                 console.log("Whoops! Upload failed");
                 $scope.cropmodal.hide();
+                $scope.photomodal.hide();
                 $ionicLoading.hide();
             }/*, function (progress) {
                 console.log("Progress: " + (progress.loaded / progress.total) * 100)

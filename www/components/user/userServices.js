@@ -54,7 +54,9 @@
 
         Broadcast.coords = function (guid) {
             var deffered = $q.defer();
-            $http.get(baseURL + "api/coordinates/" + guid)
+            $http.get(baseURL + "api/coordinates/" + guid, {
+                cache : false
+            })
             .success(function (d) {
                 data = d;
                 deffered.resolve();

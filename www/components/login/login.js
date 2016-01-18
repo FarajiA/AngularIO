@@ -12,6 +12,9 @@
                         UserObject.setUser(UserObject.data().GUID).then(function () {
                             $scope.$parent.user = $scope.user = UserObject.data();
                             $scope.$parent.photoUpdate();
+                            if ($scope.user.broadcast) {
+                                $scope.$emit('emit_Broadcasting', { action: "turn-on" });
+                            }
                             $state.go('main.dash');
                         });                        
                     }
