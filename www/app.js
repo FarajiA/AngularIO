@@ -641,7 +641,9 @@ app.factory('UserObject', ['$http', '$q', 'localStorageService', '$rootScope', f
 
     UserObject.setUser = function (guid) {
         var deffered = $q.defer();
-        $http.get(baseURL + "api/user/" + guid)
+        $http.get(baseURL + "api/user/" + guid, {
+            cache : false
+        })
         .success(function (d) {
             data = d;
             $rootScope.user = d;
@@ -675,7 +677,9 @@ app.factory('UserObject', ['$http', '$q', 'localStorageService', '$rootScope', f
 
     UserObject.getUser = function (guid) {
         var deffered = $q.defer();
-        $http.get(baseURL + "api/user/" + guid + "/" + this.data().GUID)
+        $http.get(baseURL + "api/user/" + guid + "/" + this.data().GUID, {
+            cache : false
+        })
         .success(function (d) {
             detailedUser = d;
             deffered.resolve();
