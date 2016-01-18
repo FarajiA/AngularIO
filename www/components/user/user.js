@@ -196,9 +196,11 @@
         });
 
         $scope.$on('$ionicView.leave', function () {
-            clearGeoWatch();
-            geoIndex = 0;
-            UserView.SetUserPageCurrent(false);
+            if (!$scope.selfIdentity) {
+                clearGeoWatch();
+                geoIndex = 0;
+                UserView.SetUserPageCurrent(false);
+            }
         });
 
         //Cleanup the modal when we're done with it!
