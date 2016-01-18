@@ -823,15 +823,10 @@ app.controller('initController', ['$scope', '$timeout', '$interval', '$window', 
             backgroundGeoLocation.configure(backgroundServiceSuccess, backgroundServiceFail, {
                 desiredAccuracy: 10,
                 stationaryRadius: 20,
-<<<<<<< HEAD
-                distanceFilter: 30,
-                //debug: true, // <-- enable this hear sounds for background-geolocation life-cycle. 
-=======
                 distanceFilter: 5,
                 useActivityDetection: true,
                 interval: 10000,
                 // debug: true, <-- enable this hear sounds for background-geolocation life-cycle. 
->>>>>>> refs/remotes/origin/master
                 stopOnTerminate: false, // <-- enable this to clear background location settings when the app terminates 
                 notificationTitle: "Chaser",
                 notificationText: "Broadcasting location...",
