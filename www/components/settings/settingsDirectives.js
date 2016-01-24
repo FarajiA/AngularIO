@@ -69,6 +69,9 @@
     }]);
 
     angular.module('App').directive('pwValidate', [function () {
+        /* Attributes to add for validation to include alphabet & numeral
+           pw-validate="^(?=.{6,})(?=.*[a-zA-Z])(?=.*[0-9]).*$" regex-validate-flags="g"
+        */
         return {
             restrict: 'A',
             require: 'ngModel',
