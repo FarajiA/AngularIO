@@ -42,8 +42,12 @@ var mapsPrompt = {
     title: 'Location services off',
     text: 'To see your position turn on location services',
     error: 'Location services off',
-    Errortitle: 'Map failed, sorry dawg'
+    Errortitle: 'Map failed, sorry dawg',
+    NolongerBroadcasting : 'Chaser is no longer broadcasting'
 };
+
+
+
 var dashPrompt = {
     title: 'Location services must be on'
 };
@@ -802,6 +806,7 @@ app.controller('initController', ['$scope', '$timeout', '$interval', '$window', 
             $scope.user.latitude = location.latitude;
             $scope.user.longitude = location.longitude;
             console.log('[js] BackgroundGeoLocation callback:  ' + location.latitude + ',' + location.longitude);
+
             Dash.broadcast(location.latitude, location.longitude, false).then(function () {
                 //$ionicLoading.hide();
                 //$scope.broadcastloading = false;
@@ -818,8 +823,10 @@ app.controller('initController', ['$scope', '$timeout', '$interval', '$window', 
             backgroundGeoLocation.configure(backgroundServiceSuccess, backgroundServiceFail, {
                 desiredAccuracy: 10,
                 stationaryRadius: 20,
-                distanceFilter: 30,
-                //debug: true, // <-- enable this hear sounds for background-geolocation life-cycle. 
+                distanceFilter: 5,
+                useActivityDetection: true,
+                interval: 10000,
+                // debug: true, <-- enable this hear sounds for background-geolocation life-cycle. 
                 stopOnTerminate: false, // <-- enable this to clear background location settings when the app terminates 
                 notificationTitle: "Chaser",
                 notificationText: "Broadcasting location...",
@@ -830,13 +837,14 @@ app.controller('initController', ['$scope', '$timeout', '$interval', '$window', 
             backgroundGeoLocation.configure(backgroundServiceSuccess, backgroundServiceFail, {
                 desiredAccuracy: 10,
                 stationaryRadius: 20,
-                distanceFilter: 30,
+                distanceFilter: 5,
+                useActivityDetection: true,
+                interval: 10000,
                 activityType: 'AutomotiveNavigation',
                 //debug: true, // <-- enable this hear sounds for background-geolocation life-cycle.
                 stopOnTerminate: false // <-- enable this to clear background location settings when the app terminates
             });
         }
-
         backgroundGeoLocation.start();
     }
 
@@ -946,6 +954,7 @@ document.addEventListener("resume", function () {
 
     $scope.logout = function () {
         $ionicLoading.show();
+        backgroundGeoLocation.stop();
         var out = UserObject.logout();
         if (!out.isAuth) {
             $state.go('login');
