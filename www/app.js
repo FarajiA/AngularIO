@@ -998,7 +998,6 @@ document.addEventListener("resume", function () {
             $cordovaCamera.getPicture(options).then(function (imageData) {
                 $scope.imgURI = "data:image/jpeg;base64," + imageData;
                 $scope.cropmodal.show();
-                //$scope.openPhotoModal.hide();
             }, function (err) {
                 console.log('Failed because: ');
                 console.log(err);
@@ -1023,7 +1022,6 @@ document.addEventListener("resume", function () {
             $cordovaCamera.getPicture(options).then(
               function (imageData) {
                   $scope.cropmodal.show();
-                  $scope.photoModal.hide();
                   $scope.imgURI = "data:image/jpeg;base64," + imageData;
               },
               function (err) {
