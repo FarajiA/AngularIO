@@ -1,0 +1,239 @@
+/**** All results styling ***/
+.zeroResults {text-align: center;margin-top: 50px;}
+.zeroResults h2 {color:grey;}
+
+#result .ion-ios-arrow-thin-left { font-size: 40px; }
+
+/*******  prompt styling  ******/
+.button.button-positive { background-color:#FFF2EE; color:#444; border-color: #b2b2b2; }
+.button.button-positive:hover {color: #000;}
+.button.button-positive.active, .button.button-positive.activated { border-color: #b2b2b2; background-color: #E1D6D2; }
+/***** global button styling *******/
+button.button-outline.button-full {border-right-width: thin; border-left-width: thin;}
+.button-bar .button {background-color: #FFF2EE;}
+.button-bar .button.active {background-color: #E1D6D2;}
+.button-bar .button.actived {background-color: #E1D6D2;}
+/* Side menu */
+.sidemenu-header {text-align:center;border-color: #111; background-color: #444444;color: #fff;height: 215px;background-image: url('../img/profile-background.png');}
+.sidemenu-header h1 {text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 17px;
+  font-weight: 500;
+  line-height: 44px;
+  color:#fff;
+  margin-top: 0;
+}
+.sidemenu-header .profile {display: block;padding-top: 10%;}
+.sidemenu-header .profile img {height: 100px;border-radius: 50%;}
+.photo-modal {
+    width: 200px;
+    min-height: 50px !important;
+    max-height: 175px;
+    text-align: center; 
+    margin: auto;
+    left: 0;
+    right: 0;
+    bottom: 0; 
+}
+.photo-modal .choice-buttons{margin-top:30px;}
+.photo-modal .choice-buttons a {width: 150px;}
+.photo-modal .choice-buttons a:first-child {margin-bottom: 15px;}
+.photo-modal .close a { float: left; padding-left: 11px;min-height: 40px;}
+/* Crop css */
+img-crop {
+  width: 100%;
+  height: 100%;
+  display: block;
+  position: relative;
+  overflow: hidden;
+}
+/* line 7, ../../source/scss/ng-img-crop.scss */
+img-crop canvas {
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 48%;
+  outline: none;
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+  /* mobile webkit */
+}
+#photoCanvas {
+    background: #E4E4E4;
+    margin: auto;
+    overflow: hidden;
+}
+
+/* Global spinner */
+.loading {background-color: transparent !important;}
+.button .icon {top:1px}
+/* ngMessage styling */
+label.item-input { height: 60px;}
+.item-input input {padding-right: 0;max-width: 95%;}
+.item-input i.icon {font-size:30px;margin-right:5px;}
+.item-input i.icon.error {color:#BE81F7;}
+.item-input i.icon.success {color:#4cd964;}
+.error-messages.ng-active {
+  background-color: #BE81F7;
+  display: inline-block;
+  padding: 5px;
+  border-radius: 5px;
+  margin: 15px 0 5px;
+  position: relative;
+  width:100%;
+}
+.error-messages.ng-active:after {
+  position: absolute;
+  top: -17px;
+  content: "";
+  left: 15px;
+  border-style: solid;
+  border-color: transparent transparent #BE81F7;
+  border-width: 9px;
+}
+.error-messages p {
+    color:#fff;
+    margin-bottom: 0;
+}
+/*  Login Page  */
+.LoginWrapper{color: #fff;position: relative;top: 40%;    transform: translateY(-50%);}
+.LoginWrapper .logo {text-align: center;}
+.LoginWrapper.loginShow {}
+LoginWrapper.registerShow {}
+.LoginWrapper p.register {text-align: center;
+    font-size: 20px;
+    margin-top: 30px;
+    line-height: 48px;
+}
+.login.bar-footer {padding:0}
+#login {
+    background-image: url(../img/spacey.png);
+    background-position: initial;
+    background-repeat: repeat-y;
+    background-size: cover;
+    animation: animatedBackground 50s linear infinite;
+    height: 100%;
+    margin-top: 0;
+}
+
+#login .scroll {height:100%}
+    
+@keyframes animatedBackground {
+0% {
+    background-position: 0 0;
+}
+100% {
+    background-position: 0 500px;
+}
+}
+.LoginWrapper form .list {
+    background-color: inherit;
+}
+#login form .list .item {background-color: inherit}
+#login form .list input {
+    font-size: 18px;
+    color: #fff;
+}
+
+/*  Register Page */
+.registerForm label.has-error {border-left: 5px solid rgb(204, 37, 17);}
+
+/*Dash Page
+ion-content#dash {top: 0px;} */
+#dash .scroll {height:100%}
+#dash button{ margin: auto; width: 108px; height: 108px; top: 0; left: 0; right: 0; bottom: 0; position: absolute; border-radius: 50%; }
+#dash button.broadcasting {color:#4cd964;}
+#dash button.notbroadcasting {color: #787878;}
+#dash button.loading-click {border-color: #a2a2a2; background-color: #e5e5e5; box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.1);}
+
+/* User Page */
+.userInfo img { width: 100%; height: 100%; border-radius: 50%; max-width: 200px; max-height: 200px;}
+.userInfo .button-bar .button span {display: block; height: 20px;}
+.userInfo .col-33 {text-align:center;}
+.userInfo .button-bar .button {border: 0;}
+.userInfo .button-bar .button:first-child {border-right: 1px solid #D8D8D8;}
+.userInfo button[data-chasing="false"] { background-color:#3786d0;  color:#fff; }
+.userInfo button[data-chasing="false"].activated,button[data-chasing="false"]:focus {background-color:#0a569c;}
+.userInfo button[data-chasing="true"] { background-color:#5fab87; color:#fff; }
+.userInfo button[data-chasing="true"]:focus,button[data-chasing="true"].activated { background-color:#42725C;  color:#fff; }
+.userInfo button[data-chasing="requested"] {background-color:#a333a6;  color:#fff;} 
+.userInfo button[data-chasing="requested"].activated,button[data-chasing="requested"]:focus {background-color:#6c226e;}
+#broadcast .broadcasting {background-color: #F7BE81;}
+.userInfo button .spinner-lines {stroke: #fff;position: relative;top: 8px;}
+
+/* Settings Page  */
+.bar-assertive .button.button-clear.settingButtons {font-size:27px}
+form .password {margin: 30px 0 15px;text-align: center;}
+form .private .item {border-left:0;border-right:0;border-bottom:0;font-weight:bold}
+.passwordPopup .popup {min-width: 33%;width: 350px;}
+
+/**** Search Page ****/
+.search label {height:45px;}
+.search.list-inset {margin-top:5px} 
+#search .item-content {/*padding: 10px 49px 10px 16px;*/}
+#search #result { margin: 0px 11px; }
+
+/*Map modal*/
+.map-modal {width: 100%; height: 100%; top:0; left:0;}
+.map-modal .scroll {height:100%}
+.angular-google-map { height: 100%; }
+.angular-google-map-container{height: 100%;}
+#mapbanner {
+position: absolute;
+top: 0px;
+width: 100%;background-color: #fff;
+z-index: 2;
+opacity: 0.5;
+filter: alpha(opacity=60);
+height:50px;
+text-align: center;
+}
+#mapbanner .mapTitle{display: inline-block;
+    height: 50px;
+    font-size: 30px;
+    padding-top: 15px;
+}
+#mapbanner a.button {
+    float: left;
+    margin-left: 5px;
+    position: absolute;
+    left: 10px;
+}
+
+/********* Contacts  **********/
+.contact-float{
+  background: #6b46e5 !important;
+  color:white !important;
+  z-index: 12 !important;
+  position: absolute !important; 
+  bottom: 104px !important;
+  right: 10px !important;
+  border-radius: 50% !important;
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26) !important;
+  -webkit-transform: translate3d(0, 0, 0) !important;
+  transform: translate3d(0, 0, 0) !important;
+  -webkit-transition: 0.2s linear !important;
+  transition: 0.2s linear !important;
+  -webkit-transition-property: -webkit-transform, all !important;
+  transition-property: transform, all !important;
+   min-height: 80px;
+}
+
+.contact-float.activated{
+  -webkit-transform: translate3d(0, -1px, 0)  !important;
+  transform: translate3d(0, -1px, 0) !important;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4) !important;
+    background: #fff !important; 
+}
+
+/* Fix modal backdrop for smaller devices */
+@media (max-width: 679px) {
+  .active .modal-backdrop-bg {
+    opacity: .5;
+  }
+  .modal-backdrop-bg {
+    -webkit-transition: opacity 300ms ease-in-out;
+    transition: opacity 300ms ease-in-out;
+    background-color: #000;
+    opacity: 0;
+  }
+}

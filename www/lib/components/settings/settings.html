@@ -1,0 +1,57 @@
+﻿<ion-view title="Settings">
+    <ion-nav-buttons side="left">
+        <button class="button button-clear ion-close settingButtons" ng-click="back()" style="padding-left:10px;"></button>
+    </ion-nav-buttons>
+    <ion-nav-buttons side="right">
+        <button class="button button-clear ion-checkmark settingButtons" ng-click="settingsSubmit(userSettings)" style="padding-right:10px;"></button>
+    </ion-nav-buttons>
+
+    <ion-content has-header="true" padding="true" has-bouncing="false">
+
+        <form name="form.settingsForm" novalidate>
+            <div class="list settingsForm">
+                <label class="item item-input">
+                    <input type="text" placeholder="First Name" name="firstname" maxlength="30" ng-model="userSettings.firstname" ng-minlength="2" required>
+                    <i class="icon ion-alert error" ng-show="form.settingsForm.firstname.$invalid && form.settingsForm.firstname.$touched"></i>
+                </label>
+                <label class="item item-input">
+                    <input type="text" placeholder="Last Name" name="lastname" maxlength="30" ng-model="userSettings.lastname" ng-minlength="2" required>
+                    <i class="icon ion-alert error" ng-show="form.settingsForm.lastname.$invalid && form.settingsForm.lastname.$touched"></i>
+                </label>
+                <label class="item item-input">
+                    <input type="email" maxlength="30" placeholder="Email" name="email" emailupdate-validate ng-model="userSettings.email" required>
+                    <i class="icon ion-alert error" ng-show="form.settingsForm.email.$invalid && form.settingsForm.email.$touched"></i>
+                </label>
+                <div class="error-messages" ng-messages="form.settingsForm.email.$error" ng-if="form.settingsForm.email.$touched">
+                    <p ng-message="email" ng-show="form.settingsForm.email.$invalid">Email not legit</p>
+                    <p ng-message="emailupdatevalid" ng-show="!form.settingsForm.$error.emailupdatevalid">Email is with another account</p>
+                </div>
+                <label class="item item-input">
+                    <input type="text" maxlength="15" usernameupdate-validate="^[a-zA-Z0-9\._.-]+$" regex-validate-flags="gi" ng-model="userSettings.username" name="username" min="2" ng-minlength="2" placeholder="Username" required>
+                    <i class="icon ion-checkmark success" ng-show="!form.settingsForm.username.$error.charactersvalid && !form.settingsForm.username.$invalid"></i>
+                    <i class="icon ion-alert error" ng-show="form.settingsForm.username.$invalid"></i>
+                </label>
+                <div class="error-messages" ng-messages="form.settingsForm.username.$error" ng-if="form.settingsForm.username.$touched">
+                    <p ng-message="usernameupdatevalid" ng-show="form.settingsForm.username.$error.usernamevalid">Taken</p>
+                    <p ng-message="charactersvalid" ng-show="form.settingsForm.username.$error.charactersvalid">Periods, underscores, and dashes only</p>
+                </div>
+                <div class="private">
+                    <ion-toggle ng-model="userSettings.isprivate">
+                        Private
+                    </ion-toggle>
+                </div>
+
+                <div class="password"><button type="button" class="button button-royal" ng-click="updatePassword()">Change Password</button></div>
+            </div>
+            <!--  
+            <button type="submit" class="button button-full button-outline button-assertive">
+                Save Changes
+            </button>
+            -->
+        </form>
+
+
+
+    </ion-content>
+
+</ion-view>

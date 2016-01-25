@@ -1,0 +1,60 @@
+﻿<ion-view title="Register">   
+    <ion-content has-header="true" padding="true" has-bouncing="false">
+        <form name="form.registerform" ng-submit="submitRegister(user)" novalidate>
+            <div class="list registerForm">
+                <label class="item item-input">
+                    <input type="text" placeholder="First Name" name="firstname" maxlength="30" ng-model="user.firstname" ng-minlength="2" required>
+                    <i class="icon ion-alert-circled error" ng-show="form.registerform.firstname.$invalid && form.registerform.firstname.$touched"></i>
+                </label>
+                <!-- <div class="error-messages" ng-messages="registerform.firstname.$error" ng-if="registerform.firstname.$touched">
+                    <p ng-message="minlength" ng-show="registerform.firstname.$dirty">Too short</p>
+                </div>
+                -->
+                <label class="item item-input">
+                    <input type="text" placeholder="Last Name" name="lastname" maxlength="30" ng-model="user.lastname" ng-minlength="2" required>
+                    <i class="icon ion-alert-circled error" ng-show="form.registerform.lastname.$invalid && form.registerform.lastname.$touched"></i>
+                </label>
+                <!-- <div class="error-messages" ng-messages="registerform.lastname.$error" ng-if="registerform.lastname.$touched">
+                     <p ng-message="minlength" ng-show="registerform.lastname.$dirty">Too short</p>
+                 </div>
+                 -->
+                <label class="item item-input">
+                    <input type="email" maxlength="30" placeholder="Email" name="email" email-validate ng-model="user.email" required>
+                    <i class="icon ion-alert-circled error" ng-show="form.registerform.email.$invalid && form.registerform.email.$touched"></i>
+                </label>
+                <div class="error-messages" ng-messages="form.registerform.email.$error" ng-if="form.registerform.email.$touched">
+                    <p ng-message="email" ng-show="form.registerform.email.$invalid">Email not legit</p>
+                    <p ng-message="emailvalid" ng-show="form.registerform.email.$error.emailvalid">Email is with another account</p>
+                </div>
+                <label class="item item-input">
+                    <input type="text" maxlength="15" username-validate="^[a-zA-Z0-9\._.-]+$" regex-validate-flags="gi" ng-model="user.username" name="username" min="2" ng-minlength="2" placeholder="Username" required>
+                    <i class="icon ion-checkmark success" ng-show="!form.registerform.username.$error.usernamevalid && !form.registerform.username.$invalid"></i>
+                    <i class="icon ion-alert-circled error" ng-show="form.registerform.username.$invalid && form.registerform.username.$touched"></i>
+                </label>
+                <div class="error-messages" ng-messages="form.registerform.username.$error" ng-if="form.registerform.username.$touched">
+                    <p ng-message="usernamevalid" ng-show="form.registerform.username.$error.usernamevalid">Taken</p>
+                    <p ng-message="charactersvalid" ng-show="form.registerform.username.$error.charactersvalid">Periods, underscores, and dashes only</p>
+                </div>
+                <label class="item item-input">
+                    <input type="password" maxlength="15" ng-minlength="6" ng-model="user.password" name="password" placeholder="Password" required>
+                    <i class="icon ion-alert-circled error" ng-show="form.registerform.password.$invalid && form.registerform.password.$touched"></i>
+                </label>
+                <div class="error-messages" ng-messages="form.registerform.password.$error" ng-if="form.registerform.password.$touched">
+                    <p ng-message="minlength" ng-show="form.registerform.password.$dirty">Gotta be at least 6 characters</p>
+                    <p ng-message="passwordvalid" ng-show="form.registerform.password.$error.passwordvalid">Gotta use at least one number and alphabet</p>
+                </div>
+                <label class="item item-input">
+                    <input type="password" maxlength="15" ng-minlength="6" placeholder="Confirm Password" name="passwordConfirm" ng-model="user.passwordConfirm" pw-check="user.password" required>
+                    <i class="icon ion-alert-circled error" ng-show="form.registerform.passwordConfirm.$invalid && form.registerform.passwordConfirm.$touched && !form.registerform.passwordConfirm.$pristine"></i>
+                </label>
+                <div class="error-messages" ng-messages="form.registerform.passwordConfirm.$error" ng-if="form.registerform.passwordConfirm.$touched">
+                    <p ng-message="pwmatch" ng-show="form.registerform.passwordConfirm.$error.pwmatch && form.registerform.passwordConfirm.$touched">Gotta match</p>
+                </div>
+            </div>
+
+            <button type="submit" class="button button-full button-outline button-assertive">
+                Done
+            </button>
+        </form>
+    </ion-content>
+</ion-view>
