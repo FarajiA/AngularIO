@@ -164,7 +164,7 @@ ocLazyLoadProvider.$inject = ["$ocLazyLoadProvider"];
 
 function RouteMethods($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
     
-    $ionicConfigProvider.backButton.text('');
+    $ionicConfigProvider.backButton.previousTitleText(false).text('');
     $ionicConfigProvider.tabs.position('bottom');
 
     // setup an abstract state for the tabs directive
@@ -822,10 +822,9 @@ app.controller('initController', ['$scope', '$timeout', '$interval', '$window', 
         if (ionic.Platform.isAndroid()) {
             backgroundGeoLocation.configure(backgroundServiceSuccess, backgroundServiceFail, {
                 desiredAccuracy: 10,
-                stationaryRadius: 20,
+                stationaryRadius: 9,
                 distanceFilter: 5,
                 useActivityDetection: true,
-                interval: 10000,
                 // debug: true, <-- enable this hear sounds for background-geolocation life-cycle. 
                 stopOnTerminate: false, // <-- enable this to clear background location settings when the app terminates 
                 notificationTitle: "Chaser",
@@ -836,10 +835,9 @@ app.controller('initController', ['$scope', '$timeout', '$interval', '$window', 
         else {
             backgroundGeoLocation.configure(backgroundServiceSuccess, backgroundServiceFail, {
                 desiredAccuracy: 10,
-                stationaryRadius: 20,
+                stationaryRadius: 9,
                 distanceFilter: 5,
                 useActivityDetection: true,
-                interval: 10000,
                 activityType: 'AutomotiveNavigation',
                 //debug: true, // <-- enable this hear sounds for background-geolocation life-cycle.
                 stopOnTerminate: false // <-- enable this to clear background location settings when the app terminates

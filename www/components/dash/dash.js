@@ -32,9 +32,9 @@
                 $cordovaGeolocation
                 .getCurrentPosition(posOptions)
                 .then(function (position) {
-                    $scope.userLat = position.coords.latitude;
-                    $scope.userLong = position.coords.longitude;
-                    Dash.broadcast($scope.userLat, $scope.userLong, $scope.user.broadcast).then(function () {
+                    $scope.user.latitude = position.coords.latitude;
+                    $scope.user.longitude = position.coords.longitude;
+                    Dash.broadcast($scope.user.latitude, $scope.user.longitude, $scope.user.broadcast).then(function () {
                         $ionicLoading.hide();
                         $scope.broadcastloading = false;
                         $scope.user.broadcast = (Dash.data() === 1);
