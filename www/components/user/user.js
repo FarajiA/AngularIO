@@ -8,8 +8,6 @@
         var userID = $stateParams.userId;
         $scope.imageURL = imageURL;
         var chaserPromise;
-        var locationFinished = $q.defer();
-        $scope.locationCoordsPromise = locationFinished.promise;
 
         var options = {
             timeout: 7000,
@@ -30,13 +28,11 @@
         var geoTimer;
         var GeoWatchTimer = function () {
             var d = $q.defer()
-            $ionicPlatform.ready(function () {
+            $ionicPlatform.ready(function() {
                 $scope.geoWatch = $cordovaGeolocation.watchPosition(options);
                 $scope.geoWatch.then(null,
                   function (error) {
-                      d.resolve()
-                      if (error.code === 3)
-                          return;
+                      d.resolve();
                       var seen = GeoAlert.getGeoalert();
                       if (seen)
                           return;
@@ -90,7 +86,6 @@
                 });
             });
         };
-
 
         var getUserRequest = function () {
             UserObject.getUser(userID).then(function () {
@@ -230,7 +225,11 @@
                 $scope.$watch("broadcasting", function (newValue, oldValue) {
                     if (newValue) {
                         if (!$scope.user.broadcast && ($scope.isChasing === 1 || !$scope.private)) {
-                            geoIndex = 0;
+
+                            if ($scope.modal.isShown())
+                                geoIndex = 1;
+                            else
+                                geoIndex = 0;
                             GeoWatchTimer();
                         }
                         $scope.stopCoords();
