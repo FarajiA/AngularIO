@@ -44,9 +44,11 @@
                       });
                   }, function (position) {
                       d.resolve();
+                      $scope.user.latitude = position.coords.latitude;
+                      $scope.user.longitude = position.coords.longitude;
                       $scope.userMarker.coords = {
-                          latitude: position.coords.latitude,
-                          longitude: position.coords.longitude
+                          latitude: $scope.user.latitude,
+                          longitude: $scope.user.longitude
                       };
                       geoIndex++;
                       if (geoIndex === 1)
@@ -171,7 +173,16 @@
                     if (newValue) {
                         if (!$scope.user.broadcast && ($scope.isChasing === 1 || !$scope.private)) {
                             geoIndex = 0;
-                            GeoWatchTimer();                            
+                            GeoWatchTimer().then(function () {
+                                $scope.chaserMarker = {
+                                    id: 0,
+                                    coords: {
+                                        latitude: $scope.latitude,
+                                        longitude: $scope.longitude
+                                    },
+                                    options: { icon: 'img/checkered_chaser.png' },
+                                };
+                            });
                         }
                         $scope.stopCoords();
                         $scope.interval = $interval(function () { chaserPromise(); }, 15000);
@@ -180,18 +191,6 @@
                         $scope.stopCoords();
                         $scope.interval = $interval(function () { chaserPromise(); }, 30000);
                     }
-                    $scope.chaserMarker = {
-                        id: 0,
-                        coords: {
-                            latitude: $scope.latitude,
-                            longitude: $scope.longitude
-                        },
-                        options: { icon: 'img/checkered_chaser.png' },
-                    };
-                    $scope.userMarker.coords = {
-                        latitude: $scope.user.latitude,
-                        longitude: $scope.user.longitude
-                    };
                 });
             }
             else {
@@ -225,7 +224,6 @@
                 $scope.$watch("broadcasting", function (newValue, oldValue) {
                     if (newValue) {
                         if (!$scope.user.broadcast && ($scope.isChasing === 1 || !$scope.private)) {
-
                             if ($scope.modal.isShown())
                                 geoIndex = 1;
                             else
