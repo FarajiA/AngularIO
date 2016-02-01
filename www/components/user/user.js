@@ -193,7 +193,7 @@
                                 },
                                 options: { icon: 'img/checkered_chaser.png' },
                             };
-                            scope.userMarker.coords = {
+                            $scope.userMarker.coords = {
                                 latitude: $scope.user.latitude,
                                 longitude: $scope.user.longitude
                             };
