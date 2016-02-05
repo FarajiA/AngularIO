@@ -829,6 +829,7 @@ app.controller('initController', ['$scope', '$timeout', '$interval', '$window', 
                 stopOnTerminate: false, // <-- enable this to clear background location settings when the app terminates 
                 notificationTitle: "Chaser",
                 notificationText: "Broadcasting location...",
+                notificationIcon: 'icon',
                 locationService: backgroundGeoLocation.service.ANDROID_DISTANCE_FILTER,
             });
         }
