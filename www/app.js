@@ -100,9 +100,15 @@ app.run(function ($ionicPlatform, $ionicSideMenuDelegate, $rootScope, UserObject
             if(window.cordova && window.cordova.plugins.Keyboard) {
                 cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
             }
-            if(window.StatusBar) {
-                StatusBar.styleDefault();
+            if (window.StatusBar) {
+                if (ionic.Platform.isAndroid()) {
+                    StatusBar.backgroundColorByHexString("#ef473a");
+                }
+                else {
+                    StatusBar.styleDefault();
+                }
             }
+
     });
     
     $rootScope.$on('emit_Chasers', function (event, args) {
@@ -827,9 +833,10 @@ app.controller('initController', ['$scope', '$timeout', '$interval', '$window', 
                 useActivityDetection: true,
                 // debug: true, <-- enable this hear sounds for background-geolocation life-cycle. 
                 stopOnTerminate: false, // <-- enable this to clear background location settings when the app terminates 
+                notificationIcon: 'icon',
+                notificationText: 'ENABLED',
                 notificationTitle: "Chaser",
                 notificationText: "Broadcasting location...",
-                notificationIcon: 'icon',
                 locationService: backgroundGeoLocation.service.ANDROID_DISTANCE_FILTER,
             });
         }

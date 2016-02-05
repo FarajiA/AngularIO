@@ -210,8 +210,13 @@
             else {
                 $scope.chaserLink = $scope.chasingLink = '#/main/traffic';
                 $scope.selfIdentity = true;
-                if ($scope.user.broadcast)
+                if ($scope.user.broadcast) {
+                    geoIndex = 0
+                    $scope.stopCoords = function () {
+                        $interval.cancel($scope.interval);
+                    };
                     GeoWatchTimer();
+                }
             }
 
             var shouldGeolocate = ($scope.isChasing === 1 || !$scope.private);
