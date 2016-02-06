@@ -10,8 +10,8 @@
                 UserObject.login(user).then(function () {
                     if (UserObject.data().GUID) {
                         UserObject.setUser(UserObject.data().GUID).then(function () {
-                            $scope.$parent.user = $scope.user = UserObject.data();
-                            $scope.$parent.photoUpdate();
+                            $scope.user = UserObject.data();
+                            $scope.$parent.photoUpdate($scope.user);
                             if ($scope.user.broadcast) {
                                 $scope.$emit('emit_Broadcasting', { action: "turn-on" });
                             }
@@ -32,9 +32,9 @@
             if ($scope.form.registerform.$valid) {
                 $ionicLoading.show();
                 UserObject.register(user).then(function () {
-                    $scope.$parent.user = UserObject.data();
-                    if ($scope.$parent.user.GUID) {
-                        $scope.$parent.photoUpdate();
+                    $scope.user = UserObject.data();
+                    if ($scope.user.GUID) {
+                        $scope.$parent.photoUpdate($scope.user);
                         $state.go('main.dash');
                     }
                     else {
