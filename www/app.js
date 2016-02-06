@@ -764,6 +764,7 @@ app.controller('initController', ['$scope', '$timeout', '$interval', '$window', 
     $scope.user = {};
     $scope.photoUpdate = function(user) {
         var hasphoto = user.photo;
+        $scope.user = user;
         var savedImage = localStorageService.get('chaserImage');
         $scope.chaser = {};
         if (hasphoto && !savedImage) {
