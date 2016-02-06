@@ -69,7 +69,7 @@
             };
 
             $scope.$on('$ionicView.enter', function () {
-                $scope.userSettings = angular.copy($scope.$parent.user);
+                $scope.userSettings = angular.copy($scope.user);
 
                 if ($scope.userSettings.hasOwnProperty('firstName'))
                     $scope.userSettings.firstname = $scope.userSettings.firstName;
