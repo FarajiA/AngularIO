@@ -653,7 +653,6 @@ app.factory('UserObject', ['$http', '$q', 'localStorageService', '$rootScope', f
         })
         .success(function (d) {
             data = d;
-            $rootScope.user = d;
             deffered.resolve();
         })
         .error(function (data, status) {
@@ -763,8 +762,8 @@ app.controller('initController', ['$scope', '$timeout', '$interval', '$window', 
 
     $scope.userLogged = false;
     $scope.user = {};
-    $scope.photoUpdate = function() {
-        var hasphoto = $scope.$parent.user.photo;
+    $scope.photoUpdate = function(user) {
+        var hasphoto = user.photo;
         var savedImage = localStorageService.get('chaserImage');
         $scope.chaser = {};
         if (hasphoto && !savedImage) {
@@ -789,7 +788,7 @@ app.controller('initController', ['$scope', '$timeout', '$interval', '$window', 
             }, false);
         }
 
-        $scope.photoUpdate();
+        $scope.photoUpdate($scope.user);
 
         delete $rootScope.appRun;
     });
@@ -833,7 +832,7 @@ app.controller('initController', ['$scope', '$timeout', '$interval', '$window', 
                 useActivityDetection: true,
                 // debug: true, <-- enable this hear sounds for background-geolocation life-cycle. 
                 stopOnTerminate: false, // <-- enable this to clear background location settings when the app terminates 
-                notificationIcon: 'icon',
+                notificationIcon: 'broadcast_icon',
                 notificationText: 'ENABLED',
                 notificationTitle: "Chaser",
                 notificationText: "Broadcasting location...",

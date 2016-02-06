@@ -1,6 +1,6 @@
 ﻿; (function () {
     var app = angular.module('App');
-    app.controller('TrafficController', ['$scope', 'Traffic', '$ionicPopup', '$ionicLoading', function ($scope, Traffic, $ionicPopup, $ionicLoading) {
+    app.controller('TrafficController', ['$scope', '$q', 'Traffic', '$ionicPopup', '$ionicLoading', function ($scope, $q, Traffic, $ionicPopup, $ionicLoading) {
         $scope.showChasers = true;
         $ionicLoading.show();
         $scope.imageURL = imageURL;
@@ -23,7 +23,7 @@
                 $ionicLoading.hide();
                 $scope.chasers = data.Results;
                 $scope.chasersNo = data.Total;
-                $scope.noMoChasers = ($scope.chasersNo <= countSet);
+                $scope.moChasers = ($scope.chasersNo > countSet);
                 $scope.chasersindex++;
                 $scope.$broadcast('scroll.refreshComplete');
             });
@@ -32,18 +32,23 @@
         chasersInit();
 
         $scope.loadMoreChasers = function () {
-            var pagingMax = Math.ceil($scope.chasersNo / countSet, 1);
-            if ($scope.chasersindex < pagingMax && $scope.chasersindex > 0) {
+            var deffered = $q.defer();
+            var pagingChaserMax = Math.ceil($scope.chasersNo / countSet, 1);
+            if ($scope.chasersindex < pagingChaserMax && $scope.chasersindex > 0) {
                 Traffic.chasers($scope.chasersindex).then(function (data) {
-                    var merged = $scope.chasers.concat(data.Results);
-                    $scope.chasers = merged;
+                    var chaserMerged = $scope.chasers.concat(data.Results);
+                    $scope.chasersNo = data.Total;
+                    $scope.chasers = chaserMerged;
                     $scope.chasersindex++;
+                    $scope.moChasers = ($scope.chasers.length < $scope.chasersNo);
+                    $scope.$broadcast('scroll.infiniteScrollComplete');
+                    deffered.resolve();
                 });
             }
-            else if ($scope.chasersindex == pagingMax)
-                    $scope.noMoChasers = true;
+            else if ($scope.chasersindex >= pagingChaserMax)
+                    $scope.moChasers = false;           
 
-            $scope.$broadcast('scroll.infiniteScrollComplete');
+            return deffered.promise;
         };
 
         var chasingInit = function() {
@@ -52,7 +57,7 @@
                 $ionicLoading.hide();
                 $scope.chasing = data.Results;
                 $scope.chasingNo = data.Total;
-                $scope.noMoChasing = ($scope.chasingNo <= countSet);
+                $scope.moChasing = ($scope.chasingNo > countSet);
                 $scope.chasingindex++;
                 $scope.$broadcast('scroll.refreshComplete');
             });
@@ -61,18 +66,23 @@
         chasingInit();
 
         $scope.loadMoreChasing = function () {
-            var pagingMax = Math.ceil($scope.chasingNo / countSet, 1);
-            if ($scope.chasingindex < pagingMax && $scope.chasersindex > 0) {
+            var deffered = $q.defer();
+            var pagingChasingMax = Math.ceil($scope.chasingNo / countSet, 1);
+            if ($scope.chasingindex < pagingChasingMax && $scope.chasersindex > 0) {
                 Traffic.chasing($scope.chasingindex).then(function (data) {
-                    var merged = $scope.chasing.concat(data.Results);
-                    $scope.chasing = merged;
+                    var chasingMerged = $scope.chasing.concat(data.Results);
+                    $scope.chasingNo = data.Total;
+                    $scope.chasing = chasingMerged;
+                    $scope.moChasing = ($scope.chasing.length < $scope.chasingNo)
                     $scope.chasingindex++;
+                    $scope.$broadcast('scroll.infiniteScrollComplete');
+                    deffered.resolve();
                 });
             }
-            else if ($scope.chasingindex == pagingMax)
-                $scope.noMoChasing = true;
+            else if ($scope.chasingindex >= pagingChasingMax)
+                $scope.moChasing = false;
 
-            $scope.$broadcast('scroll.infiniteScrollComplete');
+            return deffered.promise;
         };
 
         $scope.remove = function (guid,username,index) {

@@ -2,7 +2,8 @@
 .zeroResults {text-align: center;margin-top: 50px;}
 .zeroResults h2 {color:grey;}
 .item h2{ color: #2A363B !important}
-.button.button-custom {background-color:#ACDBC9}
+.button.button-custom {background-color:#ACDBC9;}
+.button.button-supared {background-color: #E84A5F;}
 #result .ion-ios-arrow-thin-left { font-size: 40px; }
 
 /*******  prompt styling  ******/

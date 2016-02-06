@@ -26,7 +26,7 @@
                         <p>{{broadcast.firstname}}&nbsp;{{broadcast.lastname}}</p>
                     </ion-item>
                 </ion-list>
-                <ion-infinite-scroll ng-if="!noMoBroadcasters" on-infinite="loadMoreBroadcasters()" distance="30%"></ion-infinite-scroll>
+                <ion-infinite-scroll ng-if="moBroadcasters" on-infinite="loadMoreBroadcasters()" distance="30%"></ion-infinite-scroll>
             </div>
             <div id="requests" ng-show="!showBroadcasters" class="requests">
                 <div class="zeroResults" ng-show="requests.length === 0">
@@ -38,15 +38,15 @@
                         <h2>{{request.username}}</h2>
                         <p>{{request.firstname}}&nbsp;{{request.lastname}}</p>                       
                         <i class="icon ion-ios-arrow-thin-left icon-accessory"></i>
-                        <ion-option-button class="button-custom" ng-click="decision(request.GUID, request.username, false, $index)">
+                        <ion-option-button class="button-supared" ng-click="decision(request.GUID, request.username, false, $index)">
                             <i class="icon ion-close-circled"></i>
                         </ion-option-button>
-                        <ion-option-button class="button-balanced" ng-click="decision(request.GUID, request.username, true, $index)">
+                        <ion-option-button class="button-custom" ng-click="decision(request.GUID, request.username, true, $index)">
                             <i class="icon ion-checkmark-circled"></i>
                         </ion-option-button>
                     </ion-item>
                 </ion-list>
-                <ion-infinite-scroll ng-if="!noMoRequests" on-infinite="loadMoreRequests()" distance="30%"></ion-infinite-scroll>
+                <ion-infinite-scroll ng-if="moRequests" on-infinite="loadMoreRequests()" distance="30%"></ion-infinite-scroll>
             </div>
         </div>
     </ion-content>

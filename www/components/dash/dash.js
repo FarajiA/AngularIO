@@ -41,7 +41,7 @@
                         $scope.$emit('emit_Broadcasting', { action: "turn-on" });
                     });
                 }, function (err) {
-                    // error
+                    $ionicLoading.hide();
                     $ionicPopup.alert({
                        title: mapsPrompt.title
                     }).then(function (res) {
