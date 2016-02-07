@@ -632,7 +632,7 @@ app.factory('UserObject', ['$http', '$q', 'localStorageService', '$rootScope', f
             deffered.resolve();
         })
         .error(function (data, status) {
-            console.log("Request failed " + status);
+            //console.log("Request failed " + status);
         });
         return deffered.promise;
     };
@@ -656,7 +656,7 @@ app.factory('UserObject', ['$http', '$q', 'localStorageService', '$rootScope', f
             deffered.resolve();
         })
         .error(function (data, status) {
-            console.log("Request failed " + status);
+            //console.log("Request failed " + status);
         });
         return deffered.promise;
     };
@@ -676,7 +676,7 @@ app.factory('UserObject', ['$http', '$q', 'localStorageService', '$rootScope', f
             deffered.resolve();
         })
         .error(function (data, status) {
-            console.log("Request failed " + status);
+            //console.log("Request failed " + status);
         });
         return deffered.promise;
     };
@@ -691,7 +691,7 @@ app.factory('UserObject', ['$http', '$q', 'localStorageService', '$rootScope', f
             deffered.resolve();
         })
         .error(function (data, status) {
-            console.log("Request failed " + status);
+            //console.log("Request failed " + status);
         });
         return deffered.promise;
     };
@@ -718,7 +718,7 @@ app.factory('Dash', ['$http', '$q', 'UserObject', function ($http, $q, UserObjec
             deffered.resolve();
         })
         .error(function (data, status) {
-            console.log("Request failed " + status);
+            //console.log("Request failed " + status);
         });
         return deffered.promise;
     };
@@ -811,7 +811,7 @@ app.controller('initController', ['$scope', '$timeout', '$interval', '$window', 
 
             $scope.user.latitude = location.latitude;
             $scope.user.longitude = location.longitude;
-            console.log('[js] BackgroundGeoLocation callback:  ' + location.latitude + ',' + location.longitude);
+            //console.log('[js] BackgroundGeoLocation callback:  ' + location.latitude + ',' + location.longitude);
 
             Dash.broadcast(location.latitude, location.longitude, false).then(function () {
                 //$ionicLoading.hide();
@@ -822,7 +822,7 @@ app.controller('initController', ['$scope', '$timeout', '$interval', '$window', 
         };
 
         var backgroundServiceFail = function (error) {
-            console.log('BackgroundGeoLocation error');
+            //console.log('BackgroundGeoLocation error');
         };
 
         if (ionic.Platform.isAndroid()) {
@@ -980,7 +980,7 @@ document.addEventListener("resume", function () {
         $scope.resImageDataURI = $dataURI;
     };
     $scope.onLoadError = function () {
-        console.log('onLoadError fired');
+        //console.log('onLoadError fired');
     };
 
     $scope.takePicture = function () {
@@ -1005,8 +1005,8 @@ document.addEventListener("resume", function () {
                 $scope.imgURI = "data:image/jpeg;base64," + imageData;
                 $scope.cropmodal.show();
             }, function (err) {
-                console.log('Failed because: ');
-                console.log(err);
+                //console.log('Failed because: ');
+                //console.log(err);
             });
         });
     };
@@ -1031,8 +1031,8 @@ document.addEventListener("resume", function () {
                   $scope.imgURI = "data:image/jpeg;base64," + imageData;
               },
               function (err) {
-                  console.log('Failed because: ');
-                  console.log(err);
+                  //console.log('Failed because: ');
+                  //console.log(err);
               });
         });
     };
@@ -1058,7 +1058,7 @@ document.addEventListener("resume", function () {
                 localStorageService.set('chaserImage', $scope.resImageDataURI);
                 $ionicLoading.hide();
             }, function (err) {
-                console.log("Whoops! Upload failed");
+                //console.log("Whoops! Upload failed");
                 $scope.cropmodal.hide();
                 $scope.photomodal.hide();
                 $ionicLoading.hide();

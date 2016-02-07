@@ -13,7 +13,7 @@
                 deffered.resolve(d);
             })
             .error(function (data, status) {
-                console.log("Request failed " + status);
+                //console.log("Request failed " + status);
             });
 
             return deffered.promise;

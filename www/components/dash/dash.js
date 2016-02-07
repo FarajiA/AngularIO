@@ -45,7 +45,7 @@
                     $ionicPopup.alert({
                        title: mapsPrompt.title
                     }).then(function (res) {
-                        console.log("Location services not on");
+                        //console.log("Location services not on");
                     });  
                 });
             }
