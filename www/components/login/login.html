@@ -67,10 +67,10 @@
                     </div>
                     <label class="item item-input">
                         <input type="password" maxlength="15" ng-minlength="6" placeholder="Confirm Password" name="passwordConfirm" ng-model="user.passwordConfirm" pw-check="user.password" required>
-                        <i class="icon ion-alert-circled error" ng-show="form.registerform.passwordConfirm.$invalid && form.registerform.passwordConfirm.$touched && !form.registerform.passwordConfirm.$pristine"></i>
+                        <i class="icon ion-alert-circled error" ng-show="form.registerform.passwordConfirm.$error.pwmatch && !form.registerform.passwordConfirm.$pristine"></i>
                     </label>
                     <div class="error-messages" ng-messages="form.registerform.passwordConfirm.$error" ng-if="form.registerform.passwordConfirm.$touched">
-                        <p ng-message="pwmatch" ng-show="form.registerform.passwordConfirm.$error.pwmatch && form.registerform.passwordConfirm.$touched">Gotta match</p>
+                        <p ng-message="pwmatch" ng-show="form.registerform.passwordConfirm.$error.pwmatch">Gotta match</p>
                     </div>
                 </div>
 

@@ -9,7 +9,9 @@
             var deffered = $q.defer();
             var guid = UserObject.data().GUID;
 
-            $http.get(baseURL + "api/activity/" + guid + "/" + index + "/" + countSet)
+            $http.get(baseURL + "api/activity/" + guid + "/" + index + "/" + countSet, {
+                cache: false
+            })
             .success(function (d) {
                 broadcastData = d;
                 deffered.resolve();
@@ -25,7 +27,9 @@
             var deffered = $q.defer();
             var guid = UserObject.data().GUID;
 
-            $http.get(baseURL + "api/requests/" + guid + "/0/" + index + "/" + countSet)
+            $http.get(baseURL + "api/requests/" + guid + "/0/" + index + "/" + countSet, {
+                cache: false
+            })
             .success(function (d) {
                 requestData = d;
                 deffered.resolve();

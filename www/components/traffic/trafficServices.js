@@ -8,7 +8,9 @@
             var deffered = $q.defer();
             var guid = UserObject.data().GUID;
 
-            $http.get(baseURL + "api/chasers/" + guid + "/" + index + "/" + countSet)
+            $http.get(baseURL + "api/chasers/" + guid + "/" + index + "/" + countSet,{
+                cache : false
+            })
             .success(function (d) {
                 deffered.resolve(d);
             })
@@ -23,7 +25,9 @@
             var deffered = $q.defer();
             var guid = UserObject.data().GUID;
 
-            $http.get(baseURL + "api/chasing/" + guid + "/" + index + "/" + countSet)
+            $http.get(baseURL + "api/chasing/" + guid + "/" + index + "/" + countSet,{
+                cache : false
+            })
             .success(function (d) {
                 deffered.resolve(d);
             })
@@ -44,10 +48,6 @@
             });
             return deffered.promise;
         };
-
-        //User.getchasers = function () { return getchasers; };
-        //User.getchasing = function () { return getchasing; };
-        //User.unfollow = function () { return data; };
 
         return User;
     }]);

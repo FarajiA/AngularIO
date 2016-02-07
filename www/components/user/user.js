@@ -210,8 +210,13 @@
             else {
                 $scope.chaserLink = $scope.chasingLink = '#/main/traffic';
                 $scope.selfIdentity = true;
-                if ($scope.user.broadcast)
+                if ($scope.user.broadcast) {
+                    geoIndex = 0
+                    $scope.stopCoords = function () {
+                        $interval.cancel($scope.interval);
+                    };
                     GeoWatchTimer();
+                }
             }
 
             var shouldGeolocate = ($scope.isChasing === 1 || !$scope.private);
@@ -243,6 +248,20 @@
                             else
                                 geoIndex = 0;
                             GeoWatchTimer();
+                        }
+                        else {
+                            $scope.chaserMarker = {
+                                id: 0,
+                                coords: {
+                                    latitude: $scope.latitude,
+                                    longitude: $scope.longitude
+                                },
+                                options: { icon: 'img/checkered_chaser.png' },
+                            };
+                            $scope.userMarker.coords = {
+                                latitude: $scope.user.latitude,
+                                longitude: $scope.user.longitude
+                            };
                         }
                         $scope.stopCoords();
                         $scope.interval = $interval(function () { chaserPromise(); }, 15000);
