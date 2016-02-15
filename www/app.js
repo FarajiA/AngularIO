@@ -36,7 +36,7 @@ var userDetails = {
     notBroadcasting: 'Not broadcasting'
 };
 var mapsAPI = {
-    url: '//maps.googleapis.com/maps/api/js?v=3&sensor=true'
+    url: 'http://maps.googleapis.com/maps/api/js?v=3&sensor=true'
 };
 var mapsPrompt = {
     title: 'Location services off',
