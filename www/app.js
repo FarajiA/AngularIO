@@ -46,16 +46,26 @@ var mapsPrompt = {
     NolongerBroadcasting : 'Chaser is no longer broadcasting'
 };
 
-
-
 var dashPrompt = {
     title: 'Location services must be on'
 };
 var SMS = {
     error: 'Problem sending SMS to 0',
     success: 'Invites sent homie',
-    inviteContent: 'Add me on Chaser! Username: 0 http://chasermobile.com/invite'
+    inviteContent: 'Add me on Chaser! Username: 0 http://chasertheapp.com/invite'
 };
+
+var ReportingConst = {
+    flaggedTitle: '0 reported!',
+    flaggedText: 'All reports are taken seriously and will be reviewed. Thanks.'
+}
+
+var BlockConst = {
+    blockedConfirmTitle: 'Are you sure?',
+    blockedCompletedTitle: '0 has been blocked!',
+    blockedCompletedText: 'This user will no longer be able to view your profile or location. Thanks.'
+}
+
 function _isEmpty(object) {
     for (var key in object) {
         if (object.hasOwnProperty(key)) {
@@ -108,7 +118,6 @@ app.run(function ($ionicPlatform, $ionicSideMenuDelegate, $rootScope, UserObject
                     StatusBar.styleDefault();
                 }
             }
-
     });
     
     $rootScope.$on('emit_Chasers', function (event, args) {

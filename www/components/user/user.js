@@ -1,8 +1,8 @@
 ﻿; (function () {
     var app = angular.module('App');
     app.requires.push('uiGmapgoogle-maps');
-    app.controller('UserController', ['$scope', '$q', '$timeout', 'UserObject', '$stateParams', 'Decision', '$location', '$ionicModal', '$interval', 'uiGmapGoogleMapApi', 'uiGmapIsReady', '$cordovaGeolocation', '$ionicPopup', '$ionicPopover', '$ionicPlatform', '$ionicLoading', 'GeoAlert', 'chaserBroadcast', 'UserView', 'Report',
-    function ($scope, $q, $timeout, UserObject, $stateParams, Decision, $location, $ionicModal, $interval, GoogleMapApi, uiGmapIsReady, $cordovaGeolocation, $ionicPopup, $ionicPopover, $ionicPlatform, $ionicLoading, GeoAlert, chaserBroadcast, UserView, Report) {
+    app.controller('UserController', ['$scope', '$q', '$timeout', 'UserObject', '$stateParams', 'Decision', '$location', '$ionicModal', '$interval', 'uiGmapGoogleMapApi', 'uiGmapIsReady', '$cordovaGeolocation', '$ionicPopup', '$ionicPopover', '$ionicPlatform', '$ionicLoading', 'GeoAlert', 'chaserBroadcast', 'UserView', 'Report','Block',
+    function ($scope, $q, $timeout, UserObject, $stateParams, Decision, $location, $ionicModal, $interval, GoogleMapApi, uiGmapIsReady, $cordovaGeolocation, $ionicPopup, $ionicPopover, $ionicPlatform, $ionicLoading, GeoAlert, chaserBroadcast, UserView, Report, Block) {
         
         var userID = $stateParams.userId;
         $scope.imageURL = imageURL;
@@ -284,7 +284,7 @@
         }).then(function (popover) {
             $scope.popover = popover;
 
-            $scope.flagUser = function () {
+        $scope.flagUser = function () {
                 $scope.popover.hide();
 
         var reportPopup = $ionicPopup.show({
@@ -303,6 +303,17 @@
                       Report.Flag($scope.GUID, UserObject.data().GUID, selected).then(function (response) {
                           if (response.ID > 0) {
                               reportPopup.close();
+                              var alertPopup = $ionicPopup.alert({
+                                  title: ReportingConst.flaggedTitle.replace(/0/gi, $scope.username),
+                                  template: ReportingConst.flaggedText
+                              });
+                          }
+                          else {
+                              reportPopup.close();
+                              var alertPopup = $ionicPopup.alert({
+                                  title: 'Whoops!',
+                                  template: updatedUserConst.unsuccessfulUpdate
+                              });
                           }
                       });
                       
@@ -310,14 +321,49 @@
               }
             ]
         });
-                console.log("User Flagged : " + UserObject.details().GUID + "/ User Snitched : " + $scope.GUID);
+                
             };
 
             $scope.blockUser = function () {
                 $scope.popover.hide();
-                console.log("User Flagged : " + $scope.GUID + " / User Snitched : " + UserObject.data().GUID);
-            };
+                var blockPopup = $ionicPopup.show({
+                    title: BlockConst.blockedConfirmTitle,
+                    buttons: [
+                        { text: 'Cancel' },
+                        {
+                          text: '<b>I\'m sure dude</b>',
+                          type: 'button-positive',
+                          onTap: function (e) {
+                          
+                          Block.block($scope.GUID).then(function (response) {
+                          if (response.ID > 0) {
+                              blockPopup.close();
+                              var alertPopup = $ionicPopup.alert({
+                                  title: ReportingConst.flaggedTitle.replace(/0/gi, $scope.username),
+                                  template: ReportingConst.flaggedText
+                              });
+                          }
+                          else {
+                              reportPopup.close();
+                              var alertPopup = $ionicPopup.alert({
+                                  title: 'Oops!',
+                                  template: updatedUserConst.unsuccessfulUpdate
+                              });
+                          }
+                      });
 
+                  }
+              }
+                    ]
+                });
+                blockPopup.then(function (res) {
+                    if(res) {
+                        console.log('You are sure');
+                    } else {
+                        console.log('You are not sure');
+                    }
+                });
+            };
         });
 
         $scope.FlagOptions = [
