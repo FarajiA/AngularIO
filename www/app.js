@@ -1,8 +1,8 @@
 /***** App globals *****/
-//var baseURL = "http://localhost:3536/";
-//var imageURL = "http://localhost:3536/photos/";
-var baseURL = "http://ch-mo.com/";
-var imageURL = "http://ch-mo.com/photos/";
+var baseURL = "http://localhost:3536/";
+var imageURL = "http://localhost:3536/photos/";
+//var baseURL = "http://ch-mo.com/";
+//var imageURL = "http://ch-mo.com/photos/";
 
 var countSet = 10;
 var activityConst = {
@@ -36,7 +36,7 @@ var userDetails = {
     notBroadcasting: 'Not broadcasting'
 };
 var mapsAPI = {
-    url: '//maps.googleapis.com/maps/api/js?v=3&sensor=true'
+    url: 'http://maps.googleapis.com/maps/api/js?v=3&sensor=true'
 };
 var mapsPrompt = {
     title: 'Location services off',
@@ -548,6 +548,25 @@ function RouteMethods($stateProvider, $urlRouterProvider, $ionicConfigProvider) 
           }]
       }
   })
+  .state('blocks', {
+      url: '/blocks',
+      templateUrl: 'components/blocks/blocks.html',
+      controller: 'BlocksController',
+      resolve: {
+          loadExternals: ['$ocLazyLoad', function ($ocLazyLoad) {
+              return $ocLazyLoad.load({
+                  name: 'blocks',
+                  files: [
+                      'components/blocks/blocks.js',
+                      'components/blocks/blocksServices.js'
+                  ]
+              });
+          }],
+          data: ['$ionicSideMenuDelegate', function ($ionicSideMenuDelegate) {
+              $ionicSideMenuDelegate.canDragContent(false);
+          }]
+      }
+  })
   .state('register', {
       url: '/register',
       templateUrl: 'components/register/register.html',
@@ -866,8 +885,6 @@ app.controller('initController', ['$scope', '$timeout', '$interval', '$window', 
        }, false);
     }
         else if (args.action === "turn-off") {
-            //if ($scope.geoWatch)
-            //    $scope.geoWatch.clearWatch();
             backgroundGeoLocation.stop();
         }
     });
@@ -892,9 +909,11 @@ app.controller('initController', ['$scope', '$timeout', '$interval', '$window', 
         $cordovaContacts.find(opts).then(function (allContacts) {
             for (var i = 0; i < allContacts.length; i++) {
                 if (allContacts[i].phoneNumbers != null && allContacts[i].phoneNumbers[0].type === 'mobile') {
-                      var contactphone = allContacts[i].phoneNumbers;
-                      var phonenumber = contactphone[0].value;
-                      var name = allContacts[i].displayName;
+                    var contactphone = allContacts[i].phoneNumbers;
+                    var phonenumber = _.pluck(_.where(contactphone, {'type': 'mobile'}), 'value');
+                    var name = allContacts[i].displayName;
+
+                    var name = allContacts[i].name.formatted;
                       var contact = {
                                name: '',
                                phonenumber: ''
@@ -975,7 +994,7 @@ document.addEventListener("resume", function () {
     $scope.resImgQuality = 1;
     $scope.selMinSize = 200;
     $scope.resImgSize = 200;
-    //$scope.aspectRatio=1.2;
+                            //$scope.aspectRatio=1.2;
     $scope.onChange = function ($dataURI) {
         $scope.resImageDataURI = $dataURI;
     };
@@ -1043,10 +1062,12 @@ document.addEventListener("resume", function () {
             chunkedMode: false,
             mimeType: "image/png"
         };
-
+        /*
         var params = new Object();
         params.headers = { ChaserGuid: UserObject.data().GUID };
         options.params = params;
+        */
+        options.headers = { ChaserGuid: UserObject.data().GUID };
 
         $ionicPlatform.ready(function () {
             $cordovaFileTransfer.upload(baseURL + "api/fileupload", $scope.resImageDataURI, options)

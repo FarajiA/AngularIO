@@ -1,0 +1,23 @@
+﻿<ion-view title="Blocks">
+    <ion-nav-buttons side="left">
+        <button class="button button-clear ion-chevron-left" ng-click="back()"></button>
+    </ion-nav-buttons>
+
+    <ion-content has-header="true" padding="false" has-bouncing="false" id="blocks">
+
+        <div id="result">
+            <div id="block" class="blocks">
+                <div class="zeroResults blocks" ng-show="blocks.length === 0 && blocksFinished">
+                    <h2>No blocks</h2>
+                </div>
+                <ion-list ng-show="blocks.length > 0">
+                    <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="block in blocks" type="item-text-wrap" ng-click="Unblock(block.GUID)" href="#/main/{{segment}}/{{block.GUID}}">
+                        <img ng-src="{{block.photo && imageURL + block.GUID + '.png' || 'img/default_avatar.png' }}">
+                        <h2>{{block.username}}</h2>
+                    </ion-item>
+                </ion-list>
+                <ion-infinite-scroll ng-if="!noMoBlockers" on-infinite="loadMoreBlockers()" distance="30%"></ion-infinite-scroll>
+           </div>
+        </div>
+</ion-content>
+</ion-view>

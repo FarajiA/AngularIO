@@ -4,9 +4,9 @@
     <meta charset="utf-8">
     <meta http-equiv="cache-control" content="no-cache" />
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
-    <meta http-equiv="Content-Security-Policy" content="img-src 'self' 'unsafe-eval' https: data: http://ch-mo.com;default-src *; script-src 'self' 'unsafe-inline' 'unsafe-eval' *; style-src  'self' 'unsafe-inline' *">
 
-    <title></title>
+    <meta http-equiv="Content-Security-Policy" content="img-src 'self' 'unsafe-eval' https: data: http://ch-mo.com;default-src *; script-src 'self' 'unsafe-inline' 'unsafe-eval' *; style-src  'self' 'unsafe-inline' *">    
+      <title></title>
 
     <link href="lib/ionic/css/ionic.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
@@ -51,6 +51,7 @@
                           <h1 class="title">{{username}}</h1>
                       </div>
                       <ion-list>
+                          <ion-item href="#/blocks" class="item-icon-left" menu-close><i class="icon ion-nuclear"></i> Blocks</ion-item>
                           <ion-item href="#/contacts" ng-click="contactsLoadPage()" class="item-icon-left" menu-close><i class="icon ion-plus-circled"></i> Invite</ion-item>
                           <ion-item href="#" class="item-icon-left" ng-click="logout()"><i class="icon ion-log-out"></i> Logout</ion-item>
 

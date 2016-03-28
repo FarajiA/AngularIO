@@ -164,6 +164,7 @@ ion-content#dash {top: 0px;} */
 #broadcast .broadcasting {background-color: #FECEA8;}
 .userInfo button .spinner-lines {stroke: #fff;position: relative;top: 8px;}
 .userIntro{font-size: 20px;}
+.popover.flagPopover {height:116px;}
 /* Settings Page  */
 .bar-assertive .button.button-clear.settingButtons {font-size:27px}
 form .password {margin: 30px 0 15px;text-align: center;}
