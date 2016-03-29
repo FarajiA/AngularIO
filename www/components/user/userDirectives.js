@@ -1,5 +1,5 @@
 ﻿; (function () {
-    angular.module('App').directive('userChoice', ['$ionicPopup', 'UserObject', 'Decision', 'Block', function ($ionicPopup, UserObject, Decision, Block) {
+    angular.module('App').directive('userChoice', ['$ionicPopup', '$timeout', 'UserObject', 'Decision', 'Block', function ($ionicPopup, $timeout, UserObject, Decision, Block) {
         return {
             restrict: 'A',
             require:'?ngModel',
@@ -45,24 +45,30 @@
                 };
 
                 var UserUnblock = function () {
+                    scope.$apply(function () {
                     var unblockPopup = $ionicPopup.show({
                         title: BlockConst.blockedConfirmTitle,
                         buttons: [
-                            { text: 'Cancel' },
+                            {
+                                text: 'Cancel',
+                                onTap: function (e) {
+                                    scope.symbol = 3;
+                                }
+                            },
                             {
                                 text: '<b>Sure</b>',
                                 type: 'button-positive',
-                                onTap: function (e) {
-                                    scope.$apply(function () {
-                                    Block.DeleteBlock(Block.data().ID).then(function (response) {
+                                onTap: function (e) {                                    
+                                Block.DeleteBlock(Block.data().ID).then(function (response) {                                    
                                         scope.symbol = 0;
                                         elem.attr('data-chasing', false);
                                         unblockPopup.close();
                                     });
-                                    });
-                                }
+                                 
+                               }
                             }
                         ]
+                       });
                     });
                 };
 

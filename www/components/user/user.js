@@ -51,7 +51,6 @@
                           latitude: $scope.user.latitude,
                           longitude: $scope.user.longitude
                       };
-                      geoIndex++;
                   });
             });
             return d.promise;
@@ -112,12 +111,13 @@
                     UserObject.setBlocked(response.ID > 0);
                     if (response.ID > 0) {
                         $scope.isChasing = $scope.symbol = 3;
+                        $scope.blockText = activityConst.unblock;
                     }
                     else {
                         $scope.isChasing = $scope.symbol = UserObject.details().isChasing;
+                        $scope.blockText = activityConst.block;
                     }
-              
-                })
+                });
 
                 $ionicLoading.hide();
                 $scope.$broadcast('scroll.refreshComplete');
@@ -139,13 +139,7 @@
         $scope.openModal = function () {
             $scope.modal.show();
             $scope.mapControl = {};
-            if (!$scope.user.broadcast) {
-                GeoWatchTimer().then(function () {
-                    GoogleMapLoad();
-                });
-            }
-            else
-                GoogleMapLoad();
+            GoogleMapLoad();
         };
 
         $scope.closeModal = function () {
@@ -225,7 +219,6 @@
                 $scope.chaserLink = $scope.chasingLink = '#/main/traffic';
                 $scope.selfIdentity = true;
                 if ($scope.user.broadcast) {
-                    geoIndex = 0
                     $scope.stopCoords = function () {
                         $interval.cancel($scope.interval);
                     };
@@ -257,11 +250,8 @@
                 $scope.$watch("broadcasting", function (newValue, oldValue) {
                     if (newValue) {
                         if (!$scope.user.broadcast && ($scope.isChasing === 1 || !$scope.private)) {
-                            if ($scope.modal.isShown())
-                                geoIndex = 1;
-                            else
-                                geoIndex = 0;
-                            GeoWatchTimer();
+                           // if ($scope.modal.isShown())
+                                GeoWatchTimer();
                         }
                         else {
                             $scope.chaserMarker = {
@@ -333,46 +323,57 @@
                 
             };
 
-            $scope.blockUser = function () {
-                $scope.popover.hide();
+        $scope.blockAction = function () {
+            $scope.popover.hide();
+            if (UserObject.getBlocked()) {
+                $timeout(function () {
+                    angular.element(document.querySelector('#btnDecision')).triggerHandler('click');
+                }, 100);
+            }
+            else {
                 var blockPopup = $ionicPopup.show({
                     title: BlockConst.blockedConfirmTitle,
                     buttons: [
-                        { text: 'Cancel' },
                         {
-                          text: '<b>Sure</b>',
-                          type: 'button-positive',
-                          onTap: function (e) {
-                          
-                          Block.block($scope.GUID).then(function (response) {
-                          if (response.ID > 0) {
-                              blockPopup.close();
-                              var alertPopup = $ionicPopup.alert({
-                                  title: BlockConst.blockedCompletedTitle.replace(/0/gi, $scope.username),
-                                  template: BlockConst.blockedCompletedText
-                              });
-                              Traffic.unfollow($scope.GUID).then(function (response) {
-                                  var callback = response;
-                                  $scope.$emit('emit_Chasers', { action: "chasers" });
-                              });
-                           
+                            text: 'Cancel'
+                        },
+                        {
+                            text: '<b>Sure</b>',
+                            type: 'button-positive',
+                            onTap: function (e) {
 
-                              
-                          }
-                          else {
-                              blockPopup.close();
-                              var alertPopup = $ionicPopup.alert({
-                                  title: 'Oops!',
-                                  template: updatedUserConst.unsuccessfulUpdate
-                              });
-                          }
-                      });
-                  }
-              }
+                                Block.block($scope.GUID).then(function (response) {
+                                    $ionicLoading.hide();
+                                    if (response.ID > 0) {
+                                        blockPopup.close();
+                                        var alertPopup = $ionicPopup.alert({
+                                            title: BlockConst.blockedCompletedTitle.replace(/0/gi, $scope.username),
+                                            template: BlockConst.blockedCompletedText
+                                        });
+                                        if ($scope.isChasing === 1)
+                                            $scope.noChasers--;
+                                        scope.$apply(function () {
+                                            $scope.$emit('emit_Chasers', { action: "chasers" });
+                                            $scope.$emit('emit_Chasers', { action: "chasing" });
+                                        });
+                                        getUserRequest();
+                                    }
+                                    else {
+                                        blockPopup.close();
+                                        var alertPopup = $ionicPopup.alert({
+                                            title: 'Oops!',
+                                            template: updatedUserConst.unsuccessfulUpdate
+                                        });
+                                    }
+                                });
+                            }
+
+                        }
                     ]
                 });
-            };
-        });
+            }
+        }
+     });
 
         $scope.FlagOptions = [
             { text: "Inappropriate image", value: "img" },

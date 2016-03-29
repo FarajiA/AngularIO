@@ -9,7 +9,8 @@ var activityConst = {
     following: 'Chasing',
     follow: 'Chase',
     requested: 'Requested',
-    unblock: 'Unblock'
+    unblock: 'Unblock',
+    block: 'Block'
 };
 var updatedUserConst = {
     successfulPassword: 'Password Updated!',
