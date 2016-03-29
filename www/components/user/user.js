@@ -23,7 +23,7 @@
             getUserRequest();
         };
 
-        $scope.alreadyReported = false;
+        $scope.alreadyBlocked = false;
 
         var geoIndex = 0;
         var geoTimer;
@@ -96,19 +96,28 @@
                 $scope.firstname = UserObject.details().firstname;
                 $scope.lastname = UserObject.details().lastname;
                 $scope.noChasers = UserObject.details().noChasers;
-                $scope.noChasing = UserObject.details().noChasing;
-                $scope.isChasing = $scope.symbol = UserObject.details().isChasing;
+                $scope.noChasing = UserObject.details().noChasing;                
                 $scope.private = UserObject.details().isprivate;
                 $scope.broadcasting = UserObject.details().broadcast;
                 $scope.longitude = Number(UserObject.details().longitude);
                 $scope.latitude = Number(UserObject.details().latitude);
                 $scope.photo = UserObject.details().photo;
-
-                Report.Flagged($scope.GUID, UserObject.data().GUID).then(function (response) {
-                    var report = Report.data();
-                    $scope.alreadyReported = (response.ID > 0)
-                    console.log("Has user reported this user: " + response);
+                /*
+                Report.Flagged($scope.GUID, UserObject.data().GUID).then(function (response) {                    
+                    $scope.alreadyReported = (response.ID > 0);
                 });
+                */
+
+                Block.blockExists($scope.GUID).then(function (response) {
+                    UserObject.setBlocked(response.ID > 0);
+                    if (response.ID > 0) {
+                        $scope.isChasing = $scope.symbol = 3;
+                    }
+                    else {
+                        $scope.isChasing = $scope.symbol = UserObject.details().isChasing;
+                    }
+              
+                })
 
                 $ionicLoading.hide();
                 $scope.$broadcast('scroll.refreshComplete');
@@ -331,7 +340,7 @@
                     buttons: [
                         { text: 'Cancel' },
                         {
-                          text: '<b>I\'m sure dude</b>',
+                          text: '<b>Sure</b>',
                           type: 'button-positive',
                           onTap: function (e) {
                           
@@ -339,29 +348,28 @@
                           if (response.ID > 0) {
                               blockPopup.close();
                               var alertPopup = $ionicPopup.alert({
-                                  title: ReportingConst.flaggedTitle.replace(/0/gi, $scope.username),
-                                  template: ReportingConst.flaggedText
+                                  title: BlockConst.blockedCompletedTitle.replace(/0/gi, $scope.username),
+                                  template: BlockConst.blockedCompletedText
                               });
+                              Traffic.unfollow($scope.GUID).then(function (response) {
+                                  var callback = response;
+                                  $scope.$emit('emit_Chasers', { action: "chasers" });
+                              });
+                           
+
+                              
                           }
                           else {
-                              reportPopup.close();
+                              blockPopup.close();
                               var alertPopup = $ionicPopup.alert({
                                   title: 'Oops!',
                                   template: updatedUserConst.unsuccessfulUpdate
                               });
                           }
                       });
-
                   }
               }
                     ]
-                });
-                blockPopup.then(function (res) {
-                    if(res) {
-                        console.log('You are sure');
-                    } else {
-                        console.log('You are not sure');
-                    }
                 });
             };
         });

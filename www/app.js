@@ -8,7 +8,8 @@ var countSet = 10;
 var activityConst = {
     following: 'Chasing',
     follow: 'Chase',
-    requested: 'Requested'
+    requested: 'Requested',
+    unblock: 'Unblock'
 };
 var updatedUserConst = {
     successfulPassword: 'Password Updated!',
@@ -251,7 +252,8 @@ function RouteMethods($stateProvider, $urlRouterProvider, $ionicConfigProvider) 
                             'lib/angular-google-maps.js',
                             'components/user/userServices.js',
                             'components/user/user.js',
-                            'components/user/userDirectives.js'
+                            'components/user/userDirectives.js',
+                            'components/blocks/blocksServices.js'
                         ]
                     });
                 }],
@@ -346,7 +348,8 @@ function RouteMethods($stateProvider, $urlRouterProvider, $ionicConfigProvider) 
                             'lib/angular-google-maps.js',
                             'components/user/userServices.js',
                             'components/user/user.js',
-                            'components/user/userDirectives.js'
+                            'components/user/userDirectives.js',
+                            'components/blocks/blocksServices.js'
                         ]
                     });
                 }],
@@ -442,7 +445,8 @@ function RouteMethods($stateProvider, $urlRouterProvider, $ionicConfigProvider) 
                             'lib/angular-google-maps.js',
                             'components/user/userServices.js',
                             'components/user/user.js',
-                            'components/user/userDirectives.js'
+                            'components/user/userDirectives.js',
+                            'components/blocks/blocksServices.js'
                         ]
                     });
                 }],
@@ -618,6 +622,9 @@ app.factory('UserObject', ['$http', '$q', 'localStorageService', '$rootScope', f
     var data = [];
     var detailedUser = [];
     var UserObject = {};
+    var block = {
+        blocked: false
+    };
 
     var _authentication = function() {
         var authData = localStorageService.get('authorizationData');
@@ -722,6 +729,14 @@ app.factory('UserObject', ['$http', '$q', 'localStorageService', '$rootScope', f
             console.log("Request failed " + status);
         });
         return deffered.promise;
+    };
+
+    UserObject.setBlocked = function (set) {
+        block.blocked = set;
+    };
+
+    UserObject.getBlocked = function () {
+        return block.blocked;
     };
 
     UserObject.details = function() { return detailedUser; };

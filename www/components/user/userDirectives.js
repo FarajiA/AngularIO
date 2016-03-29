@@ -1,5 +1,5 @@
 ﻿; (function () {
-    angular.module('App').directive('userChoice', ['UserObject', 'Decision', function (UserObject, Decision) {
+    angular.module('App').directive('userChoice', ['$ionicPopup', 'UserObject', 'Decision', 'Block', function ($ionicPopup, UserObject, Decision, Block) {
         return {
             restrict: 'A',
             require:'?ngModel',
@@ -44,8 +44,30 @@
                     });
                 };
 
+                var UserUnblock = function () {
+                    var unblockPopup = $ionicPopup.show({
+                        title: BlockConst.blockedConfirmTitle,
+                        buttons: [
+                            { text: 'Cancel' },
+                            {
+                                text: '<b>Sure</b>',
+                                type: 'button-positive',
+                                onTap: function (e) {
+                                    scope.$apply(function () {
+                                    Block.DeleteBlock(Block.data().ID).then(function (response) {
+                                        scope.symbol = 0;
+                                        elem.attr('data-chasing', false);
+                                        unblockPopup.close();
+                                    });
+                                    });
+                                }
+                            }
+                        ]
+                    });
+                };
+
                 scope.$watch(attrs.ngModel, function (newValue, oldValue) {
-                    if (newValue >= 0 && newValue < 3) {
+                    if (newValue >= 0 && newValue < 4) {
                         scope.loadingFollow = false;
                     }
                         switch (newValue) {
@@ -61,16 +83,21 @@
                                 elem.attr('data-chasing', "requested").attr("disabled", "disabled");
                                 scope.isFollowing = activityConst.requested;
                                 break;
+                            case 3:
+                                elem.attr('data-chasing', "unblock");
+                                scope.isFollowing = activityConst.unblock;
+                                break;
                         }
                 });
 
                 elem.on('click', function (e) {
                     scope.$apply(function () {
-                        scope.symbol = 3;
+                        scope.symbol = 4;
                         scope.loadingFollow = true;
                     });
-                 
-                    if (UserObject.details().isprivate && UserObject.details().isChasing == 0)
+                    if (UserObject.getBlocked())
+                        UserUnblock();
+                    else if (UserObject.details().isprivate && UserObject.details().isChasing == 0)
                         UserRequest();
                     else if (!UserObject.details().isprivate && UserObject.details().isChasing == 1)
                         UserUnfollow();

@@ -15,7 +15,7 @@
                     <a class="button" href='{{chaserLink}}'><span>{{noChasers}}</span>Chasers</a>
                     <a class="button" href='{{chasingLink}}'><span>{{noChasing}}</span>Chasing</a>
                 </div>
-                <button user-choice ng-model="symbol" ng-disabled="selfIdentity" class="button button-block icon" ng-class="{'ion-star':symbol == 0 || symbol == 1 ,'ion-paper-airplane':symbol == 2 }">
+                <button user-choice ng-model="symbol" ng-disabled="selfIdentity" class="button button-block icon" ng-class="{'ion-star':symbol == 0 || symbol == 1 ,'ion-paper-airplane':symbol == 2,'ion-nuclear':symbol == 3}">
                     <ion-spinner icon="lines" ng-show="loadingFollow"></ion-spinner>
                     {{isFollowing}}
                 </button>
