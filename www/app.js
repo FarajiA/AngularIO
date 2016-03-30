@@ -132,7 +132,11 @@ app.run(function ($ionicPlatform, $ionicSideMenuDelegate, $rootScope, UserObject
    
     $rootScope.$on('emit_UserView', function (event, args) {
         $rootScope.$broadcast('turnOn_locationWatch', args);
-    });   
+    });
+
+    $rootScope.$on('emit_Chasers_Block', function (event, args) {
+        $rootScope.$broadcast('update_Chasers_block', args);
+    });
 
     UserObject.fillAuthData();
 

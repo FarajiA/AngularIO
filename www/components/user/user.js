@@ -246,7 +246,6 @@
         $scope.$on('turnOn_locationWatch', function (event, args) {
             if (args.action === "turn-on") {
                 getUserRequest();
-
                 $scope.$watch("broadcasting", function (newValue, oldValue) {
                     if (newValue) {
                         if (!$scope.user.broadcast && ($scope.isChasing === 1 || !$scope.private)) {
@@ -352,8 +351,8 @@
                                         });
                                         if ($scope.isChasing === 1)
                                             $scope.noChasers--;
-                                        scope.$apply(function () {
-                                            $scope.$emit('emit_Chasers', { action: "chasers" });
+                                        $scope.$apply(function () {
+                                            $scope.$emit('emit_Chasers', { action: "chasing" });
                                             $scope.$emit('emit_Chasers', { action: "chasing" });
                                         });
                                         getUserRequest();
