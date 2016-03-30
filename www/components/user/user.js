@@ -1,8 +1,8 @@
 ﻿; (function () {
     var app = angular.module('App');
     app.requires.push('uiGmapgoogle-maps');
-    app.controller('UserController', ['$scope', '$q', '$timeout', 'UserObject', '$stateParams', 'Decision', '$location', '$ionicModal', '$interval', 'uiGmapGoogleMapApi', 'uiGmapIsReady', '$cordovaGeolocation', '$ionicPopup', '$ionicPopover', '$ionicPlatform', '$ionicLoading', 'GeoAlert', 'chaserBroadcast', 'UserView', 'Report','Block',
-    function ($scope, $q, $timeout, UserObject, $stateParams, Decision, $location, $ionicModal, $interval, GoogleMapApi, uiGmapIsReady, $cordovaGeolocation, $ionicPopup, $ionicPopover, $ionicPlatform, $ionicLoading, GeoAlert, chaserBroadcast, UserView, Report, Block) {
+    app.controller('UserController', ['$scope','$rootScope', '$q', '$timeout', 'UserObject', '$stateParams', 'Decision', '$location', '$ionicModal', '$interval', 'uiGmapGoogleMapApi', 'uiGmapIsReady', '$cordovaGeolocation', '$ionicPopup', '$ionicPopover', '$ionicPlatform', '$ionicLoading', 'GeoAlert', 'chaserBroadcast', 'UserView', 'Report','Block',
+    function ($scope,$rootScope, $q, $timeout, UserObject, $stateParams, Decision, $location, $ionicModal, $interval, GoogleMapApi, uiGmapIsReady, $cordovaGeolocation, $ionicPopup, $ionicPopover, $ionicPlatform, $ionicLoading, GeoAlert, chaserBroadcast, UserView, Report, Block) {
         
         var userID = $stateParams.userId;
         $scope.imageURL = imageURL;
@@ -313,14 +313,12 @@
                                   template: updatedUserConst.unsuccessfulUpdate
                               });
                           }
-                      });
-                      
+                      });                      
                   }
               }
             ]
         });
-                
-            };
+      };
 
         $scope.blockAction = function () {
             $scope.popover.hide();
@@ -340,7 +338,6 @@
                             text: '<b>Sure</b>',
                             type: 'button-positive',
                             onTap: function (e) {
-
                                 Block.block($scope.GUID).then(function (response) {
                                     $ionicLoading.hide();
                                     if (response.ID > 0) {
@@ -349,12 +346,14 @@
                                             title: BlockConst.blockedCompletedTitle.replace(/0/gi, $scope.username),
                                             template: BlockConst.blockedCompletedText
                                         });
-                                        if ($scope.isChasing === 1)
-                                            $scope.noChasers--;
-                                        $scope.$apply(function () {
-                                            $scope.$emit('emit_Chasers', { action: "chasing" });
-                                            $scope.$emit('emit_Chasers', { action: "chasing" });
+
+                                        alertPopup.then(function (res) {
+                                            $scope.$emit('emit_Chasers_Block', { action: true });
                                         });
+
+                                        $scope.$emit('emit_Activity', { action: true });
+                                        
+
                                         getUserRequest();
                                     }
                                     else {
@@ -366,12 +365,11 @@
                                     }
                                 });
                             }
-
                         }
                     ]
                 });
             }
-        }
+        };
      });
 
         $scope.FlagOptions = [

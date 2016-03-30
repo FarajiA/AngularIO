@@ -5,11 +5,13 @@
 
         User.chasers = function (index, guid) {
             var deffered = $q.defer();
-
-            $http.get(baseURL + "api/chasers/" + guid + "/" + index + "/" + countSet)
+            $http.get(baseURL + "api/chasers/" + guid + "/" + index + "/" + countSet,                
+                {
+                    headers : {"BlockGuid" : UserObject.data().GUID}
+                })
             .success(function (d) {
                 data = d;
-                deffered.resolve();
+                deffered.resolve(d);
             })
             .error(function (data, status) {
                 console.log("Request failed " + status);

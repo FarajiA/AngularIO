@@ -60,10 +60,17 @@
                                 type: 'button-positive',
                                 onTap: function (e) {                                    
                                 Block.DeleteBlock(Block.data().ID).then(function (response) {                                    
+                                    unblockPopup.close();
+                                    if (response === 1) {
                                         scope.symbol = 0;
-                                        elem.attr('data-chasing', false);
-                                        unblockPopup.close();
-                                    });
+                                        elem.attr('data-chasing', false);                                        
+                                    } else {
+                                        var alertPopup = $ionicPopup.alert({
+                                            title: 'Whoops!',
+                                            template: updatedUserConst.unsuccessfulUpdate
+                                        });
+                                    }
+                                });
                                  
                                }
                             }

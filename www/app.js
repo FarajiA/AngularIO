@@ -65,7 +65,7 @@ var ReportingConst = {
 var BlockConst = {
     blockedConfirmTitle: 'Are you sure?',
     blockedCompletedTitle: '0 has been blocked!',
-    blockedCompletedText: 'This user will no longer be able to view your profile or location. Thanks.'
+    blockedCompletedText: 'This user will no longer be able to view your profile or location.'
 }
 
 function _isEmpty(object) {
@@ -136,6 +136,10 @@ app.run(function ($ionicPlatform, $ionicSideMenuDelegate, $rootScope, UserObject
 
     $rootScope.$on('emit_Chasers_Block', function (event, args) {
         $rootScope.$broadcast('update_Chasers_block', args);
+    });
+
+    $rootScope.$on('emit_Activity', function (event, args) {
+        $rootScope.$broadcast('update_activity', args);
     });
 
     UserObject.fillAuthData();
@@ -219,6 +223,7 @@ function RouteMethods($stateProvider, $urlRouterProvider, $ionicConfigProvider) 
     })
         .state('main.traffic', {
             url: '/traffic',
+            cache: false,
             views: {
                 'main-traffic': {
                     templateUrl: 'components/traffic/traffic.html',
@@ -315,6 +320,7 @@ function RouteMethods($stateProvider, $urlRouterProvider, $ionicConfigProvider) 
         })
         .state('main.activity', {
             url: '/activity',
+            cache: false,
             views: {
                 'main-activity': {
                     templateUrl: 'components/activity/activity.html',
