@@ -13,8 +13,7 @@
 
         $scope.back = function () {
             $state.go('main.dash');
-        };
-        
+        };        
 
         $scope.Unblock = function (ID, username, index) {
             var confirmPopup = $ionicPopup.confirm({
@@ -33,7 +32,6 @@
                             });
                         }
                     });
-
                 }
             });
         }

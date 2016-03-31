@@ -576,6 +576,7 @@ function RouteMethods($stateProvider, $urlRouterProvider, $ionicConfigProvider) 
   })
   .state('blocks', {
       url: '/blocks',
+      cache: false,
       templateUrl: 'components/blocks/blocks.html',
       controller: 'BlocksController',
       resolve: {
