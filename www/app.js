@@ -65,7 +65,9 @@ var ReportingConst = {
 var BlockConst = {
     blockedConfirmTitle: 'Are you sure?',
     blockedCompletedTitle: '0 has been blocked!',
-    blockedCompletedText: 'This user will no longer be able to view your profile or location.'
+    blockedCompletedText: 'This user will no longer be able to view your profile or location.',
+    unblockConfirmTitle: 'Unblock 0?',
+    unblockOops: 'Oops! Something went wrong, try again.'
 }
 
 function _isEmpty(object) {

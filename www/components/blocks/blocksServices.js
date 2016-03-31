@@ -7,6 +7,7 @@
             var deffered = $q.defer();
             $http.get(baseURL + "api/blocks/" + UserObject.data().GUID + "/" + index + "/" + countSet)
             .success(function (d) {
+                data = d;
                 deffered.resolve(d);
             })
             .error(function (data, status) {

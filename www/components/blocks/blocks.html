@@ -7,13 +7,14 @@
 
         <div id="result">
             <div id="block" class="blocks">
-                <div class="zeroResults blocks" ng-show="blocks.length === 0 && blocksFinished">
+                <div class="zeroResults blocks" ng-show="blocks.length === 0">
                     <h2>No blocks</h2>
                 </div>
                 <ion-list ng-show="blocks.length > 0">
-                    <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="block in blocks" type="item-text-wrap" ng-click="Unblock(block.GUID)" href="#/main/{{segment}}/{{block.GUID}}">
+                    <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="block in blocks" type="item-text-wrap" ng-click="Unblock(block.ID, block.username, $index)">
                         <img ng-src="{{block.photo && imageURL + block.GUID + '.png' || 'img/default_avatar.png' }}">
                         <h2>{{block.username}}</h2>
+                        <p>{{block.firstname}}&nbsp;{{block.lastname}}</p>
                     </ion-item>
                 </ion-list>
                 <ion-infinite-scroll ng-if="!noMoBlockers" on-infinite="loadMoreBlockers()" distance="30%"></ion-infinite-scroll>
