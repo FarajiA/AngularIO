@@ -7,8 +7,8 @@
         var chasersInit = function () {
             $ionicLoading.show();
             $scope.index = 0;
-            Chasers.chasers($scope.index, userID).then(function () {
-                $scope.chasers = Chasers.data().Results;
+            Chasers.chasers($scope.index, userID).then(function (response) {
+                $scope.chasers = response.Results;
                 $scope.index++;
                 $ionicLoading.hide();
             });
@@ -20,8 +20,8 @@
             var chasersNo = Chasers.data().Total;
             var pagingMax = Math.ceil(chasersNo / countSet, 1);
             if ($scope.index < pagingMax && $scope.index > 0) {
-                Chasers.chasers($scope.index, userID).then(function () {
-                    var merged = $scope.chasers.concat(Chasers.data().Results);
+                Chasers.chasers($scope.index, userID).then(function (response) {
+                    var merged = $scope.chasers.concat(response.Results);
                     $scope.chasers = merged;
                     $scope.index++;
                 });

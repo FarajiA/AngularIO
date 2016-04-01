@@ -17,6 +17,10 @@
                 chasingInit();
         });
 
+        $scope.$on('update_Chasers_block', function (event, args) {
+            $scope.doRefresh();
+        });
+
         var chasersInit = function () {            
             $scope.chasersindex = 0;
             Traffic.chasers($scope.chasersindex).then(function (data) {

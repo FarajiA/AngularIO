@@ -71,4 +71,43 @@
         return Broadcast;
     }]);
 
+    angular.module('App').factory('Report', ['$http', '$q', 'UserObject', function ($http, $q, UserObject) {
+        var data = [];
+        var Report = {};
+
+        Report.Flag = function (flagged, snitched, type) {
+            var deffered = $q.defer();
+            var msg = { "ID": "0", "flagged": flagged, "snitched": snitched, "type": type };
+            $http.post(baseURL + "api/flag", msg)
+            .success(function (d) {
+                data = d;
+                deffered.resolve(d);
+            })
+            .error(function (data, status) {
+                console.log("Request failed " + status);
+            });
+            return deffered.promise;
+        };
+
+        Report.Flagged = function (flagged, snitched) {
+            var deffered = $q.defer();
+            $http.get(baseURL + "api/flag/" + flagged + "/" + snitched, {
+                cache: false
+            })
+            .success(function (d) {
+                data = d;
+                deffered.resolve(d);
+            })
+            .error(function (data, status) {
+                console.log("Request failed " + status);
+            });
+            return deffered.promise;
+        };
+
+        Report.data = function () { return data; }
+        return Report;
+    }]);
+
+
+
 })();

@@ -5,6 +5,7 @@
         $scope.showBroadcasters = true;
         $ionicLoading.show();
         $scope.imageURL = imageURL;
+
         $scope.doRefresh = function () {
             activityInit();
             requestInit();
@@ -116,6 +117,9 @@
             }
         };
 
+        $scope.$on('update_activity', function (event, args) {
+            $scope.doRefresh();
+        });
 
     }]);
 })();
