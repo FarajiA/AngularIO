@@ -296,9 +296,11 @@
                   text: '<b>Report</b>',
                   type: 'button-positive',
                   onTap: function (e) {
+                      $ionicLoading.show();
                       var reportResponse;
                       var selected = $scope.selectedReportValue
                       Report.Flag($scope.GUID, UserObject.data().GUID, selected).then(function (response) {
+                          $ionicLoading.hide();
                           if (response.ID > 0) {
                               reportPopup.close();
                               var alertPopup = $ionicPopup.alert({
