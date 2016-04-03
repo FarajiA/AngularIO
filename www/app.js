@@ -1,8 +1,8 @@
 /***** App globals *****/
-var baseURL = "http://localhost:3536/";
-var imageURL = "http://localhost:3536/photos/";
-//var baseURL = "http://ch-mo.com/";
-//var imageURL = "http://ch-mo.com/photos/";
+//var baseURL = "http://localhost:3536/";
+//var imageURL = "http://localhost:3536/photos/";
+var baseURL = "http://ch-mo.com/";
+var imageURL = "http://ch-mo.com/photos/";
 
 var countSet = 10;
 var activityConst = {
@@ -947,13 +947,26 @@ app.controller('initController', ['$scope', '$timeout', '$interval', '$window', 
         $cordovaContacts.find(opts).then(function (allContacts) {
             for (var i = 0; i < allContacts.length; i++) {
                 if (allContacts[i].phoneNumbers != null && allContacts[i].phoneNumbers[0].type === 'mobile') {
+                   
                     var contactphone = allContacts[i].phoneNumbers;
+                    var phonenumber = contactphone[0].value;
+                    var name = allContacts[i].displayName;
+                    /*iphone method 
+                    var phonenumber = _.pluck(_.where(contactphone, { 'type': 'mobile' }), 'value');                                        
+                    var name = allContacts[i].name.formatted;
+                      var contact = {
+                               name: '',
+                               phonenumber: ''
+                      };
+                    */
+                    /* android method */
                     var phonenumber = contactphone[0].value;
                     var name = allContacts[i].displayName;
                       var contact = {
                                name: '',
                                phonenumber: ''
                       };
+                    // end android method */
                       contact.name = name;
                       contact.phonenumber = phonenumber;
                       var idx = $scope.contacts.indexOf(contact);
