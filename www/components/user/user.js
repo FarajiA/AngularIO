@@ -144,8 +144,6 @@
 
         $scope.closeModal = function () {
             $scope.modal.hide();
-            if (!$scope.user.broadcast)
-                $scope.geoWatch.clearWatch();
         };
 
         var chaserPromise = function () {
@@ -233,7 +231,6 @@
         $scope.$on('$ionicView.leave', function () {
             if (!$scope.selfIdentity) {
                 clearGeoWatch();
-                geoIndex = 0;
                 UserView.SetUserPageCurrent(false);
             }
         });

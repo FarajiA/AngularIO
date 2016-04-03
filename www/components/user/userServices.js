@@ -84,6 +84,7 @@
                 deffered.resolve(d);
             })
             .error(function (data, status) {
+                $q.reject(status);
                 console.log("Request failed " + status);
             });
             return deffered.promise;
@@ -99,6 +100,7 @@
                 deffered.resolve(d);
             })
             .error(function (data, status) {
+                $q.reject(status);
                 console.log("Request failed " + status);
             });
             return deffered.promise;
