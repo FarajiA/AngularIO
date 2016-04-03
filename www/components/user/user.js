@@ -315,7 +315,11 @@
                                   template: updatedUserConst.unsuccessfulUpdate
                               });
                           }
-                      });                      
+                      }, function () {
+                          $ionicLoading.hide();
+                      }).finally(function () {
+                          $ionicLoading.hide();
+                      });
                   }
               }
             ]

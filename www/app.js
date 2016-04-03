@@ -1112,10 +1112,13 @@ document.addEventListener("resume", function () {
             mimeType: "image/png"
         };
         
+        /* iPhone header setting
         var params = new Object();
         params.headers = { ChaserGuid: UserObject.data().GUID };
         options.params = params;
-        
+        */
+
+        // android header setting
         options.headers = { ChaserGuid: UserObject.data().GUID };
 
         $ionicPlatform.ready(function () {
