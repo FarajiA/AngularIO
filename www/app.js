@@ -1,8 +1,8 @@
 /***** App globals *****/
-var baseURL = "http://localhost:3536/";
-var imageURL = "http://localhost:3536/photos/";
-//var baseURL = "http://ch-mo.com/";
-//var imageURL = "http://ch-mo.com/photos/";
+//var baseURL = "http://localhost:3536/";
+//var imageURL = "http://localhost:3536/photos/";
+var baseURL = "http://ch-mo.com/";
+var imageURL = "http://ch-mo.com/photos/";
 
 var countSet = 10;
 var activityConst = {
