@@ -1,4 +1,7 @@
 ﻿<ion-view>
+    <ion-nav-buttons side="right">
+        <button class="button button-icon icon ion-android-more-vertical" ng-click="popover.show($event)"></button>
+    </ion-nav-buttons>
 <ion-nav-title>{{title}}</ion-nav-title>
     <ion-content has-header="true" padding="true" has-bouncing="true">
         <ion-refresher spinner="lines" on-refresh="doRefresh()" disable-pulling-rotation="true">
@@ -12,7 +15,7 @@
                     <a class="button" href='{{chaserLink}}'><span>{{noChasers}}</span>Chasers</a>
                     <a class="button" href='{{chasingLink}}'><span>{{noChasing}}</span>Chasing</a>
                 </div>
-                <button user-choice ng-model="symbol" ng-disabled="selfIdentity" class="button button-block icon" ng-class="{'ion-star':symbol == 0 || symbol == 1 ,'ion-paper-airplane':symbol == 2 }">
+                <button id="btnDecision" user-choice ng-model="symbol" ng-disabled="selfIdentity" class="button button-block icon" ng-class="{'ion-star':symbol == 0 || symbol == 1 ,'ion-paper-airplane':symbol == 2,'ion-nuclear':symbol == 3}">
                     <ion-spinner icon="lines" ng-show="loadingFollow"></ion-spinner>
                     {{isFollowing}}
                 </button>
@@ -44,4 +47,20 @@
     </ion-content>
   </ion-modal-view>
 </script>
+
+    <script id="menuPopover.html" type="text/ng-template">
+        <ion-popover-view class="flagPopover">
+            <ion-content>
+                <div class="list">
+                    <a class="item" ng-click="flagUser()">
+                        Report
+                    </a>
+                    <a class="item" ng-disabled="alreadyBlocked" ng-click="blockAction()">
+                        {{blockText}}
+                    </a>
+                </div>
+            </ion-content>
+        </ion-popover-view>
+    </script>
+
 </ion-view>

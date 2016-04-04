@@ -1,10 +1,9 @@
 ﻿; (function () {
     var app = angular.module('App');
     app.requires.push('uiGmapgoogle-maps');
-    app.controller('UserController', ['$scope', '$q', '$timeout', 'UserObject', '$stateParams', 'Decision', '$location', '$ionicModal', '$interval', 'uiGmapGoogleMapApi', 'uiGmapIsReady', '$cordovaGeolocation', '$ionicPopup', '$ionicPlatform', '$ionicLoading', 'GeoAlert', 'chaserBroadcast', 'UserView',
-    function ($scope, $q, $timeout, UserObject, $stateParams, Decision, $location, $ionicModal, $interval, GoogleMapApi, uiGmapIsReady, $cordovaGeolocation, $ionicPopup, $ionicPlatform, $ionicLoading, GeoAlert, chaserBroadcast, UserView) {
-
-
+    app.controller('UserController', ['$scope','$rootScope', '$q', '$timeout', 'UserObject', '$stateParams', 'Decision', '$location', '$ionicModal', '$interval', 'uiGmapGoogleMapApi', 'uiGmapIsReady', '$cordovaGeolocation', '$ionicPopup', '$ionicPopover', '$ionicPlatform', '$ionicLoading', 'GeoAlert', 'chaserBroadcast', 'UserView', 'Report','Block',
+    function ($scope,$rootScope, $q, $timeout, UserObject, $stateParams, Decision, $location, $ionicModal, $interval, GoogleMapApi, uiGmapIsReady, $cordovaGeolocation, $ionicPopup, $ionicPopover, $ionicPlatform, $ionicLoading, GeoAlert, chaserBroadcast, UserView, Report, Block) {
+        
         var userID = $stateParams.userId;
         $scope.imageURL = imageURL;
         var chaserPromise;
@@ -23,6 +22,8 @@
         $scope.doRefresh = function () {
             getUserRequest();
         };
+
+        $scope.alreadyBlocked = false;
 
         var geoIndex = 0;
         var geoTimer;
@@ -50,9 +51,6 @@
                           latitude: $scope.user.latitude,
                           longitude: $scope.user.longitude
                       };
-                      geoIndex++;
-                      if (geoIndex === 1)
-                          $scope.geoWatch.clearWatch();
                   });
             });
             return d.promise;
@@ -97,13 +95,29 @@
                 $scope.firstname = UserObject.details().firstname;
                 $scope.lastname = UserObject.details().lastname;
                 $scope.noChasers = UserObject.details().noChasers;
-                $scope.noChasing = UserObject.details().noChasing;
-                $scope.isChasing = $scope.symbol = UserObject.details().isChasing;
+                $scope.noChasing = UserObject.details().noChasing;                
                 $scope.private = UserObject.details().isprivate;
                 $scope.broadcasting = UserObject.details().broadcast;
                 $scope.longitude = Number(UserObject.details().longitude);
                 $scope.latitude = Number(UserObject.details().latitude);
                 $scope.photo = UserObject.details().photo;
+                /*
+                Report.Flagged($scope.GUID, UserObject.data().GUID).then(function (response) {                    
+                    $scope.alreadyReported = (response.ID > 0);
+                });
+                */
+
+                Block.blockExists($scope.GUID).then(function (response) {
+                    UserObject.setBlocked(response.ID > 0);
+                    if (response.ID > 0) {
+                        $scope.isChasing = $scope.symbol = 3;
+                        $scope.blockText = activityConst.unblock;
+                    }
+                    else {
+                        $scope.isChasing = $scope.symbol = UserObject.details().isChasing;
+                        $scope.blockText = activityConst.block;
+                    }
+                });
 
                 $ionicLoading.hide();
                 $scope.$broadcast('scroll.refreshComplete');
@@ -125,19 +139,11 @@
         $scope.openModal = function () {
             $scope.modal.show();
             $scope.mapControl = {};
-            if (!$scope.user.broadcast) {
-                GeoWatchTimer().then(function () {
-                    GoogleMapLoad();
-                });
-            }
-            else
-                GoogleMapLoad();
+            GoogleMapLoad();
         };
 
         $scope.closeModal = function () {
             $scope.modal.hide();
-            if (!$scope.user.broadcast)
-                $scope.geoWatch.clearWatch();
         };
 
         var chaserPromise = function () {
@@ -211,7 +217,6 @@
                 $scope.chaserLink = $scope.chasingLink = '#/main/traffic';
                 $scope.selfIdentity = true;
                 if ($scope.user.broadcast) {
-                    geoIndex = 0
                     $scope.stopCoords = function () {
                         $interval.cancel($scope.interval);
                     };
@@ -226,7 +231,6 @@
         $scope.$on('$ionicView.leave', function () {
             if (!$scope.selfIdentity) {
                 clearGeoWatch();
-                geoIndex = 0;
                 UserView.SetUserPageCurrent(false);
             }
         });
@@ -239,15 +243,11 @@
         $scope.$on('turnOn_locationWatch', function (event, args) {
             if (args.action === "turn-on") {
                 getUserRequest();
-
                 $scope.$watch("broadcasting", function (newValue, oldValue) {
                     if (newValue) {
                         if (!$scope.user.broadcast && ($scope.isChasing === 1 || !$scope.private)) {
-                            if ($scope.modal.isShown())
-                                geoIndex = 1;
-                            else
-                                geoIndex = 0;
-                            GeoWatchTimer();
+                           // if ($scope.modal.isShown())
+                                GeoWatchTimer();
                         }
                         else {
                             $scope.chaserMarker = {
@@ -274,5 +274,121 @@
             }
         });
 
+        $ionicPopover.fromTemplateUrl('menuPopover.html', {
+            scope: $scope,
+        }).then(function (popover) {
+            $scope.popover = popover;
+
+        $scope.flagUser = function () {
+                $scope.popover.hide();
+
+        var reportPopup = $ionicPopup.show({
+            templateUrl: 'components/user/report-modal.html',
+            cssClass: 'reportUserPopup',
+            title: 'Report',
+            scope: $scope,
+            buttons: [
+              { text: 'Cancel' },
+              {
+                  text: '<b>Report</b>',
+                  type: 'button-positive',
+                  onTap: function (e) {
+                      $ionicLoading.show();
+                      var reportResponse;
+                      var selected = $scope.selectedReportValue
+                      Report.Flag($scope.GUID, UserObject.data().GUID, selected).then(function (response) {
+                          $ionicLoading.hide();
+                          if (response.ID > 0) {
+                              reportPopup.close();
+                              var alertPopup = $ionicPopup.alert({
+                                  title: ReportingConst.flaggedTitle.replace(/0/gi, $scope.username),
+                                  template: ReportingConst.flaggedText
+                              });
+                          }
+                          else {
+                              reportPopup.close();
+                              var alertPopup = $ionicPopup.alert({
+                                  title: 'Whoops!',
+                                  template: updatedUserConst.unsuccessfulUpdate
+                              });
+                          }
+                      }, function () {
+                          $ionicLoading.hide();
+                      }).finally(function () {
+                          $ionicLoading.hide();
+                      });
+                  }
+              }
+            ]
+        });
+      };
+
+        $scope.blockAction = function () {
+            $scope.popover.hide();
+            if (UserObject.getBlocked()) {
+                $timeout(function () {
+                    angular.element(document.querySelector('#btnDecision')).triggerHandler('click');
+                }, 100);
+            }
+            else {
+                var blockPopup = $ionicPopup.show({
+                    title: BlockConst.blockedConfirmTitle,
+                    buttons: [
+                        {
+                            text: 'Cancel'
+                        },
+                        {
+                            text: '<b>Sure</b>',
+                            type: 'button-positive',
+                            onTap: function (e) {
+                                Block.block($scope.GUID).then(function (response) {
+                                    $ionicLoading.hide();
+                                    if (response.ID > 0) {
+                                        blockPopup.close();
+                                        var alertPopup = $ionicPopup.alert({
+                                            title: BlockConst.blockedCompletedTitle.replace(/0/gi, $scope.username),
+                                            template: BlockConst.blockedCompletedText
+                                        });
+
+                                        alertPopup.then(function (res) {
+                                            $scope.$emit('emit_Chasers_Block', { action: true });
+                                        });
+
+                                        $scope.$emit('emit_Activity', { action: true });
+                                        
+
+                                        getUserRequest();
+                                    }
+                                    else {
+                                        blockPopup.close();
+                                        var alertPopup = $ionicPopup.alert({
+                                            title: 'Oops!',
+                                            template: updatedUserConst.unsuccessfulUpdate
+                                        });
+                                    }
+                                });
+                            }
+                        }
+                    ]
+                });
+            }
+        };
+     });
+
+        $scope.FlagOptions = [
+            { text: "Inappropriate image", value: "img" },
+            { text: "Username or Name", value: "name" },
+            { text: "Being an idiot", value: "idiot" },
+            { text: "All the above", value: "all" }
+        ];
+
+        $scope.ReportChange = function (item) {
+            $scope.selectedReportValue = item.value;
+        };
+
+        $scope.reportdata = {
+            option: 'img'
+        };
+        
     }]);
 })();

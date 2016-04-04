@@ -139,7 +139,8 @@ label.item-input { height: 60px;}
 
 /*  Register Page */
 .registerForm label.has-error {border-left: 5px solid rgb(204, 37, 17);}
-
+.RegisterWrapper form .legal {width: 100%;text-align: center;display:inline-block;padding: 0 20px;}
+.RegisterWrapper form .legal a {text-decoration:none;color:#fd6391;}
 /*Dash Page
 ion-content#dash {top: 0px;} */
 .dashTitle {text-align:center;display: block; padding-top: 8px;}
@@ -161,9 +162,12 @@ ion-content#dash {top: 0px;} */
 .userInfo button[data-chasing="true"]:focus,button[data-chasing="true"].activated { background-color:#42725C;  color:#fff; }
 .userInfo button[data-chasing="requested"] {background-color:#a333a6;  color:#fff;} 
 .userInfo button[data-chasing="requested"].activated,button[data-chasing="requested"]:focus {background-color:#6c226e;}
+.userInfo button[data-chasing="unblock"]{border: #355C7D solid 1px; }
+.userInfo button[data-chasing="unblock"] .spinner-lines {stroke: grey}
 #broadcast .broadcasting {background-color: #FECEA8;}
 .userInfo button .spinner-lines {stroke: #fff;position: relative;top: 8px;}
 .userIntro{font-size: 20px;}
+.popover.flagPopover {height:116px;}
 /* Settings Page  */
 .bar-assertive .button.button-clear.settingButtons {font-size:27px}
 form .password {margin: 30px 0 15px;text-align: center;}

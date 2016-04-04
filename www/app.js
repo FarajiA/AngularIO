@@ -8,7 +8,9 @@ var countSet = 10;
 var activityConst = {
     following: 'Chasing',
     follow: 'Chase',
-    requested: 'Requested'
+    requested: 'Requested',
+    unblock: 'Unblock',
+    block: 'Block'
 };
 var updatedUserConst = {
     successfulPassword: 'Password Updated!',
@@ -46,16 +48,28 @@ var mapsPrompt = {
     NolongerBroadcasting : 'Chaser is no longer broadcasting'
 };
 
-
-
 var dashPrompt = {
     title: 'Location services must be on'
 };
 var SMS = {
     error: 'Problem sending SMS to 0',
     success: 'Invites sent homie',
-    inviteContent: 'Add me on Chaser! Username: 0 http://chasermobile.com/invite'
+    inviteContent: 'Add me on Chaser! Username: 0 http://chasertheapp.com/invite'
 };
+
+var ReportingConst = {
+    flaggedTitle: '0 reported!',
+    flaggedText: 'All reports are taken seriously and will be reviewed. Thanks.'
+}
+
+var BlockConst = {
+    blockedConfirmTitle: 'Are you sure?',
+    blockedCompletedTitle: '0 has been blocked!',
+    blockedCompletedText: 'This user will no longer be able to view your profile or location.',
+    unblockConfirmTitle: 'Unblock 0?',
+    unblockOops: 'Oops! Something went wrong, try again.'
+}
+
 function _isEmpty(object) {
     for (var key in object) {
         if (object.hasOwnProperty(key)) {
@@ -108,7 +122,6 @@ app.run(function ($ionicPlatform, $ionicSideMenuDelegate, $rootScope, UserObject
                     StatusBar.styleDefault();
                 }
             }
-
     });
     
     $rootScope.$on('emit_Chasers', function (event, args) {
@@ -121,7 +134,15 @@ app.run(function ($ionicPlatform, $ionicSideMenuDelegate, $rootScope, UserObject
    
     $rootScope.$on('emit_UserView', function (event, args) {
         $rootScope.$broadcast('turnOn_locationWatch', args);
-    });   
+    });
+
+    $rootScope.$on('emit_Chasers_Block', function (event, args) {
+        $rootScope.$broadcast('update_Chasers_block', args);
+    });
+
+    $rootScope.$on('emit_Activity', function (event, args) {
+        $rootScope.$broadcast('update_activity', args);
+    });
 
     UserObject.fillAuthData();
 
@@ -204,6 +225,7 @@ function RouteMethods($stateProvider, $urlRouterProvider, $ionicConfigProvider) 
     })
         .state('main.traffic', {
             url: '/traffic',
+            cache: false,
             views: {
                 'main-traffic': {
                     templateUrl: 'components/traffic/traffic.html',
@@ -242,7 +264,8 @@ function RouteMethods($stateProvider, $urlRouterProvider, $ionicConfigProvider) 
                             'lib/angular-google-maps.js',
                             'components/user/userServices.js',
                             'components/user/user.js',
-                            'components/user/userDirectives.js'
+                            'components/user/userDirectives.js',
+                            'components/blocks/blocksServices.js'
                         ]
                     });
                 }],
@@ -299,6 +322,7 @@ function RouteMethods($stateProvider, $urlRouterProvider, $ionicConfigProvider) 
         })
         .state('main.activity', {
             url: '/activity',
+            cache: false,
             views: {
                 'main-activity': {
                     templateUrl: 'components/activity/activity.html',
@@ -337,7 +361,8 @@ function RouteMethods($stateProvider, $urlRouterProvider, $ionicConfigProvider) 
                             'lib/angular-google-maps.js',
                             'components/user/userServices.js',
                             'components/user/user.js',
-                            'components/user/userDirectives.js'
+                            'components/user/userDirectives.js',
+                            'components/blocks/blocksServices.js'
                         ]
                     });
                 }],
@@ -433,7 +458,8 @@ function RouteMethods($stateProvider, $urlRouterProvider, $ionicConfigProvider) 
                             'lib/angular-google-maps.js',
                             'components/user/userServices.js',
                             'components/user/user.js',
-                            'components/user/userDirectives.js'
+                            'components/user/userDirectives.js',
+                            'components/blocks/blocksServices.js'
                         ]
                     });
                 }],
@@ -548,6 +574,26 @@ function RouteMethods($stateProvider, $urlRouterProvider, $ionicConfigProvider) 
           }]
       }
   })
+  .state('blocks', {
+      url: '/blocks',
+      cache: false,
+      templateUrl: 'components/blocks/blocks.html',
+      controller: 'BlocksController',
+      resolve: {
+          loadExternals: ['$ocLazyLoad', function ($ocLazyLoad) {
+              return $ocLazyLoad.load({
+                  name: 'blocks',
+                  files: [
+                      'components/blocks/blocks.js',
+                      'components/blocks/blocksServices.js'
+                  ]
+              });
+          }],
+          data: ['$ionicSideMenuDelegate', function ($ionicSideMenuDelegate) {
+              $ionicSideMenuDelegate.canDragContent(false);
+          }]
+      }
+  })
   .state('register', {
       url: '/register',
       templateUrl: 'components/register/register.html',
@@ -590,6 +636,9 @@ app.factory('UserObject', ['$http', '$q', 'localStorageService', '$rootScope', f
     var data = [];
     var detailedUser = [];
     var UserObject = {};
+    var block = {
+        blocked: false
+    };
 
     var _authentication = function() {
         var authData = localStorageService.get('authorizationData');
@@ -694,6 +743,14 @@ app.factory('UserObject', ['$http', '$q', 'localStorageService', '$rootScope', f
             console.log("Request failed " + status);
         });
         return deffered.promise;
+    };
+
+    UserObject.setBlocked = function (set) {
+        block.blocked = set;
+    };
+
+    UserObject.getBlocked = function () {
+        return block.blocked;
     };
 
     UserObject.details = function() { return detailedUser; };
@@ -891,16 +948,26 @@ app.controller('initController', ['$scope', '$timeout', '$interval', '$window', 
             for (var i = 0; i < allContacts.length; i++) {
                 if (allContacts[i].phoneNumbers != null && allContacts[i].phoneNumbers[0].type === 'mobile') {
                     var contactphone = allContacts[i].phoneNumbers;
-                    var phonenumber = _.pluck(_.where(contactphone, {'type': 'mobile'}), 'value');
+                    var phonenumber = contactphone[0].value;
                     var name = allContacts[i].displayName;
-
+                    /*iphone method  */
+                    var phonenumber = _.pluck(_.where(contactphone, { 'type': 'mobile' }), 'value');                                        
                     var name = allContacts[i].name.formatted;
                       var contact = {
                                name: '',
                                phonenumber: ''
                       };
-                      contact.name = name;
-                      contact.phonenumber = phonenumber;
+                   
+                    /* android method
+                    var phonenumber = contactphone[0].value;
+                    var name = allContacts[i].displayName;
+                    var contact = {
+                        name: '',
+                        phonenumber: ''
+                    };
+                    // end android method */
+                    contact.name = name;
+                    contact.phonenumber = phonenumber;
                       var idx = $scope.contacts.indexOf(contact);
 
                       if (idx === -1)
@@ -1043,11 +1110,19 @@ document.addEventListener("resume", function () {
             chunkedMode: false,
             mimeType: "image/png"
         };
+<<<<<<< HEAD
         /*
+=======
+        /* iPhone header setting
+>>>>>>> refs/remotes/origin/master
         var params = new Object();
         params.headers = { ChaserGuid: UserObject.data().GUID };
         options.params = params;
         */
+<<<<<<< HEAD
+=======
+        // android header setting
+>>>>>>> refs/remotes/origin/master
         options.headers = { ChaserGuid: UserObject.data().GUID };
 
         $ionicPlatform.ready(function () {

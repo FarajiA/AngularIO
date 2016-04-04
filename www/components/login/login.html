@@ -4,13 +4,13 @@
     <div class="LoginWrapper" ng-class="showLoginForm ? 'loginShow' : 'registerShow'">
         <div class="logo"><img id="logo" ng-src="img/logo.png" /></div>
         <div class="loginform" ng-show="showLoginForm" ng-animate="{enter: 'animate-enter', leave: 'animate-leave'}">
-            <form name="form.loginform" ng-submit="submitLogin(user)" novalidate>
+            <form name="form.loginform" ng-submit="submitLogin(userLogin)" novalidate>
                 <div class="list list-inset">
                     <label class="item item-input">
-                        <input type="text" placeholder="Username / Email" ng-model="user.username" name="username" ng-minlength="2" required>
+                        <input type="text" placeholder="Username / Email" ng-model="userLogin.username" name="username" ng-minlength="2" required>
                     </label>
                     <label class="item item-input">
-                        <input type="password" placeholder="Password" ng-model="user.password" name="password" ng-minlength="2" required>
+                        <input type="password" placeholder="Password" ng-model="userLogin.password" name="password" ng-minlength="2" required>
                     </label>
 
                 </div>
@@ -73,9 +73,9 @@
                         <p ng-message="pwmatch" ng-show="form.registerform.passwordConfirm.$error.pwmatch">Gotta match</p>
                     </div>
                 </div>
-
+                <p class="legal">By clicking Sign Up, you agree to our <a href="http://chasertheapp.com/terms">Terms</a> and that you have read our <a href="http://chasertheapp.com/privacy">Privacy Policy</a></p>
                 <button type="submit" class="button button-full button-outline button-assertive">
-                    Done
+                    Sign Up
                 </button>
             </form>
         </div>

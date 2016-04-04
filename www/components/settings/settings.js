@@ -40,8 +40,7 @@
                                   }
                              } else {
                                   e.preventDefault();
-                             }                                
-                              
+                             }                             
                           }
                       }
                     ]
