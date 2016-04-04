@@ -1110,20 +1110,13 @@ document.addEventListener("resume", function () {
             chunkedMode: false,
             mimeType: "image/png"
         };
-<<<<<<< HEAD
-        /*
-=======
-        /* iPhone header setting
->>>>>>> refs/remotes/origin/master
+        /* iPhone header setting*/
         var params = new Object();
         params.headers = { ChaserGuid: UserObject.data().GUID };
         options.params = params;
-        */
-<<<<<<< HEAD
-=======
+        
         // android header setting
->>>>>>> refs/remotes/origin/master
-        options.headers = { ChaserGuid: UserObject.data().GUID };
+        // options.headers = { ChaserGuid: UserObject.data().GUID };
 
         $ionicPlatform.ready(function () {
             $cordovaFileTransfer.upload(baseURL + "api/fileupload", $scope.resImageDataURI, options)
