@@ -1,6 +1,7 @@
 ﻿; (function () {
     angular.module('App').controller('BlocksController', ['$scope','$state','$ionicLoading','$ionicPopup', 'Block', function ($scope, $state, $ionicLoading, $ionicPopup, Block) {
         
+        $scope.imageURL = imageURL;
         var init = function () {
             $scope.index = 0;
             Block.blocks($scope.index).then(function (response) {
