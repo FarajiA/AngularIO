@@ -139,7 +139,8 @@ LoginWrapper.registerShow {}
 
 /*  Register Page */
 .registerForm label.has-error {border-left: 5px solid rgb(204, 37, 17);}
-
+.RegisterWrapper form .legal {width: 100%;text-align: center;display:inline-block;padding: 0 20px;}
+.RegisterWrapper form .legal a {text-decoration:none;color:#fd6391;}
 /*Dash Page
 ion-content#dash {top: 0px;} */
 .dashTitle {text-align:center;display: block; padding-top: 8px;}
