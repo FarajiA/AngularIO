@@ -825,7 +825,8 @@ app.controller('initController', ['$scope', '$timeout', '$interval', '$window', 
         var savedImage = localStorageService.get('chaserImage');
         $scope.chaser = {};
         if (hasphoto && !savedImage) {
-            convertImgToBase64URL(imageURL + UserObject.data().GUID + ".png", function(base64Img) {
+            var rando = Math.floor(1000 + Math.random() * 9000)
+            convertImgToBase64URL(imageURL + UserObject.data().GUID + ".png?id=" + rando, function (base64Img) {
                 $scope.chaser.savedImage = base64Img;
                 localStorageService.set('chaserImage', $scope.chaser.savedImage);
             }, 'image/png');
