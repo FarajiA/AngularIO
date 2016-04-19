@@ -52,7 +52,7 @@ var dashPrompt = {
     title: 'Location services must be on'
 };
 var SMS = {
-    error: 'Problem sending SMS to 0',
+    error: 'Problem sending SMS',
     success: 'Invites sent homie',
     inviteContent: 'Add me on Chaser! Username: 0 http://chasertheapp.com/invite'
 };
