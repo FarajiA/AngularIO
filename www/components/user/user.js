@@ -62,7 +62,7 @@
             $scope.stopCoords();
         };
 
-        var GoogleMapLoad = function () {
+        var GoogleMapInvoke = function() {
             GoogleMapApi.then(function (maps) {
                 $scope.options = { disableDefaultUI: true };
                 var markerBounds = new maps.LatLngBounds();
@@ -78,13 +78,28 @@
                     //$scope.map.control.getGMap().setZoom($scope.map.control.getGMap().getZoom());
                 });
             },
-            function (error) {
-                $scope.modal.hide();
-                $ionicPopup.alert({
-                    title: mapsPrompt.Errortitle
-                }).then(function (res) {
+                function (error) {
+                    $scope.modal.hide();
+                    $ionicPopup.alert({
+                        title: mapsPrompt.Errortitle
+                    }).then(function (res) {
+                    });
                 });
-            });
+        };
+
+
+        var GoogleMapLoad = function () {
+            if (!_isEmpty($scope.userMarker.coords)) {
+                GoogleMapInvoke();
+            }
+            else {
+                var watchCoords = $scope.$watch("userMarker.coords", function (newValue, oldValue) {
+                        if (newValue) {
+                            GoogleMapInvoke();
+                            watchCoords();
+                        }
+                });
+            }
         };
 
         var getUserRequest = function () {
