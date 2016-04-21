@@ -12,7 +12,7 @@
                         <p>{{chaser.firstname}}&nbsp;{{chaser.lastname}}</p>
                     </ion-item>
                 </ion-list>
-                <ion-infinite-scroll ng-if="!noMoChasers" on-infinite="loadMoreChasers()" distance="30%"></ion-infinite-scroll>
+                <ion-infinite-scroll ng-if="!noMoChasers" on-infinite="loadMoreChasers()" distance="30%" spinner="lines"></ion-infinite-scroll>
             </div>
         </div>
     </ion-content>
