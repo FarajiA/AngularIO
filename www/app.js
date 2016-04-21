@@ -45,7 +45,7 @@ var mapsPrompt = {
     text: 'To see your position turn on location services',
     error: 'Location services off',
     Errortitle: 'Map failed, sorry dawg',
-    NolongerBroadcasting : 'Chaser is no longer broadcasting'
+    NolongerBroadcasting : '0 is no longer broadcasting'
 };
 
 var dashPrompt = {
@@ -225,7 +225,6 @@ function RouteMethods($stateProvider, $urlRouterProvider, $ionicConfigProvider) 
     })
         .state('main.traffic', {
             url: '/traffic',
-            cache: false,
             views: {
                 'main-traffic': {
                     templateUrl: 'components/traffic/traffic.html',
@@ -322,7 +321,6 @@ function RouteMethods($stateProvider, $urlRouterProvider, $ionicConfigProvider) 
         })
         .state('main.activity', {
             url: '/activity',
-            cache: false,
             views: {
                 'main-activity': {
                     templateUrl: 'components/activity/activity.html',

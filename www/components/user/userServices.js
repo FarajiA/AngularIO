@@ -9,7 +9,7 @@
         $http.post(baseURL + "api/chasing", msg)
         .success(function (d) {
             data = d;
-            deffered.resolve();
+            deffered.resolve(d);
         })
         .error(function (data, status) {
             console.log("Request failed " + status);
@@ -22,7 +22,7 @@
         $http.delete(baseURL + "api/chasing/" + UserObject.data().GUID + "/" + guid)
         .success(function (d) {
             data = d;
-            deffered.resolve();
+            deffered.resolve(d);
         })
         .error(function (data, status) {
             console.log("Request failed " + status);
@@ -36,7 +36,7 @@
         $http.post(baseURL + "api/requests", msg)
         .success(function (d) {
             data = d;
-            deffered.resolve();
+            deffered.resolve(d);
         })
         .error(function (data, status) {
             console.log("Request failed " + status);

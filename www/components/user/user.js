@@ -64,6 +64,7 @@
 
         var GoogleMapInvoke = function() {
             GoogleMapApi.then(function (maps) {
+                $ionicLoading.hide();
                 $scope.options = { disableDefaultUI: true };
                 var markerBounds = new maps.LatLngBounds();
                 var chaser_Latlng = new maps.LatLng($scope.latitude, $scope.longitude);
@@ -89,6 +90,7 @@
 
 
         var GoogleMapLoad = function () {
+            $ionicLoading.show();
             if (!_isEmpty($scope.userMarker.coords)) {
                 GoogleMapInvoke();
             }
@@ -173,7 +175,7 @@
                     $scope.broadcasting = false;
                     if ($scope.modal.isShown()) {
                         $ionicPopup.alert({
-                            template: mapsPrompt.NolongerBroadcasting
+                            template: mapsPrompt.NolongerBroadcasting.replace(/0/gi, $scope.username)
                         }).then(function (res) {
                             $scope.modal.hide();
                         });
