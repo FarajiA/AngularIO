@@ -7,10 +7,13 @@
 
                 var UserRequest = function () {
                         scope.$apply(function () {
-                            Decision.request(UserObject.details().GUID).then(function () {
-                                if (Decision.data() === 1) {
+                            Decision.request(UserObject.details().GUID).then(function (response) {
+                                if (response === 1) {
                                     elem.attr('data-chasing', "requested").attr("disabled", "disabled");
                                     scope.symbol = 2;
+                                }
+                                else {
+                                    scope.symbol = 0;
                                 }
                             });
                         });
@@ -19,12 +22,15 @@
                 var UserFollow = function () {
                         scope.$apply(function () {
                             Decision.follow(UserObject.details().GUID).then(function () {
-                                if (Decision.data() === 1) {
+                                if (response === 1) {
                                     elem.attr('data-chasing', true);
                                     UserObject.details().isChasing = true;
                                     scope.noChasers++;
                                     scope.symbol = 1;
                                     scope.$emit('emit_Chasers', { action: "chasing" });
+                                }
+                                else {
+                                    scope.symbol = 0;
                                 }
                             });
                         });
@@ -33,12 +39,15 @@
                 var UserUnfollow = function () {
                     scope.$apply(function () {
                         Decision.unfollow(UserObject.details().GUID).then(function () {
-                            if (Decision.data() === 1) {
+                            if (response === 1) {
                                 elem.attr('data-chasing', false);
                                 UserObject.details().isChasing = false;
                                 scope.noChasers--;
                                 scope.symbol = 0;
                                 scope.$emit('emit_Chasers', { action: "chasing" });
+                            }
+                            else {
+                                scope.symbol = 1;
                             }
                         });
                     });
