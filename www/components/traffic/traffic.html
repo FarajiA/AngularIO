@@ -31,7 +31,7 @@
                         </ion-option-button>
                     </ion-item>
                 </ion-list>
-                <ion-infinite-scroll ng-if="moChasers" on-infinite="loadMoreChasers()" spinner="lines" distance="30%"></ion-infinite-scroll>
+                <ion-infinite-scroll ng-if="moChasers" on-infinite="loadMoreChasers()" immediate-check="false" spinner="lines" distance="30%"></ion-infinite-scroll>
             </div>
             <div id="chasing" ng-show="!showChasers" class="chasing">
                 <div class="zeroResults" ng-show="chasing.length === 0">
@@ -44,7 +44,7 @@
                         <p>{{chaser.firstname}}&nbsp;{{chaser.lastname}}</p>
                     </ion-item>
                 </ion-list>
-                <ion-infinite-scroll ng-if="moChasing" on-infinite="loadMoreChasing()" spinner="lines" distance="30%">
+                <ion-infinite-scroll ng-if="moChasing" on-infinite="loadMoreChasing()" immediate-check="false" spinner="lines" distance="30%">
                 </ion-infinite-scroll>
             </div>
         </div>
