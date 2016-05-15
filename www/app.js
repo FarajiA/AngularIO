@@ -1,8 +1,8 @@
 /***** App globals *****/
-//var baseURL = "http://localhost:3536/";
-//var imageURL = "http://localhost:3536/photos/";
-var baseURL = "http://ch-mo.com/";
-var imageURL = "http://ch-mo.com/photos/";
+var baseURL = "http://localhost:3536/";
+var imageURL = "http://localhost:3536/photos/";
+//var baseURL = "http://ch-mo.com/";
+//var imageURL = "http://ch-mo.com/photos/";
 
 var countSet = 10;
 var activityConst = {
@@ -871,6 +871,7 @@ app.controller('initController', ['$scope', '$timeout', '$interval', '$window', 
             Dash.broadcast(location.latitude, location.longitude, false).then(function () {
                 //$ionicLoading.hide();
                 //$scope.broadcastloading = false;
+                console.log('[postCommplete] BackgroundGeoLocation callbackSent: ' + location.latitude + ',' + location.longitude);
                 $scope.user.broadcast = (Dash.data() === 1);
             });
             backgroundGeoLocation.finish();

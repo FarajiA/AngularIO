@@ -6,9 +6,11 @@
         var chasingInit = function () {
             $ionicLoading.show();
             $scope.index = 0;
-            Chasing.chasing($scope.index, userID).then(function () {
-                $scope.chasing = Chasing.data().Results;
+            Chasing.chasing($scope.index, userID).then(function (response) {
+                $scope.chasing = response.Results;
                 $scope.index++;
+                $ionicLoading.hide();
+            }, function (error) {
                 $ionicLoading.hide();
             });
         };
