@@ -26,7 +26,7 @@
                         <p>{{broadcast.firstname}}&nbsp;{{broadcast.lastname}}</p>
                     </ion-item>
                 </ion-list>
-                <ion-infinite-scroll ng-if="moBroadcasters" on-infinite="loadMoreBroadcasters()" distance="30%"></ion-infinite-scroll>
+                <ion-infinite-scroll ng-if="moBroadcasters" immediate-check="false" on-infinite="loadMoreBroadcasters()" distance="30%"></ion-infinite-scroll>
             </div>
             <div id="requests" ng-show="!showBroadcasters" class="requests">
                 <div class="zeroResults" ng-show="requests.length === 0">
@@ -46,7 +46,7 @@
                         </ion-option-button>
                     </ion-item>
                 </ion-list>
-                <ion-infinite-scroll ng-if="moRequests" on-infinite="loadMoreRequests()" distance="30%"></ion-infinite-scroll>
+                <ion-infinite-scroll ng-if="moRequests" immediate-check="false" on-infinite="loadMoreRequests()" distance="30%"></ion-infinite-scroll>
             </div>
         </div>
     </ion-content>

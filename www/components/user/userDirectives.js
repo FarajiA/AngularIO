@@ -21,7 +21,7 @@
 
                 var UserFollow = function () {
                         scope.$apply(function () {
-                            Decision.follow(UserObject.details().GUID).then(function () {
+                            Decision.follow(UserObject.details().GUID).then(function (response) {
                                 if (response === 1) {
                                     elem.attr('data-chasing', true);
                                     UserObject.details().isChasing = true;
@@ -38,7 +38,7 @@
 
                 var UserUnfollow = function () {
                     scope.$apply(function () {
-                        Decision.unfollow(UserObject.details().GUID).then(function () {
+                        Decision.unfollow(UserObject.details().GUID).then(function (response) {
                             if (response === 1) {
                                 elem.attr('data-chasing', false);
                                 UserObject.details().isChasing = false;

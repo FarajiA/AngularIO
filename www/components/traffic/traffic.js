@@ -72,7 +72,7 @@
         $scope.loadMoreChasing = function () {
             var deffered = $q.defer();
             var pagingChasingMax = Math.ceil($scope.chasingNo / countSet, 1);
-            if ($scope.chasingindex < pagingChasingMax && $scope.chasersindex > 0) {
+            if ($scope.chasingindex < pagingChasingMax && $scope.chasingindex > 0) {
                 Traffic.chasing($scope.chasingindex).then(function (data) {
                     var chasingMerged = $scope.chasing.concat(data.Results);
                     $scope.chasingNo = data.Total;

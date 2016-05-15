@@ -14,7 +14,7 @@
             })
             .success(function (d) {
                 broadcastData = d;
-                deffered.resolve();
+                deffered.resolve(d);
             })
             .error(function (data, status) {
                 //console.log("Request failed " + status);
@@ -32,7 +32,7 @@
             })
             .success(function (d) {
                 requestData = d;
-                deffered.resolve();
+                deffered.resolve(d);
             })
             .error(function (data, status) {
                 //console.log("Request failed " + status);
@@ -47,7 +47,7 @@
             $http.delete(baseURL + "api/requests/" + userGuid + "/" + guid + "/0/0")
             .success(function (d) {
                 data = d;
-                deffered.resolve();
+                deffered.resolve(d);
             })
             .error(function (data, status) {
                 //console.log("Request failed " + status);
@@ -63,7 +63,7 @@
             $http.put(baseURL + "api/requests/0/0/0/0", msg)
             .success(function (d) {
                 data = d;
-                deffered.resolve();
+                deffered.resolve(d);
             })
             .error(function (data, status) {
                 //console.log("Request failed " + status);

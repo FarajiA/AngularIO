@@ -11,6 +11,8 @@
                 $scope.chasers = response.Results;
                 $scope.index++;
                 $ionicLoading.hide();
+            }, function (error) {
+                $ionicLoading.hide();
             });
         };
 

@@ -91,7 +91,7 @@
                 confirmPopup.then(function (res) {
                     if (res) {
                         Activity.requestAccept(guid).then(function (response) {
-                            var successful = Activity.data();
+                            var successful = response;
                             $scope.requests.splice(index, 1);
                             $scope.requestsNo = ($scope.requestsNo - 1);
                             $scope.$emit('emit_Chasers', { action: "chasers" });
@@ -108,7 +108,7 @@
                 confirmPopup.then(function (res) {
                     if (res) {
                         Activity.requestDecline(guid).then(function (response) {
-                            var successful = Activity.data();
+                            var successful = response;
                             $scope.requests.splice(index, 1);
                             $scope.requestsNo = ($scope.requestsNo - 1);
                         });
